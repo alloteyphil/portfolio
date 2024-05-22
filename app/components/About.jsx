@@ -1,3 +1,6 @@
+"use client";
+
+import Link from "next/link";
 /* eslint-disable react/no-unescaped-entities */
 import React from "react";
 
@@ -16,6 +19,16 @@ const About = () => {
         interactive features, I'm dedicated to delivering intuitive solutions
         that engage and delight users. Let's build something amazing together!
       </p>
+      <Link
+        rel="noopener noreferrer"
+        target="_blank"
+        href={
+          "https://drive.google.com/file/d/12F2QVi11Ngy113Ug2swXQoiS-tdlOuiQ/view?usp=drive_link"
+        }
+        className="bg-white text-black hover:bg-black hover:text-white border border-white rounded-lg p-5"
+      >
+        View resume
+      </Link>
     </div>
   );
 };
