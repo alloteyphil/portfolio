@@ -1,8 +1,8 @@
+/* eslint-disable react/no-unescaped-entities */
+
 "use client";
 
 import Link from "next/link";
-/* eslint-disable react/no-unescaped-entities */
-import React from "react";
 
 const About = () => {
   return (
@@ -25,7 +25,7 @@ const About = () => {
         href={
           "https://drive.google.com/file/d/12F2QVi11Ngy113Ug2swXQoiS-tdlOuiQ/view?usp=drive_link"
         }
-        className="bg-white text-black hover:bg-black hover:text-white border border-white rounded-lg p-5"
+        className="bg-white text-black hover:bg-black hover:text-white border border-white rounded-lg p-4"
       >
         View resume
       </Link>

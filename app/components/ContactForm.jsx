@@ -1,117 +1,142 @@
 "use client";
-import React from "react";
-import { cn } from "@/utils/cn";
-import {
-  IconBrandGithub,
-  IconBrandGoogle,
-  IconBrandOnlyfans,
-} from "@tabler/icons-react";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
 
-export function ContactForm() {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted");
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+import emailjs from "@emailjs/browser";
+
+const ContactForm = () => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const [disabled, setDisabled] = useState(false);
+
+  const toastifySuccess = () => {
+    toast.success("Message sent!", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: false,
+      className: "--toastify-color-success",
+      toastId: "notifyToast",
+    }),
+      toast.error("Message failed to send", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        className: "--toastify-color-error",
+        toastId: "notifyToast",
+      });
+  };
+
+  const onSubmit = async (data) => {
+    const { name, email, message } = data;
+    try {
+      setDisabled(true);
+
+      const templateParams = {
+        name,
+        email,
+        message,
+      };
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_SERVICE_ID,
+        process.env.NEXT_PUBLIC_TEMPLATE_ID,
+        templateParams,
+        process.env.NEXT_PUBLIC_PUBLIC_KEY
+      );
+      reset();
+      toastifySuccess();
+      setDisabled(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
-    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
-      <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
-        Welcome to Aceternity
-      </h2>
-      <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-        Login to aceternity if you can because we don&apos;t have a login flow
-        yet
-      </p>
-
-      <form className="my-8" onSubmit={handleSubmit}>
-        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
-          <LabelInputContainer>
-            <Label htmlFor="firstname">First name</Label>
-            <Input id="firstname" placeholder="Tyler" type="text" />
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastname" placeholder="Durden" type="text" />
-          </LabelInputContainer>
-        </div>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
-          <Label htmlFor="twitterpassword">Your twitter password</Label>
-          <Input
-            id="twitterpassword"
-            placeholder="••••••••"
-            type="twitterpassword"
-          />
-        </LabelInputContainer>
-
+    <div>
+      <form
+        className="flex flex-col gap-6"
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+      >
+        <label className="text-2xl font-medium">Your name</label>
+        <input
+          type="text"
+          name="name"
+          {...register("name", {
+            required: {
+              value: true,
+              message: "Please enter your name",
+            },
+            maxLength: {
+              value: 30,
+              message: "Please use 30 characters or less",
+            },
+          })}
+          className="bg-black border p-2 rounded-lg w-[450px] border-white"
+          placeholder="Name"
+        />
+        {errors.name && (
+          <span className="text-red-500 italic text-sm p=0 m-0">
+            {errors.name.message}
+          </span>
+        )}
+        <label className="text-2xl font-medium">Email</label>
+        <input
+          type="email"
+          name="email"
+          {...register("email", {
+            required: true,
+            pattern: {
+              value:
+                /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+              message: "invalid email address",
+            },
+          })}
+          className="bg-black border p-2 rounded-lg w-[450px] border-white"
+          placeholder="Email"
+        />
+        {errors.email && (
+          <span className="text-red-500 italic text-sm p=0 m-0">
+            Please enter a valid email address
+          </span>
+        )}
+        <label className="text-2xl font-medium">Your message</label>
+        <textarea
+          rows={3}
+          name="message"
+          {...register("message", {
+            required: true,
+          })}
+          className="bg-black rounded-lg border p-2 border-white"
+          placeholder="Enter your message"
+        />
+        {errors.message && (
+          <span className="text-red-500 italic text-sm p=0 m-0">
+            Please enter your message
+          </span>
+        )}
         <button
-          className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
+          disabled={disabled}
+          className="bg-white text-black hover:bg-black hover:text-white border border-white rounded-lg p-3 w-40"
         >
-          Sign up &rarr;
-          <BottomGradient />
+          Submit
         </button>
-
-        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
-
-        <div className="flex flex-col space-y-4">
-          <button
-            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-            type="submit"
-          >
-            <IconBrandGithub className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-            <span className="text-neutral-700 dark:text-neutral-300 text-sm">
-              GitHub
-            </span>
-            <BottomGradient />
-          </button>
-          <button
-            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-            type="submit"
-          >
-            <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-            <span className="text-neutral-700 dark:text-neutral-300 text-sm">
-              Google
-            </span>
-            <BottomGradient />
-          </button>
-          <button
-            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-            type="submit"
-          >
-            <IconBrandOnlyfans className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-            <span className="text-neutral-700 dark:text-neutral-300 text-sm">
-              OnlyFans
-            </span>
-            <BottomGradient />
-          </button>
-        </div>
       </form>
-    </div>
-  );
-}
-
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-    </>
-  );
-};
-
-const LabelInputContainer = ({ children, className }) => {
-  return (
-    <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
+      <ToastContainer />
     </div>
   );
 };
+
+export default ContactForm;

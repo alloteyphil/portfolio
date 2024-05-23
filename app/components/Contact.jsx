@@ -1,3 +1,5 @@
+import ContactForm from "./ContactForm";
+
 const Contact = () => {
   return (
     <div
@@ -7,6 +9,10 @@ const Contact = () => {
       <h3 className="text-5xl items-center text-center font-semibold">
         Contact
       </h3>
+
+      <div className="p-5 rounded-lg border border-white w-max">
+        <ContactForm />
+      </div>
     </div>
   );
 };
