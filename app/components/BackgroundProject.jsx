@@ -1,10 +1,10 @@
 import { BackgroundGradient } from "./ui/background-gradient";
 import Image from "next/image";
 
-const BrackgroundProject = ({ image, tools, title, description }) => {
+const BackgroundProject = ({ image, tools, title, description }) => {
   return (
     <div>
-      <BackgroundGradient className="rounded-[22px] max-w-sm min-h-[620px] p-6 bg-white dark:bg-black">
+      <BackgroundGradient className="rounded-[22px] max-w-max min-h-[620px] p-6 bg-white dark:bg-black">
         <Image
           src={image}
           alt={title}
@@ -34,4 +34,4 @@ const BrackgroundProject = ({ image, tools, title, description }) => {
   );
 };
 
-export default BrackgroundProject;
+export default BackgroundProject;

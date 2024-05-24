@@ -24,7 +24,7 @@ export const Header = () => {
         words={words2}
         opacity={1}
         duration={2}
-        startDelay={0.2}
+        startDelay={0.5}
       />
     </div>
   );

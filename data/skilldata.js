@@ -1,4 +1,4 @@
-export const skilldata = [
+export const skillData = [
   {
     id: 1,
     name: "React",

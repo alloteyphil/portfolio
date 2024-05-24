@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="scroll-smooth text-neutral-50">
+    <html lang="en" className="text-neutral-50">
       <body className={inter.className}>{children}</body>
     </html>
   );

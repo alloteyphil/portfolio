@@ -1,8 +1,14 @@
 "use client";
 
-import React from "react";
-import BrackgroundProject from "./BrackgroundProject";
-import { projectdata } from "@/data/projectdata";
+import { projectData } from "@/data/projectdata";
+import BackgroundProject from "./BackgroundProject";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const Project = () => {
   return (
@@ -14,17 +20,23 @@ const Project = () => {
         Projects
       </h3>
 
-      <div className="grid grid-cols-3 max-w-sm min-w-max gap-[52px] mx-auto h-max">
-        {projectdata.map((project) => (
-          <BrackgroundProject
-            key={project.id}
-            image={project.image}
-            title={project.title}
-            description={project.description}
-            tools={project.Tools}
-          />
-        ))}
-      </div>
+      <Carousel>
+        <CarouselContent className="">
+          {projectData.map((project) => (
+            <CarouselItem key={project.id} className="basis-1/3">
+              <BackgroundProject
+                key={project.id}
+                image={project.image}
+                title={project.title}
+                description={project.description}
+                tools={project.Tools}
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
     </div>
   );
 };

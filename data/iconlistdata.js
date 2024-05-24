@@ -1,6 +1,7 @@
 export const iconlistdata = [
   {
     href: "https://github.com/alloteyphil",
+    id: 1,
     link: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -14,6 +15,7 @@ export const iconlistdata = [
   },
   {
     href: "http://www.linkedin.com/in/alloteyphilip/",
+    id: 2,
     link: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -27,6 +29,7 @@ export const iconlistdata = [
   },
   {
     href: "mailto:alloteyphilip@gmail.com",
+    id: 3,
     link: (
       <svg
         xmlns="http://www.w3.org/2000/svg"

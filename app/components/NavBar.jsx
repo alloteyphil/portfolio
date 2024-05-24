@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const NavBar = () => {
   return (
-    <div className="flex justify-between px-4 py-3 text-lg fixed top-0 left-0 w-full z-50 bg-transparent">
+    <nav className="flex justify-between px-4 py-3 text-lg fixed top-0 left-0 w-full z-50 bg-transparent">
       <Link href={"#header"} className="hover:underline uppercase">
         Portfolio
       </Link>
@@ -20,7 +20,7 @@ const NavBar = () => {
           Contact
         </Link>
       </div>
-    </div>
+    </nav>
   );
 };
 

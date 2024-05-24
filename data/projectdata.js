@@ -1,4 +1,4 @@
-export const projectdata = [
+export const projectData = [
   {
     id: 1,
     title: "Airbnb Clone",

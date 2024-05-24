@@ -100,7 +100,7 @@ const ContactForm = () => {
             pattern: {
               value:
                 /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-              message: "invalid email address",
+              message: "Invalid email address",
             },
           })}
           className="bg-black border p-2 rounded-lg w-[450px] border-white"
@@ -129,7 +129,11 @@ const ContactForm = () => {
         <button
           type="submit"
           disabled={disabled}
-          className="bg-white text-black hover:bg-black hover:text-white border border-white rounded-lg p-3 w-40"
+          className={
+            disabled
+              ? " cursor-not-allowed rounded-lg p-3 w-40 hover:bg-black hover:text-white border border-white"
+              : "bg-white text-black hover:bg-black hover:text-white border border-white rounded-lg p-3 w-40"
+          }
         >
           Submit
         </button>
