@@ -1,5 +1,6 @@
 import About from "./components/About";
 import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 import { Header } from "./components/Header";
 import IconList from "./components/IconList";
 import NavBar from "./components/NavBar";
@@ -16,6 +17,7 @@ export default async function Home() {
       <Skills />
       <Project />
       <Contact />
+      <Footer />
     </div>
   );
 }

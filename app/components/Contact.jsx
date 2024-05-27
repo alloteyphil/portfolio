@@ -10,7 +10,7 @@ const Contact = () => {
         Contact
       </h3>
 
-      <div className="p-5 rounded-lg border border-white w-max">
+      <div className="max-w-max">
         <ContactForm />
       </div>
     </div>

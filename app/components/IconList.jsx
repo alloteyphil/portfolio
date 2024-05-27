@@ -11,7 +11,7 @@ const IconList = () => {
           target="blank"
           className="hvr-buzz"
         >
-          {link.link}
+          {link.image}
         </Link>
       ))}
     </div>
