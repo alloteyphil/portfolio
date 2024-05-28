@@ -2,21 +2,18 @@ import Link from "next/link";
 
 const NavBar = () => {
   return (
-    <nav className="flex justify-between px-4 py-3 text-lg fixed top-0 left-0 w-full z-50 bg-transparent">
-      <Link href={"#header"} className="hover:underline uppercase">
-        Portfolio
-      </Link>
-      <div className="flex gap-6">
-        <Link href={"#about"} className="hover:underline">
+    <nav className="px-32 py-6 text-lg max-w-max fixed top-2 left-1/2 -translate-x-1/2 rounded-full border border-white/30 z-50 bg-transparent after:absolute after:top-0 after:left-0 after:w-full after:h-full after:backdrop-blur after:z-20 after:bg-white/5 overflow-hidden">
+      <div className="flex item-center justify-center gap-7">
+        <Link href={"#about"} className="hover:underline z-50">
           About
         </Link>
-        <Link href={"#skills"} className="hover:underline">
+        <Link href={"#skills"} className="hover:underline z-50">
           Skills
         </Link>
-        <Link href={"#projects"} className="hover:underline">
+        <Link href={"#projects"} className="hover:underline z-50">
           Projects
         </Link>
-        <Link href={"#contact"} className="hover:underline">
+        <Link href={"#contact"} className="hover:underline z-50">
           Contact
         </Link>
       </div>
