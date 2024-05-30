@@ -65,7 +65,7 @@ const ContactForm = () => {
   };
   return (
     <div>
-      <BackgroundGradient className="rounded-[22px] w-[500px] max-h-max flex flex-col my-auto p-6 pb-10 bg-white dark:bg-black">
+      <BackgroundGradient className="rounded-[22px] w-full lg:w-[500px] max-h-max flex flex-col my-auto p-6 pb-10 bg-white dark:bg-black">
         <form
           className="flex flex-col gap-6"
           onSubmit={handleSubmit(onSubmit)}
@@ -133,8 +133,8 @@ const ContactForm = () => {
             disabled={disabled}
             className={
               disabled
-                ? " cursor-not-allowed rounded-lg p-3 w-40 hover:bg-black hover:text-white border border-white"
-                : "bg-white text-black hover:bg-black hover:text-white border border-white rounded-lg p-3 w-40"
+                ? " cursor-not-allowed text-gray-600"
+                : "inline-flex lg:w-max h-12 p-8 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
             }
           >
             Submit

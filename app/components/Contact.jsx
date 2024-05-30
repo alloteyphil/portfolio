@@ -3,14 +3,14 @@ import ContactForm from "./ContactForm";
 const Contact = () => {
   return (
     <div
-      className="flex flex-col boxed snap-start min-h-screen justify-center gap-20 py-20"
+      className="flex flex-col boxed snap-start lg:min-h-screen py-20 justify-center gap-20 max-lg:gap-10"
       id="contact"
     >
-      <h3 className="text-5xl items-center text-center font-semibold">
+      <h3 className="text-5xl max-lg:text-4xl  items-center text-center font-semibold">
         Contact
       </h3>
 
-      <div className="max-w-max">
+      <div className="lg:max-w-max max-lg:w-full">
         <ContactForm />
       </div>
     </div>

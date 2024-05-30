@@ -13,14 +13,14 @@ export const Header = () => {
       {/* Radial gradient for the container to give a faded look */}
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
       <TextGenerateEffect
-        className="text-[100px] uppercase font-bold relative z-20 dark:text-neutral-400 py-8"
+        className="text-[100px] uppercase font-bold relative z-20 dark:text-neutral-400 lg:py-8 max-lg:text-7xl text-center"
         words={words}
         opacity={1}
         duration={2}
         gradient={true}
       />
       <TextGenerateEffect
-        className="text-xl text-center max-w-2xl mx-auto leading-loose uppercase tracking-widest text-neutral-400"
+        className="text-xl text-center max-w-2xl mx-auto leading-loose uppercase tracking-widest text-neutral-400 max-lg:mt-4"
         words={words2}
         opacity={1}
         duration={2}

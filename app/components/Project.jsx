@@ -13,17 +13,17 @@ import {
 const Project = () => {
   return (
     <div
-      className="flex flex-col boxed snap-start min-h-screen justify-center gap-20 py-20"
+      className="flex flex-col boxed snap-start min-h-screen justify-center gap-20 max-lg:gap-10 lg:py-20"
       id="projects"
     >
-      <h3 className="text-5xl items-center text-center font-semibold">
+      <h3 className="text-5xl max-lg:text-4xl items-center text-center font-semibold">
         Projects
       </h3>
 
       <Carousel>
         <CarouselContent>
           {projectData.map((project) => (
-            <CarouselItem key={project.id} className="basis-1/3">
+            <CarouselItem key={project.id} className="lg:basis-1/3">
               <BackgroundProject
                 key={project.id}
                 image={project.image}

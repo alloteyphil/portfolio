@@ -7,10 +7,10 @@ import Link from "next/link";
 const About = () => {
   return (
     <div
-      className="flex flex-col justify-center items-center gap-16 boxed snap-start min-h-screen"
+      className="flex flex-col justify-center items-center gap-16 boxed snap-start min-h-screen max-lg:gap-10"
       id="about"
     >
-      <h3 className="text-5xl font-semibold">About me</h3>
+      <h3 className="text-5xl max-lg:text-4xl  font-semibold">About me</h3>
       <p className="text-center text-lg leading-10 max-w-3xl">
         Hey there, I'm Philip, a front-end engineer with a passion for crafting
         seamless digital experiences. With a keen eye for design and a knack for
@@ -19,15 +19,18 @@ const About = () => {
         interactive features, I'm dedicated to delivering intuitive solutions
         that engage and delight users. Let's build something amazing together!
       </p>
-      <Link
-        target="_blank"
-        href={
-          "https://drive.google.com/file/d/12F2QVi11Ngy113Ug2swXQoiS-tdlOuiQ/view?usp=drive_link"
-        }
-        className="bg-white text-black hover:bg-black hover:text-white border border-white rounded-lg p-4"
-      >
-        View resume
-      </Link>
+
+      <button className="inline-flex h-12 p-8 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+        <Link
+          target="_blank"
+          href={
+            "https://drive.google.com/file/d/12F2QVi11Ngy113Ug2swXQoiS-tdlOuiQ/view?usp=drive_link"
+          }
+          className=""
+        >
+          View resume
+        </Link>
+      </button>
     </div>
   );
 };

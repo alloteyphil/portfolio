@@ -23,7 +23,7 @@ export const EvervaultCard = ({ id, photo, className }) => {
   return (
     <div
       className={cn(
-        "p-0.5  bg-transparent aspect-square group/card flex items-center justify-center w-40 h-full relative",
+        "p-0.5  bg-transparent aspect-square group/card flex items-center justify-center w-40 max-lg:w-24 h-full max-lg:h-24 relative",
         className
       )}
     >
@@ -37,8 +37,15 @@ export const EvervaultCard = ({ id, photo, className }) => {
           randomString={randomString}
         />
         <div className="relative z-10 flex items-center justify-center">
-          <div className="relative h-24 w-24  rounded-full flex items-center justify-center text-white font-bold text-4xl">
-            <Image src={photo} key={id} width={50} height={50} alt="" />
+          <div className="relative rounded-full flex items-center justify-center text-white font-bold text-4xl">
+            <Image
+              src={photo}
+              key={id}
+              width={50}
+              className="max-lg:h-12 max-lg:w-12"
+              height={50}
+              alt=""
+            />
           </div>
         </div>
       </div>
