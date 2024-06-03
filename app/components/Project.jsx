@@ -23,7 +23,10 @@ const Project = () => {
       <Carousel>
         <CarouselContent>
           {projectData.map((project) => (
-            <CarouselItem key={project.id} className="lg:basis-1/3">
+            <CarouselItem
+              key={project.id}
+              className="md:basis-1/2 lg:basis-1/3"
+            >
               <BackgroundProject
                 key={project.id}
                 image={project.image}

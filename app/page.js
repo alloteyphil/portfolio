@@ -10,7 +10,7 @@ import Skills from "./components/Skills";
 
 export default async function Home() {
   return (
-    <div className="max-h-screen max-lg:overflow-x-hidden max-lg:px-6 overflow-y-scroll snap-y snap-mandatory">
+    <div className="max-h-screen max-lg:overflow-x-hidden max-lg:px-6 overflow-y-scroll snap-y snap-mandatory max-lg:text-sm">
       <NavBar />
       <MobileNav />
       <Header />

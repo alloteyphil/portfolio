@@ -10,7 +10,7 @@ const Contact = () => {
         Contact
       </h3>
 
-      <div className="lg:max-w-max max-lg:w-full">
+      <div className="md:max-w-md lg:max-w-max w-full mx-auto">
         <ContactForm />
       </div>
     </div>

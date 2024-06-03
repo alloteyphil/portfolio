@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { BackgroundGradient } from "./ui/background-gradient";
 import Image from "next/image";
+import { LinkIcon } from "lucide-react";
 
 const BackgroundProject = ({ image, tools, title, description, link }) => {
   return (
     <div>
-      <BackgroundGradient className="rounded-[22px] max-w-max min-h-[620px] p-6 bg-white flex flex-col justify-between dark:bg-black">
+      <BackgroundGradient className="rounded-[22px] relative max-w-max min-h-[620px] p-6 bg-white flex flex-col justify-between dark:bg-black">
         <Image
           src={image}
           alt={title}
@@ -30,15 +31,14 @@ const BackgroundProject = ({ image, tools, title, description, link }) => {
             </div>
           ))}
         </div>
-        <div className="w-full flex justify-end grow">
-          <Link
-            href={link}
-            className="hover:underline text-sm self-end text-neutral-600 dark:text-neutral-300 "
-            target="_blank"
-          >
-            Link to the project
-          </Link>
-        </div>
+
+        <Link
+          href={link}
+          className="absolute top-7 right-8 bg-black p-2 rounded-full animate-pulse"
+          target="_blank"
+        >
+          <LinkIcon size={16} className="text-white" />
+        </Link>
       </BackgroundGradient>
     </div>
   );

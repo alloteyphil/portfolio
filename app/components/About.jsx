@@ -10,8 +10,8 @@ const About = () => {
       className="flex flex-col justify-center items-center gap-16 boxed snap-start min-h-screen max-lg:gap-10"
       id="about"
     >
-      <h3 className="text-5xl max-lg:text-4xl  font-semibold">About me</h3>
-      <p className="text-center text-lg leading-10 max-w-3xl">
+      <h3 className="text-5xl max-lg:text-4xl font-semibold">About me</h3>
+      <p className="text-center lg:text-lg leading-10 max-w-3xl max-lg:max-w-lg">
         Hey there, I'm Philip, a front-end engineer with a passion for crafting
         seamless digital experiences. With a keen eye for design and a knack for
         coding, I specialize in bringing user interfaces to life. Whether it's
