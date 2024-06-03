@@ -1,5 +1,4 @@
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
 import { TextGenerateEffect } from "./ui/text-generate-effect";
 
 export const Header = () => {

@@ -85,7 +85,7 @@ const ContactForm = () => {
                 message: "Please use 30 characters or less",
               },
             })}
-            className="bg-black border-b p-2 border-white focus:outline-none"
+            className="bg-black border-b p-2 rounded-none border-white focus:outline-none"
             placeholder="Name"
           />
           {errors.name && (
@@ -105,7 +105,7 @@ const ContactForm = () => {
                 message: "Invalid email address",
               },
             })}
-            className="bg-black border-b p-2 border-white focus:outline-none"
+            className="bg-black border-b p-2 rounded-none border-white focus:outline-none"
             placeholder="Email"
           />
           {errors.email && (
@@ -120,7 +120,7 @@ const ContactForm = () => {
             {...register("message", {
               required: true,
             })}
-            className="bg-black border-b p-2 border-white focus:outline-none"
+            className="bg-black border-b p-2 rounded-none border-white focus:outline-none"
             placeholder="Enter your message"
           />
           {errors.message && (
