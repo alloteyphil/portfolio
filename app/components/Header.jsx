@@ -5,7 +5,7 @@ export const Header = () => {
   const words = `Philip Allotey`;
   const words2 = `Frontend Engineer`;
   return (
-    <div
+    <header
       id="header"
       className="w-full snap-start h-screen dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex flex-col items-center justify-center"
     >
@@ -25,6 +25,6 @@ export const Header = () => {
         duration={2}
         startDelay={0.5}
       />
-    </div>
+    </header>
   );
 };
