@@ -2,7 +2,6 @@ import About from "./components/About";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import { Header } from "./components/Header";
-import IconList from "./components/IconList";
 import MobileNav from "./components/MobileNav";
 import NavBar from "./components/NavBar";
 import Project from "./components/Project";
@@ -14,7 +13,6 @@ export default async function Home() {
       <NavBar />
       <MobileNav />
       <Header />
-      <IconList />
       <About />
       <Skills />
       <Project />
