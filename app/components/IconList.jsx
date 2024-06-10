@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const IconList = () => {
   return (
-    <div className="flex flex-col fixed -translate-y-1/2 top-1/2 right-4 gap-7 items-center bg-gray-100 p-2 shadow-2xl max-lg:hidden">
+    <div className="flex items-center bg-gray-100 p-2 shadow-2xl max-lg:hidden">
       {iconlistdata.map((link) => (
         <Link
           key={link.id}
