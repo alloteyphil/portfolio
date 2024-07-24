@@ -71,4 +71,16 @@ export const skillData = [
     icon: "javascript.png",
     color: "#232F3E",
   },
+  {
+    id: 13,
+    name: "Typescript",
+    icon: "typescript.png",
+    color: "#007ACC",
+  },
+  {
+    id: 14,
+    name: "Wordpress",
+    icon: "wordpress.png",
+    color: "#21759B",
+  },
 ];
