@@ -24,7 +24,7 @@ const About = () => {
         <Link
           target="_blank"
           href={
-            "https://drive.google.com/file/d/1zQem_Aodb40eKeyacZTrbx-XraZE6tX6/view?usp=sharing"
+            "https://drive.google.com/file/d/1IIQ7EEQhgxsnm8GzOsA5dyFuceD9BYiL/view?usp=sharing"
           }
           className=""
         >
