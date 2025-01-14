@@ -1,5 +1,14 @@
 export const projectData = [
   {
+    id: 10,
+    title: "The Light Veil",
+    description:
+      "Presenting a portfolio website I developed for The Light Veil, a client specializing in lighting setups for shows and events. Built using WordPress and Elementor, the site serves as a dynamic platform to showcase their expertise and services. With a clean design and intuitive navigation, the website effectively highlights their brand while providing a seamless user experience. This project demonstrates my ability to create customized web solutions that align with a client’s vision and goals.",
+    image: "/the-light-veil.png",
+    tools: "WordPress, Elementor",
+    link: "https://thelightveil.info/",
+  },
+  {
     id: 1,
     title: "ShowBiz",
     description:
