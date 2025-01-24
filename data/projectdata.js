@@ -15,7 +15,7 @@ export const projectData = [
       "Presenting my ShowBiz project, built using Next.js, TypeScript, and Tailwind CSS. This movie site provides users with an engaging platform to discover and explore a wide range of films. With an emphasis on responsive design and smooth navigation, the interface is crafted for an exceptional user experience. The project demonstrates my ability to integrate modern web technologies into a visually appealing and functional application.",
     image: "/ShowBiz.png",
     tools: "Next.js, TypeScript, Tailwind CSS, Shadcn-UI",
-    link: "https://show-biz-delta.vercel.app/",
+    link: "https://showbizhub.vercel.app/",
   },
 
   {
