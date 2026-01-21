@@ -3,7 +3,16 @@ import { BackgroundGradient } from "./ui/background-gradient";
 import Image from "next/image";
 import { LinkIcon } from "lucide-react";
 
-const BackgroundProject = ({ image, tools, title, description, link }) => {
+const BackgroundProject = ({
+  image,
+  tools,
+  title,
+  description,
+  link,
+  priority = false,
+  loading = "lazy",
+  fetchPriority,
+}) => {
   return (
     <div>
       <BackgroundGradient className="rounded-[22px] relative max-w-max min-h-[620px] p-6 bg-white flex flex-col justify-between dark:bg-black">
@@ -12,6 +21,12 @@ const BackgroundProject = ({ image, tools, title, description, link }) => {
           alt={title}
           height={420}
           width={400}
+          sizes="(max-width: 768px) 80vw, 400px"
+          quality={70}
+          placeholder="blur"
+          priority={priority}
+          loading={loading}
+          fetchPriority={fetchPriority}
           className="object-cover object-center rounded-[22px]"
         />
         <p className="text-base text-black mt-4 mb-2 dark:text-neutral-50">

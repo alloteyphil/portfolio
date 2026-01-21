@@ -22,7 +22,7 @@ const Project = () => {
 
       <Carousel>
         <CarouselContent>
-          {projectData.map((project) => (
+          {projectData.map((project, index) => (
             <CarouselItem
               key={project.id}
               className="md:basis-1/2 lg:basis-1/3"
@@ -34,6 +34,9 @@ const Project = () => {
                 description={project.description}
                 tools={project.tools}
                 link={project.link}
+                priority={index === 0}
+                loading={index < 2 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
               />
             </CarouselItem>
           ))}

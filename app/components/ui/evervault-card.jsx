@@ -1,17 +1,23 @@
 "use client";
-import { useMotionValue, useMotionTemplate } from "framer-motion";
-import { motion } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
 
 export const EvervaultCard = ({ id, photo, className }) => {
-  let mouseX = useMotionValue(0);
-  let mouseY = useMotionValue(0);
+  const rawMouseX = useMotionValue(0);
+  const rawMouseY = useMotionValue(0);
+  const mouseX = useSpring(rawMouseX, { stiffness: 200, damping: 30, mass: 0.5 });
+  const mouseY = useSpring(rawMouseY, { stiffness: 200, damping: 30, mass: 0.5 });
 
   function onMouseMove({ currentTarget, clientX, clientY }) {
     let { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
+    rawMouseX.set(clientX - left);
+    rawMouseY.set(clientY - top);
+  }
+
+  function onMouseLeave() {
+    rawMouseX.set(0);
+    rawMouseY.set(0);
   }
 
   return (
@@ -23,6 +29,7 @@ export const EvervaultCard = ({ id, photo, className }) => {
     >
       <div
         onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
         className="rounded-3xl w-full relative overflow-hidden bg-transparent flex items-center justify-center h-full"
       >
         <CardPattern
@@ -48,13 +55,13 @@ export const EvervaultCard = ({ id, photo, className }) => {
 
 export function CardPattern({ mouseX, mouseY }) {
   let maskImage = useMotionTemplate`radial-gradient(250px at ${mouseX}px ${mouseY}px, white, transparent)`;
-  let style = { maskImage, WebkitMaskImage: maskImage };
+  let style = { maskImage, WebkitMaskImage: maskImage, willChange: "mask-image" };
 
   return (
     <div className="pointer-events-none">
       <div className="absolute inset-0 rounded-2xl  [mask-image:linear-gradient(white,transparent)] group-hover/card:opacity-50"></div>
       <motion.div
-        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-blue-700 opacity-0  group-hover/card:opacity-100 backdrop-blur-xl transition duration-500"
+        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-blue-700 opacity-0 group-hover/card:opacity-100 backdrop-blur-xl transition duration-500 will-change-[mask-image]"
         style={style}
       />
     </div>
