@@ -1,7 +1,5 @@
 "use client";
 import { useMotionValue } from "framer-motion";
-import { useState } from "react";
-import { useMotionTemplate, motion } from "framer-motion";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
 
@@ -9,15 +7,10 @@ export const EvervaultCard = ({ id, photo, className }) => {
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
 
-  const [randomString, setRandomString] = useState("");
-
   function onMouseMove({ currentTarget, clientX, clientY }) {
     let { left, top } = currentTarget.getBoundingClientRect();
     mouseX.set(clientX - left);
     mouseY.set(clientY - top);
-
-    const str = generateRandomString(500);
-    setRandomString(str);
   }
 
   return (
@@ -34,7 +27,6 @@ export const EvervaultCard = ({ id, photo, className }) => {
         <CardPattern
           mouseX={mouseX}
           mouseY={mouseY}
-          randomString={randomString}
         />
         <div className="relative z-10 flex items-center justify-center">
           <div className="relative rounded-full flex items-center justify-center text-white font-bold text-4xl">
@@ -53,10 +45,7 @@ export const EvervaultCard = ({ id, photo, className }) => {
   );
 };
 
-export function CardPattern({ mouseX, mouseY, randomString }) {
-  let maskImage = useMotionTemplate`radial-gradient(250px at ${mouseX}px ${mouseY}px, white, transparent)`;
-  let style = { maskImage, WebkitMaskImage: maskImage };
-
+export function CardPattern({ mouseX, mouseY }) {
   return (
     <div className="pointer-events-none">
       <div className="absolute inset-0 rounded-2xl  [mask-image:linear-gradient(white,transparent)] group-hover/card:opacity-50"></div>
@@ -75,16 +64,6 @@ export function CardPattern({ mouseX, mouseY, randomString }) {
     </div>
   );
 }
-
-const characters =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-export const generateRandomString = (length) => {
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-};
 
 export const Icon = ({ className, ...rest }) => {
   return (
