@@ -38,6 +38,15 @@ export const projectData = [
   },
 
   {
+    id: 5,
+    title: "Natours",
+    description:
+      "A modern tour booking platform built with React, Convex, and Stripe. Users can browse curated nature tours, compare options side by side, leave reviews, and book seamlessly with secure Stripe Checkout. Features include real-time data with Convex, email authentication via Better Auth, a wishlist system, global search, and a fully responsive UI with light and dark mode support.",
+    image: natours,
+    tools: "React, TypeScript, Tailwind CSS, Convex, Better Auth, Stripe, TanStack Router",
+    link: "https://natours-hazel-one.vercel.app/",
+  },
+  {
     id: 2,
     title: "Airbnb Clone",
     description:
@@ -63,15 +72,6 @@ export const projectData = [
     image: fastReactPizza,
     tools: "Vite, React, Tailwind CSS",
     link: "https://fast-react-pizza-orcin.vercel.app/",
-  },
-  {
-    id: 5,
-    title: "Natours",
-    description:
-      "Introducing my Natours project, developed with Node.js, Express, and MongoDB. This platform offers unique tours and experiences, allowing users to explore the world's natural wonders. With a focus on user experience, I've designed an intuitive interface for easy navigation. Security measures, including encryption and authentication protocols, ensure user data protection. Explore this platform to witness the culmination of my passion for travel and web development.",
-    image: natours,
-    tools: "Node.js, Express, MongoDB, Pug, CSS",
-    link: "https://natours-wmn5.onrender.com/",
   },
   {
     id: 6,
