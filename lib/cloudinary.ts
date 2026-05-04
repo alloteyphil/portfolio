@@ -2,6 +2,26 @@ import { v2 as cloudinary } from "cloudinary";
 import { env } from "./env";
 import { buildCloudinaryDeliveryUrl } from "./screenshot-store";
 
+function assertValidCloudinaryCloudName(cloudName: string | undefined): void {
+  if (!cloudName) return;
+  if (cloudName.toLowerCase() === "portfolio") {
+    throw new Error(
+      "CLOUDINARY_CLOUD_NAME is set to \"portfolio\", but that is the folder prefix inside public IDs (portfolio/…), not your Cloudinary account cloud name. Copy the Cloud name from your Cloudinary dashboard (Settings) into CLOUDINARY_CLOUD_NAME."
+    );
+  }
+}
+
+function formatCloudinaryUploadError(error: unknown): Error {
+  const base = error instanceof Error ? error : new Error(String(error));
+  const message = base.message.toLowerCase();
+  if (message.includes("invalid cloud_name") || message.includes("cloud_name")) {
+    return new Error(
+      `${base.message} — Check CLOUDINARY_CLOUD_NAME: it must be your account cloud name from the Cloudinary dashboard, not the \"portfolio\" folder used in image public IDs.`
+    );
+  }
+  return base instanceof Error ? base : new Error(String(base));
+}
+
 cloudinary.config({
   cloud_name: env.CLOUDINARY_CLOUD_NAME,
   api_key: env.CLOUDINARY_API_KEY,
@@ -16,6 +36,7 @@ export async function uploadScreenshotToCloudinary(
   if (!env.CLOUDINARY_CLOUD_NAME || !env.CLOUDINARY_API_KEY || !env.CLOUDINARY_API_SECRET) {
     throw new Error("Cloudinary credentials are missing.");
   }
+  assertValidCloudinaryCloudName(env.CLOUDINARY_CLOUD_NAME);
   const uploaded = await new Promise<{ secure_url: string }>((resolve, reject) => {
     const upload = cloudinary.uploader.upload_stream(
       {
@@ -27,7 +48,7 @@ export async function uploadScreenshotToCloudinary(
       },
       (error, result) => {
         if (error || !result) {
-          reject(error ?? new Error("Cloudinary upload failed"));
+          reject(formatCloudinaryUploadError(error ?? new Error("Cloudinary upload failed")));
           return;
         }
         resolve({ secure_url: result.secure_url });
@@ -40,6 +61,9 @@ export async function uploadScreenshotToCloudinary(
 
 export async function getCloudinaryScreenshotUrl(publicId: string): Promise<string | null> {
   if (!env.CLOUDINARY_CLOUD_NAME) {
+    return null;
+  }
+  if (env.CLOUDINARY_CLOUD_NAME.toLowerCase() === "portfolio") {
     return null;
   }
 
