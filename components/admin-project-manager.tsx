@@ -169,16 +169,16 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
 
   return (
     <div className="space-y-6">
-      <div className="rounded border border-terminal-border p-4">
+      <div className="min-w-0 rounded border border-terminal-border p-3 sm:p-4">
         <p className="text-sm text-terminal-text/90">
           Visible projects: <span className="text-terminal-amber">{visibleCount}</span> / {repos.length}
         </p>
-        <div className="mt-3 flex flex-wrap gap-3">
+        <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
           <button
             type="button"
             onClick={() => void triggerRefresh()}
             disabled={refreshing}
-            className="rounded border border-terminal-accent px-3 py-1.5 text-sm text-terminal-accent disabled:opacity-60"
+            className="inline-flex min-h-10 items-center justify-center rounded border border-terminal-accent px-3 py-2 text-sm text-terminal-accent disabled:opacity-60 sm:min-h-0 sm:py-1.5"
           >
             {refreshing
               ? refreshProgress
@@ -190,13 +190,13 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
             type="button"
             onClick={() => void loadRepos()}
             disabled={loading}
-            className="rounded border border-terminal-border px-3 py-1.5 text-sm text-terminal-text disabled:opacity-60"
+            className="inline-flex min-h-10 items-center justify-center rounded border border-terminal-border px-3 py-2 text-sm text-terminal-text disabled:opacity-60 sm:min-h-0 sm:py-1.5"
           >
             Reload repos
           </button>
         </div>
         {refreshResult ? (
-          <div className="mt-3 rounded border border-terminal-border/70 bg-black/40 p-3 text-xs">
+          <div className="mt-3 rounded border border-terminal-border/70 bg-terminal-panel/50 p-3 text-xs">
             <p className={refreshResult.ok ? "text-green-300" : "text-red-300"}>
               {refreshResult.ok ? "Refresh completed successfully." : "Refresh completed with failures."}
             </p>
@@ -229,10 +229,10 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
           </p>
         ) : (
           repos.map((repo) => (
-            <div key={repo.id} className="rounded border border-terminal-border p-4">
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+            <div key={repo.id} className="min-w-0 rounded border border-terminal-border p-3 sm:p-4">
+              <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                 <div className="min-w-0">
-                  <p className="text-sm text-terminal-accent">{repo.fullName}</p>
+                  <p className="break-words text-sm text-terminal-accent">{repo.fullName}</p>
                   <a
                     href={repo.repositoryUrl}
                     target="_blank"
@@ -242,7 +242,7 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
                     {repo.repositoryUrl}
                   </a>
                 </div>
-                <label className="flex items-center gap-2 text-xs">
+                <label className="flex shrink-0 cursor-pointer items-center gap-2 text-xs sm:justify-end">
                   <input
                     type="checkbox"
                     checked={repo.isVisible}
@@ -271,7 +271,7 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
                       )
                     }
                     placeholder="https://example.com"
-                    className="w-full rounded border border-terminal-border bg-transparent px-3 py-2 text-sm"
+                    className="w-full min-w-0 rounded border border-terminal-border bg-transparent px-3 py-2 text-sm"
                   />
                 </div>
 
@@ -287,7 +287,7 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
                       )
                     }
                     rows={2}
-                    className="w-full rounded border border-terminal-border bg-transparent px-3 py-2 text-sm"
+                    className="w-full min-w-0 rounded border border-terminal-border bg-transparent px-3 py-2 text-sm"
                   />
                 </div>
 
@@ -310,16 +310,16 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
                         )
                       )
                     }
-                    className="w-full rounded border border-terminal-border bg-transparent px-3 py-2 text-sm"
+                    className="w-full min-w-0 rounded border border-terminal-border bg-transparent px-3 py-2 text-sm"
                   />
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-stretch sm:justify-end">
                   <button
                     type="button"
                     onClick={() => void updateRepo(repo)}
                     disabled={savingRepo === repo.fullName}
-                    className="rounded border border-terminal-accent px-3 py-1.5 text-xs text-terminal-accent disabled:opacity-60"
+                    className="w-full rounded border border-terminal-accent px-3 py-2.5 text-xs text-terminal-accent disabled:opacity-60 sm:w-auto sm:py-1.5"
                   >
                     {savingRepo === repo.fullName ? "Saving..." : "Save changes"}
                   </button>

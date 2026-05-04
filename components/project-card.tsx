@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { FolderGit2, Globe, iconButtonClass, iconStroke } from "@/components/icons";
 import type { PortfolioProject } from "@/types/project";
 
 type ProjectCardProps = {
@@ -21,19 +22,21 @@ export function ProjectCard({ project }: ProjectCardProps) {
   ).slice(0, 6);
 
   return (
-    <article className="h-full rounded-xl border border-terminal-border bg-gradient-to-b from-black/80 to-black/50 p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_14px_40px_rgba(0,0,0,0.45)]">
-      <header className="mb-4 flex items-center justify-between border-b border-terminal-border/70 pb-3">
-        <div className="flex items-center gap-2">
+    <article className="h-full min-w-0 rounded-xl border border-terminal-border bg-gradient-to-b from-terminal-panel to-terminal-bg p-4 shadow-terminal sm:p-5">
+      <header className="mb-4 flex min-w-0 items-center justify-between gap-2 border-b border-terminal-border/70 pb-3">
+        <div className="flex shrink-0 items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
           <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
           <span className="h-2.5 w-2.5 rounded-full bg-green-400" />
         </div>
-        <span className="text-xs text-terminal-amber">{project.name}</span>
+        <span className="min-w-0 truncate text-right text-xs text-terminal-amber">{project.name}</span>
       </header>
 
-      <div className="mb-4 overflow-hidden rounded-lg border border-terminal-border/70 bg-black/30">
-        <div className="border-b border-terminal-border/70 bg-black/50 px-3 py-2 text-xs text-terminal-amber">
-          {project.homepageUrl}
+      <div className="mb-4 min-w-0 overflow-hidden rounded-lg border border-terminal-border/70 bg-terminal-panel/50">
+        <div className="border-b border-terminal-border/70 bg-terminal-bg/70 px-2 py-2 text-xs text-terminal-amber sm:px-3">
+          <span className="block truncate" title={project.homepageUrl}>
+            {project.homepageUrl}
+          </span>
         </div>
         {hasScreenshot ? (
           <Image
@@ -42,18 +45,18 @@ export function ProjectCard({ project }: ProjectCardProps) {
             width={1200}
             height={600}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 600px"
-            className="h-48 w-full object-cover"
+            className="h-40 w-full object-cover sm:h-48"
             onError={() => setImageLoadFailed(true)}
           />
         ) : (
-          <div className="flex h-48 items-center justify-center text-xs text-terminal-text/70">
+          <div className="flex h-40 items-center justify-center px-2 text-center text-xs text-terminal-text/70 sm:h-48">
             Screenshot not available yet. Run refresh to generate it.
           </div>
         )}
       </div>
 
-      <h3 className="text-lg text-terminal-accent">{project.fullName}</h3>
-      <p className="mt-2 text-sm text-terminal-text/90">{project.description}</p>
+      <h3 className="break-words text-base text-terminal-accent sm:text-lg">{project.fullName}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-terminal-text/90">{project.description}</p>
 
       <div className="mt-4 flex flex-wrap gap-2">
         {stackTags.map((topic) => (
@@ -66,21 +69,23 @@ export function ProjectCard({ project }: ProjectCardProps) {
         ))}
       </div>
 
-      <footer className="mt-5 flex gap-3 text-sm">
+      <footer className="mt-5 flex flex-col gap-2 text-sm sm:flex-row sm:gap-3">
         <Link
           href={project.repositoryUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded border border-terminal-border px-3 py-1 text-terminal-accent hover:border-terminal-accent"
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded border border-terminal-border px-3 py-2 text-terminal-accent hover:border-terminal-accent sm:min-h-0 sm:py-1"
         >
+          <FolderGit2 className={iconButtonClass} strokeWidth={iconStroke} aria-hidden />
           source
         </Link>
         <Link
           href={project.homepageUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded border border-terminal-border px-3 py-1 text-terminal-amber hover:border-terminal-amber"
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded border border-terminal-border px-3 py-2 text-terminal-amber hover:border-terminal-amber sm:min-h-0 sm:py-1"
         >
+          <Globe className={iconButtonClass} strokeWidth={iconStroke} aria-hidden />
           live
         </Link>
       </footer>

@@ -3,7 +3,27 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: light;
+  --color-terminal-bg: 250 250 249;
+  --color-terminal-panel: 245 245 244;
+  --color-terminal-border: 214 211 209;
+  --color-terminal-text: 41 37 36;
+  --color-terminal-accent: 5 150 105;
+  --color-terminal-amber: 180 83 9;
+  --terminal-shadow: 0 0 0 1px rgb(231 229 228 / 1), 0 18px 48px rgb(28 25 23 / 0.06);
+  --terminal-scanline-stripe: rgb(0 0 0 / 0.035);
+}
+
+.dark {
   color-scheme: dark;
+  --color-terminal-bg: 13 13 13;
+  --color-terminal-panel: 17 17 17;
+  --color-terminal-border: 42 42 42;
+  --color-terminal-text: 216 228 200;
+  --color-terminal-accent: 134 239 172;
+  --color-terminal-amber: 251 191 36;
+  --terminal-shadow: 0 0 0 1px rgb(31 31 31 / 1), 0 24px 50px rgb(0 0 0 / 0.45);
+  --terminal-scanline-stripe: rgb(255 255 255 / 0.03);
 }
 
 * {
@@ -13,7 +33,6 @@
 body {
   margin: 0;
   font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  background: #0d0d0d;
 }
 
 a {
@@ -21,42 +40,61 @@ a {
 }
 
 .terminal-panel {
-  border: 1px solid #2a2a2a;
+  border: 1px solid rgb(var(--color-terminal-border) / 1);
   border-radius: 0.75rem;
-  background: rgba(17, 17, 17, 0.92);
-  padding: 1.25rem;
-  box-shadow: 0 0 0 1px #1f1f1f, 0 24px 50px rgba(0, 0, 0, 0.45);
+  background: rgb(var(--color-terminal-panel) / 0.92);
+  padding: 1rem;
+  box-shadow: var(--terminal-shadow);
+}
+
+@media (min-width: 640px) {
+  .terminal-panel {
+    padding: 1.25rem;
+  }
 }
 
 .scanline {
   background: repeating-linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.03) 1px,
+    var(--terminal-scanline-stripe),
+    var(--terminal-scanline-stripe) 1px,
     transparent 1px,
     transparent 4px
   );
+  opacity: 0.14;
+}
+
+.dark .scanline {
   opacity: 0.12;
 }
 
-.typing {
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid #86efac;
-  animation: typing 2.4s steps(44) 0.1s 1 both, blink 0.9s step-end infinite;
+/* Home intro: JS-driven type/delete loop + caret (see app/page.tsx). */
+.intro-typer {
+  max-width: 100%;
 }
 
-@keyframes typing {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
+.intro-typer__text {
+  word-break: break-word;
+}
+
+@media (min-width: 640px) {
+  .intro-typer__text {
+    white-space: nowrap;
   }
 }
 
-@keyframes blink {
+.intro-typer__caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  background: rgb(var(--color-terminal-accent));
+  vertical-align: -0.14em;
+  animation: caret-blink 0.85s step-end infinite;
+}
+
+@keyframes caret-blink {
   50% {
-    border-color: transparent;
+    opacity: 0;
   }
 }

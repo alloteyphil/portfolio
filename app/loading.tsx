@@ -1,13 +1,20 @@
 import { TerminalFrame } from "@/components/terminal-frame";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
     <TerminalFrame title="~/loading">
       <p className="text-sm text-terminal-amber">$ boot --app</p>
-      <h1 className="mt-3 text-2xl font-semibold text-terminal-text">Initializing session...</h1>
-      <p className="mt-3 max-w-2xl text-terminal-text/80">Preparing portfolio output and route data.</p>
-      <div className="mt-6 h-2 w-full max-w-md overflow-hidden rounded bg-terminal-border">
-        <div className="h-full w-1/2 animate-pulse bg-terminal-accent" />
+      <Skeleton className="mt-4 h-8 w-2/3 max-w-md" />
+      <Skeleton className="mt-3 h-4 w-full max-w-2xl" />
+      <Skeleton className="mt-2 h-4 w-5/6 max-w-xl" />
+      <Skeleton className="mt-2 h-4 w-4/6 max-w-lg" />
+      <div className="mt-8 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+        <Skeleton className="h-11 w-full sm:h-10 sm:w-36" rounded="sm" />
+        <Skeleton className="h-11 w-full sm:h-10 sm:w-32" rounded="sm" />
+      </div>
+      <div className="mt-10 h-2 w-full max-w-md overflow-hidden rounded bg-terminal-border/30">
+        <div className="h-full w-1/3 animate-pulse bg-terminal-accent/50" />
       </div>
     </TerminalFrame>
   );

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "@/lib/env";
+import { getTurnstileServerSecret } from "@/lib/turnstile-keys";
 
 const contactPayloadSchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -15,7 +16,8 @@ type TurnstileVerifyResponse = {
 };
 
 async function verifyTurnstileToken(token: string): Promise<boolean> {
-  if (!env.TURNSTILE_SECRET_KEY) {
+  const secret = getTurnstileServerSecret(env.TURNSTILE_SECRET_KEY);
+  if (!secret) {
     return false;
   }
 
@@ -23,7 +25,7 @@ async function verifyTurnstileToken(token: string): Promise<boolean> {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
-      secret: env.TURNSTILE_SECRET_KEY,
+      secret,
       response: token
     })
   });

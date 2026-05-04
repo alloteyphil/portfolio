@@ -9,7 +9,7 @@ export default async function ProjectsPage() {
 
   return (
     <TerminalFrame title="~/projects">
-      <p className="mb-6 text-sm text-terminal-text/85">
+      <p className="mb-6 text-sm leading-relaxed text-terminal-text/85">
         Showing repos tagged <span className="text-terminal-amber">portfolio</span> with a valid homepage URL.
       </p>
 
@@ -28,7 +28,7 @@ export default async function ProjectsPage() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}

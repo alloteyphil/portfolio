@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import "./globals.css";
+import { themeInitScript } from "@/lib/theme-init-script";
 
 type GlobalErrorProps = {
   error: Error & { digest?: string };
@@ -13,9 +15,12 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
   }, [error]);
 
   return (
-    <html lang="en">
-      <body className="bg-terminal-bg px-5 py-8 font-mono text-terminal-text">
-        <main className="mx-auto w-full max-w-3xl rounded-xl border border-terminal-border bg-black/40 p-6">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="bg-terminal-bg px-5 py-8 font-mono text-terminal-text antialiased">
+        <main className="mx-auto w-full max-w-3xl rounded-xl border border-terminal-border bg-terminal-panel/80 p-6 shadow-terminal">
           <p className="text-sm text-terminal-amber">$ kernel panic --ui</p>
           <h1 className="mt-3 text-2xl font-semibold">Global application error</h1>
           <p className="mt-3 text-terminal-text/80">

@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,18 +9,30 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        outfit: ["var(--font-outfit)", "system-ui", "sans-serif"],
+        mono: [
+          "var(--font-geist-mono)",
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Monaco",
+          "Consolas",
+          "monospace"
+        ]
+      },
       colors: {
         terminal: {
-          bg: "#0d0d0d",
-          panel: "#111111",
-          border: "#2a2a2a",
-          text: "#d8e4c8",
-          accent: "#86efac",
-          amber: "#fbbf24"
+          bg: "rgb(var(--color-terminal-bg) / <alpha-value>)",
+          panel: "rgb(var(--color-terminal-panel) / <alpha-value>)",
+          border: "rgb(var(--color-terminal-border) / <alpha-value>)",
+          text: "rgb(var(--color-terminal-text) / <alpha-value>)",
+          accent: "rgb(var(--color-terminal-accent) / <alpha-value>)",
+          amber: "rgb(var(--color-terminal-amber) / <alpha-value>)"
         }
       },
       boxShadow: {
-        terminal: "0 0 0 1px #2a2a2a, 0 24px 50px rgba(0, 0, 0, 0.45)"
+        terminal: "var(--terminal-shadow)"
       }
     }
   },

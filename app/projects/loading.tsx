@@ -1,13 +1,17 @@
 import { TerminalFrame } from "@/components/terminal-frame";
+import { ProjectCardSkeleton } from "@/components/ui/project-card-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProjectsLoading() {
   return (
-    <TerminalFrame title="~/projects/loading">
-      <p className="text-sm text-terminal-amber">$ fetch featured-projects</p>
-      <h1 className="mt-3 text-2xl font-semibold text-terminal-text">Loading project index...</h1>
-      <p className="mt-3 max-w-2xl text-terminal-text/80">
-        Syncing featured repository metadata and screenshot references.
-      </p>
+    <TerminalFrame title="~/projects">
+      <Skeleton className="mb-2 h-4 w-48" />
+      <Skeleton className="mb-6 h-3 w-full max-w-xl" />
+      <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
+        {Array.from({ length: 4 }, (_, i) => (
+          <ProjectCardSkeleton key={i} />
+        ))}
+      </div>
     </TerminalFrame>
   );
 }
