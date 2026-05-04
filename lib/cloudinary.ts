@@ -39,13 +39,20 @@ export async function uploadScreenshotToCloudinary(
 }
 
 export async function getCloudinaryScreenshotUrl(publicId: string): Promise<string | null> {
-  if (!env.CLOUDINARY_CLOUD_NAME || !env.CLOUDINARY_API_KEY || !env.CLOUDINARY_API_SECRET) {
+  if (!env.CLOUDINARY_CLOUD_NAME) {
     return null;
   }
+
+  const deliveryUrl = buildCloudinaryDeliveryUrl(env.CLOUDINARY_CLOUD_NAME, publicId);
+
+  if (!env.CLOUDINARY_API_KEY || !env.CLOUDINARY_API_SECRET) {
+    return deliveryUrl;
+  }
+
   try {
     const resource = await cloudinary.api.resource(publicId, { resource_type: "image" });
-    return resource.secure_url ?? buildCloudinaryDeliveryUrl(env.CLOUDINARY_CLOUD_NAME, publicId);
+    return resource.secure_url ?? deliveryUrl;
   } catch {
-    return null;
+    return deliveryUrl;
   }
 }

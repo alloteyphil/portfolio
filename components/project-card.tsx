@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { PortfolioProject } from "@/types/project";
@@ -10,6 +11,10 @@ type ProjectCardProps = {
 };
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const [imageLoadFailed, setImageLoadFailed] = useState(false);
+  const screenshotUrl = project.screenshotUrl ?? undefined;
+  const hasScreenshot = Boolean(screenshotUrl) && !imageLoadFailed;
+
   return (
     <article className="terminal-panel h-full">
       <header className="mb-4 flex items-center justify-between border-b border-terminal-border pb-3">
@@ -25,18 +30,19 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <div className="border-b border-terminal-border bg-black/40 px-3 py-2 text-xs text-terminal-amber">
           {project.homepageUrl}
         </div>
-        {project.screenshotUrl ? (
+        {hasScreenshot ? (
           <Image
-            src={project.screenshotUrl}
+            src={screenshotUrl!}
             alt={`${project.name} screenshot`}
             width={1200}
             height={600}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 600px"
             className="h-48 w-full object-cover"
+            onError={() => setImageLoadFailed(true)}
           />
         ) : (
           <div className="flex h-48 items-center justify-center text-xs text-terminal-text/70">
-            Screenshot pending refresh...
+            Screenshot not available yet. Run refresh to generate it.
           </div>
         )}
       </div>

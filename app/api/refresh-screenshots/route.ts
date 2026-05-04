@@ -38,10 +38,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   const failures = results.filter((result) => !result.success);
-  return NextResponse.json({
-    ok: failures.length === 0,
-    processed: results.length,
-    failed: failures.length,
-    results
-  });
+  const succeeded = results.length - failures.length;
+
+  return NextResponse.json(
+    {
+      ok: failures.length === 0,
+      processed: results.length,
+      succeeded,
+      failed: failures.length,
+      results
+    },
+    {
+      status: failures.length === 0 ? 200 : 500
+    }
+  );
 }
