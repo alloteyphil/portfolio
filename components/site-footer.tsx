@@ -10,13 +10,17 @@ export function SiteFooter() {
       <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-terminal-text/65">
           <span>© {year} Philip Allotey</span>
-          <span aria-hidden className="hidden text-terminal-border sm:inline">·</span>
-          <span className="text-terminal-text/55">
-            press{" "}
-            <kbd className="inline-flex min-w-5 items-center justify-center rounded border border-terminal-border bg-terminal-bg px-1.5 py-0.5 font-mono text-[10px] text-terminal-text/85">
-              ?
-            </kbd>{" "}
-            for shortcuts
+          <span className="hidden items-center gap-x-3 [@media(hover:hover)_and_(pointer:fine)]:inline-flex">
+            <span aria-hidden className="text-terminal-border">
+              ·
+            </span>
+            <span className="text-terminal-text/55">
+              press{" "}
+              <kbd className="inline-flex min-w-5 items-center justify-center rounded border border-terminal-border bg-terminal-bg px-1.5 py-0.5 font-mono text-[10px] text-terminal-text/85">
+                ?
+              </kbd>{" "}
+              for shortcuts
+            </span>
           </span>
         </p>
 
