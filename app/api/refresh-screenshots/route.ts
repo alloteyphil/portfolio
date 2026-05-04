@@ -4,18 +4,26 @@ import { getPortfolioProjects } from "@/lib/projects";
 import { captureScreenshot } from "@/lib/screenshotone";
 import { uploadScreenshotToCloudinary } from "@/lib/cloudinary";
 
-export const maxDuration = 300;
+export const maxDuration = 60;
 
-const PROJECT_REFRESH_CONCURRENCY = 4;
+const DEFAULT_BATCH_LIMIT = 2;
+const MAX_BATCH_LIMIT = 4;
+const PROJECT_REFRESH_CONCURRENCY = 2;
+
 type RefreshResult = { name: string; success: boolean; error?: string };
 type RefreshSummary = {
   ok: boolean;
+  total: number;
+  offset: number;
+  nextOffset: number;
+  done: boolean;
   processed: number;
   succeeded: number;
   failed: number;
   results: RefreshResult[];
   completedAt: string;
 };
+
 let lastRefreshSummary: RefreshSummary | null = null;
 
 function getErrorMessage(error: unknown): string {
@@ -65,6 +73,36 @@ async function runWithConcurrency<TItem>(
   );
 }
 
+function clampInteger(value: unknown, min: number, max: number, fallback: number): number {
+  const parsed = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  const integer = Math.trunc(parsed);
+  return Math.min(Math.max(integer, min), max);
+}
+
+async function readBatchOptions(request: NextRequest): Promise<{ offset: number; limit: number }> {
+  const url = new URL(request.url);
+  const queryOffset = url.searchParams.get("offset");
+  const queryLimit = url.searchParams.get("limit");
+
+  let bodyOffset: unknown;
+  let bodyLimit: unknown;
+  try {
+    const body = await request.clone().json();
+    if (body && typeof body === "object") {
+      bodyOffset = (body as Record<string, unknown>).offset;
+      bodyLimit = (body as Record<string, unknown>).limit;
+    }
+  } catch {
+    // body is optional
+  }
+
+  return {
+    offset: clampInteger(queryOffset ?? bodyOffset, 0, Number.MAX_SAFE_INTEGER, 0),
+    limit: clampInteger(queryLimit ?? bodyLimit, 1, MAX_BATCH_LIMIT, DEFAULT_BATCH_LIMIT)
+  };
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const startedAt = Date.now();
   const missingEnv = [
@@ -94,11 +132,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
+  const { offset, limit } = await readBatchOptions(request);
+
   const projects = await getPortfolioProjects();
+  const total = projects.length;
+  const slice = projects.slice(offset, offset + limit);
   const results: RefreshResult[] = [];
 
   await runWithConcurrency(
-    projects,
+    slice,
     async (project) => {
       try {
         const image = await captureScreenshot(project.homepageUrl);
@@ -115,7 +157,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     PROJECT_REFRESH_CONCURRENCY
   );
 
-  if (env.VERCEL_DEPLOY_HOOK_URL) {
+  const nextOffset = offset + slice.length;
+  const done = nextOffset >= total;
+
+  if (done && env.VERCEL_DEPLOY_HOOK_URL) {
     await fetch(env.VERCEL_DEPLOY_HOOK_URL, { method: "POST" });
   }
 
@@ -123,19 +168,30 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const succeeded = results.length - failures.length;
   const summary: RefreshSummary = {
     ok: failures.length === 0,
+    total,
+    offset,
+    nextOffset,
+    done,
     processed: results.length,
     succeeded,
     failed: failures.length,
     results,
     completedAt: new Date().toISOString()
   };
-  lastRefreshSummary = summary;
+
+  if (done) {
+    lastRefreshSummary = summary;
+  }
 
   return NextResponse.json(
     {
       ...summary,
       durationMs: Date.now() - startedAt,
-      message: summary.ok ? "Screenshot refresh completed successfully." : "Screenshot refresh completed with errors."
+      message: failures.length === 0
+        ? done
+          ? "Screenshot refresh completed successfully."
+          : `Batch processed (${nextOffset}/${total}). Continue.`
+        : "Screenshot refresh completed with errors."
     },
     {
       status: failures.length === 0 ? 200 : 500
@@ -157,6 +213,11 @@ export async function GET(): Promise<NextResponse> {
         env.CLOUDINARY_API_SECRET &&
         env.REFRESH_SCREENSHOTS_SECRET
     ),
+    batching: {
+      defaultLimit: DEFAULT_BATCH_LIMIT,
+      maxLimit: MAX_BATCH_LIMIT,
+      usage: "POST { offset?: number, limit?: number }; loop until { done: true }."
+    },
     lastRun: lastRefreshSummary
   });
 }

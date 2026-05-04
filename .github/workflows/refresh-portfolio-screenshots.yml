@@ -13,31 +13,64 @@ jobs:
         env:
           REFRESH_URL: ${{ secrets.SCREENSHOT_REFRESH_URL || vars.SCREENSHOT_REFRESH_URL || secrets.PORTFOLIO_REFRESH_URL || vars.PORTFOLIO_REFRESH_URL }}
           REFRESH_SECRET: ${{ secrets.REFRESH_SCREENSHOTS_SECRET || vars.REFRESH_SCREENSHOTS_SECRET || secrets.SCREENSHOT_REFRESH_SECRET || vars.SCREENSHOT_REFRESH_SECRET }}
+          BATCH_LIMIT: "2"
+          MAX_BATCHES: "20"
         run: |
           if [ -z "$REFRESH_URL" ] || [ -z "$REFRESH_SECRET" ]; then
-            echo "::warning::Skipping screenshot refresh. Set SCREENSHOT_REFRESH_URL and REFRESH_SCREENSHOTS_SECRET (or supported legacy names)."
+            echo "::warning::Skipping screenshot refresh. Required secrets are not configured."
             exit 0
           fi
 
-          response_file="$(mktemp)"
-          status_code="$(curl -X POST "$REFRESH_URL" \
-            -H "Authorization: Bearer $REFRESH_SECRET" \
-            -H "Content-Type: application/json" \
-            --retry 3 \
-            --retry-delay 2 \
-            --retry-all-errors \
-            --connect-timeout 10 \
-            --max-time 180 \
-            --silent \
-            --show-error \
-            --output "$response_file" \
-            --write-out "%{http_code}")"
+          offset=0
+          batch=0
+          aggregate_failed=0
+          aggregate_total=0
+          aggregate_succeeded=0
 
-          if [ "${status_code}" -lt 200 ] || [ "${status_code}" -ge 300 ]; then
-            echo "Refresh endpoint failed with HTTP ${status_code}"
+          while [ "$batch" -lt "$MAX_BATCHES" ]; do
+            response_file="$(mktemp)"
+            status_code="$(curl -X POST "$REFRESH_URL" \
+              -H "Authorization: Bearer $REFRESH_SECRET" \
+              -H "Content-Type: application/json" \
+              --retry 3 \
+              --retry-delay 2 \
+              --retry-all-errors \
+              --connect-timeout 10 \
+              --max-time 90 \
+              --silent \
+              --show-error \
+              --output "$response_file" \
+              --write-out "%{http_code}" \
+              --data "{\"offset\":${offset},\"limit\":${BATCH_LIMIT}}")"
+
+            if [ "${status_code}" -lt 200 ] || [ "${status_code}" -ge 300 ]; then
+              echo "Refresh batch ${batch} failed with HTTP ${status_code}"
+              cat "$response_file"
+              exit 1
+            fi
+
             cat "$response_file"
-            exit 1
-          fi
+            echo
 
-          echo "Refresh endpoint succeeded with HTTP ${status_code}"
-          cat "$response_file"
+            done_flag=$(jq -r '.done' "$response_file")
+            next_offset=$(jq -r '.nextOffset' "$response_file")
+            total=$(jq -r '.total' "$response_file")
+            succeeded=$(jq -r '.succeeded' "$response_file")
+            failed=$(jq -r '.failed' "$response_file")
+
+            aggregate_total="$total"
+            aggregate_succeeded=$((aggregate_succeeded + succeeded))
+            aggregate_failed=$((aggregate_failed + failed))
+
+            if [ "$done_flag" = "true" ]; then
+              echo "Refresh complete. total=${aggregate_total} succeeded=${aggregate_succeeded} failed=${aggregate_failed}"
+              break
+            fi
+
+            offset="$next_offset"
+            batch=$((batch + 1))
+          done
+
+          if [ "$aggregate_failed" -gt 0 ]; then
+            echo "::warning::Some screenshots failed (failed=${aggregate_failed})."
+          fi

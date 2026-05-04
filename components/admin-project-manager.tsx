@@ -14,13 +14,28 @@ type EditableProjectRepo = {
   isVisible: boolean;
 };
 
-type RefreshResult = {
+type RefreshBatchResult = {
   ok: boolean;
+  total: number;
+  offset: number;
+  nextOffset: number;
+  done: boolean;
   processed: number;
   succeeded: number;
   failed: number;
   results: Array<{ name: string; success: boolean; error?: string }>;
   completedAt: string;
+};
+
+type RefreshAggregate = {
+  ok: boolean;
+  total: number;
+  processed: number;
+  succeeded: number;
+  failed: number;
+  results: Array<{ name: string; success: boolean; error?: string }>;
+  completedAt: string;
+  done: boolean;
 };
 
 type AdminProjectManagerProps = {
@@ -32,7 +47,8 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [refreshResult, setRefreshResult] = useState<RefreshResult | null>(null);
+  const [refreshResult, setRefreshResult] = useState<RefreshAggregate | null>(null);
+  const [refreshProgress, setRefreshProgress] = useState<{ processed: number; total: number } | null>(null);
   const [savingRepo, setSavingRepo] = useState<string | null>(null);
 
   async function loadRepos() {
@@ -77,25 +93,77 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
     setRefreshing(true);
     setError(null);
     setRefreshResult(null);
-    const response = await fetch("/api/admin/refresh-screenshots", { method: "POST" });
-    const payload = (await response.json()) as {
-      ok?: boolean;
-      error?: string;
-      details?: RefreshResult;
-      result?: RefreshResult;
+    setRefreshProgress(null);
+
+    const aggregate: RefreshAggregate = {
+      ok: true,
+      total: 0,
+      processed: 0,
+      succeeded: 0,
+      failed: 0,
+      results: [],
+      completedAt: new Date().toISOString(),
+      done: false
     };
 
-    if (!response.ok || !payload.ok) {
-      const details = payload.details;
-      if (details) setRefreshResult(details);
-      setError(payload.error ?? "Failed to refresh screenshots.");
-      setRefreshing(false);
-      return;
+    let offset = 0;
+    const MAX_BATCHES = 25;
+
+    for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
+      const response = await fetch("/api/admin/refresh-screenshots", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ offset, limit: 2 })
+      });
+      const payload = (await response.json()) as {
+        ok?: boolean;
+        error?: string;
+        details?: RefreshBatchResult;
+        result?: RefreshBatchResult;
+      };
+
+      const batchResult = payload.result ?? payload.details ?? null;
+
+      if (batchResult) {
+        aggregate.total = batchResult.total;
+        aggregate.processed += batchResult.processed;
+        aggregate.succeeded += batchResult.succeeded;
+        aggregate.failed += batchResult.failed;
+        aggregate.results = aggregate.results.concat(batchResult.results);
+        aggregate.completedAt = batchResult.completedAt;
+        aggregate.done = batchResult.done;
+        setRefreshProgress({ processed: aggregate.processed, total: aggregate.total });
+      }
+
+      if (!response.ok || !payload.ok) {
+        aggregate.ok = false;
+        if (batchResult) setRefreshResult({ ...aggregate });
+        setError(payload.error ?? "Failed to refresh screenshots.");
+        setRefreshing(false);
+        return;
+      }
+
+      if (!batchResult) {
+        setError("Unexpected refresh response.");
+        setRefreshing(false);
+        return;
+      }
+
+      if (batchResult.failed > 0) {
+        aggregate.ok = false;
+      }
+
+      if (batchResult.done) {
+        setRefreshResult({ ...aggregate });
+        setRefreshing(false);
+        return;
+      }
+
+      offset = batchResult.nextOffset;
     }
 
-    if (payload.result) {
-      setRefreshResult(payload.result);
-    }
+    setError("Refresh stopped after too many batches. Try again.");
+    setRefreshResult({ ...aggregate });
     setRefreshing(false);
   }
 
@@ -112,7 +180,11 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
             disabled={refreshing}
             className="rounded border border-terminal-accent px-3 py-1.5 text-sm text-terminal-accent disabled:opacity-60"
           >
-            {refreshing ? "Refreshing..." : "Refresh screenshots"}
+            {refreshing
+              ? refreshProgress
+                ? `Refreshing... (${refreshProgress.processed}/${refreshProgress.total})`
+                : "Refreshing..."
+              : "Refresh screenshots"}
           </button>
           <button
             type="button"
