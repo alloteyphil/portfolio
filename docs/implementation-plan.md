@@ -29,8 +29,6 @@ flowchart TD
 
   contactPage["ContactPage"] --> turnstile["TurnstileVerification"]
   turnstile --> resend["ResendEmailSend"]
-  resend --> posthog["PostHogTrackContactSubmit"]
-  projectsPage --> posthog
 ```
 
 ## Phases
@@ -83,17 +81,15 @@ Exit criteria:
 - Screenshot job skips unchanged projects.
 - Failed refresh keeps previous screenshot URL.
 
-## Phase 5: Contact, SEO, Analytics
+## Phase 5: Contact and SEO
 
 - Add `/contact` route and submission endpoint.
 - Validate Turnstile token and send via Resend.
-- Add PostHog page view and key event tracking.
 - Add metadata, sitemap, robots, OG defaults.
 
 Exit criteria:
 
 - Contact submissions succeed with valid Turnstile token.
-- PostHog receives page and conversion events.
 - SEO files/routes are generated and valid.
 
 ## Phase 6: Cleanup, Quality, Release
@@ -139,7 +135,6 @@ Exit criteria:
 - Resume asset is available at `/cv/resume.pdf` and opens without auth.
 - Skills section is present and includes evidence links to shipped portfolio work.
 - Projects page supports filtering by stack/category.
-- PostHog captures key funnel events beyond baseline page views.
 
 ## Planned Code Areas
 

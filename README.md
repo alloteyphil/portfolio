@@ -11,7 +11,6 @@ Next.js App Router portfolio with a terminal aesthetic, admin-curated featured p
 - ScreenshotOne for website capture
 - Cloudinary for screenshot hosting/CDN
 - Resend + Turnstile for contact submissions
-- PostHog for analytics
 - GitHub Actions for refresh automation
 
 ## Setup
@@ -36,8 +35,6 @@ Next.js App Router portfolio with a terminal aesthetic, admin-curated featured p
    - `CONTACT_TO_EMAIL`
    - `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
    - `TURNSTILE_SECRET_KEY`
-   - `NEXT_PUBLIC_POSTHOG_KEY`
-   - `NEXT_PUBLIC_POSTHOG_HOST`
 3. Install dependencies:
    - `bun install`
 4. Run locally:

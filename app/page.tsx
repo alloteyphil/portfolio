@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { TerminalFrame } from "@/components/terminal-frame";
-import posthog from "posthog-js";
 
 export default function HomePage() {
   return (
@@ -27,14 +26,12 @@ export default function HomePage() {
         <Link
           href="/projects"
           className="rounded border border-terminal-accent px-4 py-2 text-terminal-accent"
-          onClick={() => posthog.capture("home_cta_clicked", { destination: "projects" })}
         >
           cd ~/projects
         </Link>
         <Link
           href="/about"
           className="rounded border border-terminal-amber px-4 py-2 text-terminal-amber"
-          onClick={() => posthog.capture("home_cta_clicked", { destination: "about" })}
         >
           cat ~/about
         </Link>

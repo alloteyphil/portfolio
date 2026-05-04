@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "@/lib/env";
-import { getPostHogClient } from "@/lib/posthog-server";
 
 const contactPayloadSchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -77,16 +76,6 @@ export async function POST(request: Request): Promise<NextResponse> {
   if (!emailSent) {
     return NextResponse.json({ ok: false, error: "Contact delivery failed." }, { status: 502 });
   }
-
-  const posthog = getPostHogClient();
-  posthog.capture({
-    distinctId: parsed.data.email,
-    event: "contact_message_received",
-    properties: {
-      subject: parsed.data.subject,
-      name: parsed.data.name
-    }
-  });
 
   return NextResponse.json({ ok: true });
 }

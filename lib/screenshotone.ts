@@ -1,5 +1,14 @@
 import { env } from "./env";
 
+async function readSafeResponseBody(response: Response): Promise<string> {
+  try {
+    const text = await response.text();
+    return text.slice(0, 500);
+  } catch {
+    return "";
+  }
+}
+
 export async function captureScreenshot(url: string): Promise<Buffer> {
   if (!env.SCREENSHOTONE_API_KEY) {
     throw new Error("SCREENSHOTONE_API_KEY is missing.");
@@ -16,7 +25,18 @@ export async function captureScreenshot(url: string): Promise<Buffer> {
 
   const response = await fetch(screenshotUrl.toString());
   if (!response.ok) {
-    throw new Error(`ScreenshotOne failed with status ${response.status}`);
+    const body = await readSafeResponseBody(response);
+    throw new Error(
+      `ScreenshotOne failed with status ${response.status}${body ? `: ${body}` : ""}`
+    );
+  }
+
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.startsWith("image/")) {
+    const body = await readSafeResponseBody(response);
+    throw new Error(
+      `ScreenshotOne returned non-image response (${contentType || "unknown content type"})${body ? `: ${body}` : ""}`
+    );
   }
 
   const arrayBuffer = await response.arrayBuffer();

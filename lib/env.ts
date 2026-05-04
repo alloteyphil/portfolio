@@ -16,9 +16,7 @@ const envSchema = z.object({
   TURNSTILE_SECRET_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
   RESEND_API_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
   CONTACT_FROM_EMAIL: z.preprocess(emptyToUndefined, z.string().email().optional()),
-  CONTACT_TO_EMAIL: z.preprocess(emptyToUndefined, z.string().email().optional()),
-  NEXT_PUBLIC_POSTHOG_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  NEXT_PUBLIC_POSTHOG_HOST: z.preprocess(emptyToUndefined, z.string().url().optional())
+  CONTACT_TO_EMAIL: z.preprocess(emptyToUndefined, z.string().email().optional())
 });
 
 const parsed = envSchema.parse(process.env);

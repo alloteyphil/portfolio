@@ -18,7 +18,6 @@ This file defines provider responsibilities, required secrets, and runtime contr
 | Cloudinary | Screenshot storage and CDN delivery | Projects UI and refresh pipeline |
 | Resend | Contact form email delivery | Contact endpoint |
 | Turnstile | Contact spam/bot protection | Contact form verification |
-| PostHog | Product analytics | Page views and key events |
 
 ## Required Environment Variables
 
@@ -61,11 +60,6 @@ This file defines provider responsibilities, required secrets, and runtime contr
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
 - `TURNSTILE_SECRET_KEY`
 
-## PostHog
-
-- `NEXT_PUBLIC_POSTHOG_KEY`
-- `NEXT_PUBLIC_POSTHOG_HOST`
-
 ## Contract Notes
 
 - All secrets must be configured in production and in CI where needed.
@@ -98,15 +92,6 @@ This file defines provider responsibilities, required secrets, and runtime contr
 
 - Contact send requires successful Turnstile verification.
 - Resend delivery failures return non-success status and log diagnostic details.
-
-## PostHog
-
-Minimum required events:
-
-- `page_view`
-- `project_click_live_link`
-- `contact_submit_success`
-- `contact_submit_failure`
 
 ## Operational Expectations
 

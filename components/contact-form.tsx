@@ -3,7 +3,6 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import Script from "next/script";
 import { z } from "zod";
-import posthog from "posthog-js";
 
 type SubmitState = {
   status: "idle" | "submitting" | "success" | "error";
@@ -89,7 +88,6 @@ export function ContactForm() {
       }
       setFieldErrors(nextErrors);
       setToast({ type: "error", message: "Please fix the highlighted fields." });
-      posthog.capture("contact_form_validation_failed", { error_fields: errorFields });
       return;
     }
 
@@ -113,20 +111,17 @@ export function ContactForm() {
         const errorMessage = payload.error ?? "Unable to send message right now. Please try again.";
         setToast({ type: "error", message: errorMessage });
         setState({ status: "error", message: errorMessage });
-        posthog.capture("contact_form_failed", { error: errorMessage, status_code: response.status });
         return;
       }
 
       form.reset();
       setToast({ type: "success", message: "Message sent successfully." });
       setState({ status: "success", message: "Message sent. Thanks for reaching out." });
-      posthog.capture("contact_form_submitted");
     } catch (err) {
       const errorMessage = "Network error while sending message. Please try again.";
       setToast({ type: "error", message: errorMessage });
       setState({ status: "error", message: errorMessage });
-      posthog.capture("contact_form_failed", { error: errorMessage });
-      posthog.captureException(err);
+      console.error(err);
     }
   }
 

@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { PortfolioProject } from "@/types/project";
-import posthog from "posthog-js";
 
 type ProjectCardProps = {
   project: PortfolioProject;
@@ -62,14 +61,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <Link
           href={project.repositoryUrl}
           className="underline decoration-terminal-accent underline-offset-2"
-          onClick={() => posthog.capture("project_source_link_clicked", { project_name: project.name })}
         >
           source
         </Link>
         <Link
           href={project.homepageUrl}
           className="underline decoration-terminal-amber underline-offset-2"
-          onClick={() => posthog.capture("project_live_link_clicked", { project_name: project.name, url: project.homepageUrl })}
         >
           live
         </Link>
