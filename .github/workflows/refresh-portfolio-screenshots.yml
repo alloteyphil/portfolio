@@ -1,9 +1,7 @@
 name: Refresh Portfolio Screenshots
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   refresh:
