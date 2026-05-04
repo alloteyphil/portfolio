@@ -1,5 +1,18 @@
+import type { Metadata } from "next";
 import { TerminalFrame } from "@/components/terminal-frame";
 import { ContactForm } from "@/components/contact-form";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description:
+    "Send Philip a message — Cloudflare Turnstile keeps the bots out, Resend delivers the email.",
+  openGraph: {
+    title: "Contact",
+    description:
+      "Send Philip a message — Cloudflare Turnstile keeps the bots out, Resend delivers the email.",
+    url: "/contact"
+  }
+};
 
 export default function ContactPage() {
   return (

@@ -1,5 +1,16 @@
+import type { Metadata } from "next";
 import { BookOpen, iconStroke } from "@/components/icons";
 import { TerminalFrame } from "@/components/terminal-frame";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description: "Notes and write-ups — MDX scaffold, posts coming soon.",
+  openGraph: {
+    title: "Blog",
+    description: "Notes and write-ups — MDX scaffold, posts coming soon.",
+    url: "/blog"
+  }
+};
 
 export default function BlogPage() {
   return (

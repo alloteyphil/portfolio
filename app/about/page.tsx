@@ -1,7 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, FileText, iconStroke } from "@/components/icons";
 import { TerminalFrame } from "@/components/terminal-frame";
 import { SKILL_GROUPS } from "@/data/skills";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Philip Allotey — Founding Engineer at Clubz, full-stack developer in Accra working in Next.js, React Native, Convex, and LiveKit.",
+  openGraph: {
+    title: "About",
+    description:
+      "Philip Allotey — Founding Engineer at Clubz, full-stack developer in Accra working in Next.js, React Native, Convex, and LiveKit.",
+    url: "/about"
+  }
+};
 
 export default function AboutPage() {
   return (

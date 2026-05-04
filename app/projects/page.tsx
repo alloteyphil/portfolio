@@ -1,7 +1,20 @@
+import type { Metadata } from "next";
 import { ProjectCard } from "@/components/project-card";
 import { TerminalFrame } from "@/components/terminal-frame";
 import { env } from "@/lib/env";
 import { getPortfolioProjects } from "@/lib/projects";
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description:
+    "A live list of repos I tag portfolio — pulled from GitHub with screenshots refreshed on demand.",
+  openGraph: {
+    title: "Projects",
+    description:
+      "A live list of repos I tag portfolio — pulled from GitHub with screenshots refreshed on demand.",
+    url: "/projects"
+  }
+};
 
 export default async function ProjectsPage() {
   const projects = await getPortfolioProjects();
