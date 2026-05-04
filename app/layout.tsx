@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import Script from "next/script";
 import "./globals.css";
 import { HeaderDrawers } from "@/components/header-drawers";
+import { SiteFooter } from "@/components/site-footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { env } from "@/lib/env";
 import { themeInitScript } from "@/lib/theme-init-script";
@@ -50,7 +51,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <Script id="theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeInitScript }} />
           <ThemeProvider>
             <div className="scanline pointer-events-none fixed inset-0" />
-            <main className="mx-auto min-h-screen w-full min-w-0 max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+            <main className="mx-auto flex min-h-screen w-full min-w-0 max-w-6xl flex-col px-4 py-6 sm:px-6 sm:py-8">
               <header className="mb-6 border-b border-terminal-border pb-5 sm:mb-8 sm:pb-6">
                 <div className="flex items-center gap-3">
                   <div>
@@ -63,7 +64,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   <HeaderDrawers />
                 </div>
               </header>
-              {children}
+              <div className="flex-1">{children}</div>
+              <SiteFooter />
             </main>
           </ThemeProvider>
         </body>
