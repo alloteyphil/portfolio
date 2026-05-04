@@ -12,7 +12,12 @@ const MODES = [
   { value: "system" as const, label: "System", Icon: Monitor },
 ];
 
-export function ThemeToggle() {
+type ThemeToggleProps = {
+  /** Called after choosing a theme (e.g. close parent drawer). */
+  onThemeSelected?: () => void;
+};
+
+export function ThemeToggle({ onThemeSelected }: ThemeToggleProps) {
   const { theme, setTheme } = useTheme();
   const mounted = useSyncExternalStore(
     emptySubscribe,
@@ -46,7 +51,10 @@ export function ThemeToggle() {
               title={label}
               aria-label={`${label} theme`}
               aria-pressed={active}
-              onClick={() => setTheme(value)}
+              onClick={() => {
+                setTheme(value);
+                onThemeSelected?.();
+              }}
               className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border transition md:h-9 md:w-9 ${
                 active
                   ? "border-terminal-accent bg-terminal-accent/12 text-terminal-accent shadow-[inset_0_0_0_1px_rgb(var(--color-terminal-accent)/0.15)]"

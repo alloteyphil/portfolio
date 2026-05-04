@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { type LucideIcon, FileText, FolderKanban, Home, Layers, Mail, Sun, User, iconStroke } from "@/components/icons";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -22,10 +23,41 @@ const LINKS: DrawerLink[] = [
 
 export function HeaderDrawers() {
   const pathname = usePathname();
+  const linksDrawerRef = useRef<HTMLDetailsElement>(null);
+  const themeDrawerRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    const closeAll = () => {
+      if (linksDrawerRef.current) linksDrawerRef.current.open = false;
+      if (themeDrawerRef.current) themeDrawerRef.current.open = false;
+    };
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+
+      const clickedInsideLinks = linksDrawerRef.current?.contains(target) ?? false;
+      const clickedInsideTheme = themeDrawerRef.current?.contains(target) ?? false;
+      if (!clickedInsideLinks && !clickedInsideTheme) {
+        closeAll();
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeAll();
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   return (
     <div className="ml-auto flex items-center gap-2">
-      <details className="group relative">
+      <details ref={linksDrawerRef} className="group relative">
         <summary className="inline-flex h-9 cursor-pointer list-none items-center gap-1.5 rounded-md border border-terminal-border bg-terminal-bg px-2.5 text-xs text-terminal-text transition hover:border-terminal-amber hover:text-terminal-amber md:h-10 md:px-3 md:text-sm">
           <Layers className="size-4" strokeWidth={iconStroke} aria-hidden />
           links
@@ -39,6 +71,9 @@ export function HeaderDrawers() {
                   key={link.href}
                   href={link.href}
                   {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  onClick={() => {
+                    if (linksDrawerRef.current) linksDrawerRef.current.open = false;
+                  }}
                   className={`inline-flex min-h-9 items-center gap-2 rounded-md border px-2.5 py-1.5 text-xs transition md:text-sm ${
                     active
                       ? "border-terminal-accent bg-terminal-accent/10 text-terminal-accent"
@@ -54,13 +89,17 @@ export function HeaderDrawers() {
         </div>
       </details>
 
-      <details className="group relative">
+      <details ref={themeDrawerRef} className="group relative">
         <summary className="inline-flex h-9 cursor-pointer list-none items-center gap-1.5 rounded-md border border-terminal-border bg-terminal-bg px-2.5 text-xs text-terminal-text transition hover:border-terminal-amber hover:text-terminal-amber md:h-10 md:px-3 md:text-sm">
           <Sun className="size-4" strokeWidth={iconStroke} aria-hidden />
           theme
         </summary>
         <div className="absolute right-0 top-[calc(100%+0.45rem)] z-30 rounded-lg border border-terminal-border bg-terminal-panel/95 p-2 shadow-terminal backdrop-blur-sm">
-          <ThemeToggle />
+          <ThemeToggle
+            onThemeSelected={() => {
+              if (themeDrawerRef.current) themeDrawerRef.current.open = false;
+            }}
+          />
         </div>
       </details>
     </div>
