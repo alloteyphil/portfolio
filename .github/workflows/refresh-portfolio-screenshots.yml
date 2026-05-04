@@ -1,0 +1,25 @@
+name: Refresh Portfolio Screenshots
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger screenshot refresh route
+        env:
+          REFRESH_URL: ${{ secrets.SCREENSHOT_REFRESH_URL }}
+          REFRESH_SECRET: ${{ secrets.REFRESH_SCREENSHOTS_SECRET }}
+        run: |
+          if [ -z "$REFRESH_URL" ] || [ -z "$REFRESH_SECRET" ]; then
+            echo "Missing SCREENSHOT_REFRESH_URL or REFRESH_SCREENSHOTS_SECRET"
+            exit 1
+          fi
+
+          curl -X POST "$REFRESH_URL" \
+            -H "Authorization: Bearer $REFRESH_SECRET" \
+            -H "Content-Type: application/json" \
+            --fail-with-body
