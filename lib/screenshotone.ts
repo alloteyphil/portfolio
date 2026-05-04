@@ -1,5 +1,7 @@
 import { env } from "./env";
 
+const SCREENSHOT_REQUEST_TIMEOUT_MS = 30_000;
+
 async function readSafeResponseBody(response: Response): Promise<string> {
   try {
     const text = await response.text();
@@ -23,7 +25,9 @@ export async function captureScreenshot(url: string): Promise<Buffer> {
   screenshotUrl.searchParams.set("block_ads", "true");
   screenshotUrl.searchParams.set("full_page", "false");
 
-  const response = await fetch(screenshotUrl.toString());
+  const response = await fetch(screenshotUrl.toString(), {
+    signal: AbortSignal.timeout(SCREENSHOT_REQUEST_TIMEOUT_MS)
+  });
   if (!response.ok) {
     const body = await readSafeResponseBody(response);
     throw new Error(

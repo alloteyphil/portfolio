@@ -16,17 +16,12 @@ function cleanUrl(value: string | null): string | null {
 export async function getPortfolioProjects(): Promise<PortfolioProject[]> {
   const repos = await fetchUserRepos();
 
-  const reposWithHomepages = repos
+  const candidates = repos
     .map((repo) => ({
       repo,
       homepageUrl: cleanUrl(repo.homepage)
     }))
-    .filter((repo) => Boolean(repo.homepageUrl));
-
-  const taggedRepos = reposWithHomepages.filter(({ repo }) => repo.topics.includes("portfolio"));
-
-  // Prefer explicit "portfolio" tags, but fall back to any repo with a valid homepage.
-  const candidates = (taggedRepos.length > 0 ? taggedRepos : reposWithHomepages)
+    .filter((repo) => Boolean(repo.homepageUrl) && repo.repo.topics.includes("portfolio"))
     .slice(0, 30);
 
   const projects = await Promise.all(

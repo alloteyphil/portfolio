@@ -1,0 +1,15 @@
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+
+const isAdminRoute = createRouteMatcher(["/admin(.*)", "/api/admin(.*)"]);
+
+export default clerkMiddleware(async (auth, req) => {
+  if (!isAdminRoute(req)) {
+    return;
+  }
+
+  await auth.protect();
+});
+
+export const config = {
+  matcher: ["/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpg|jpeg|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)"]
+};

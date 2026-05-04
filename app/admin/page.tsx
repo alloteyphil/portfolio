@@ -1,31 +1,34 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 import { TerminalFrame } from "@/components/terminal-frame";
+import { AdminProjectManager } from "@/components/admin-project-manager";
+import { requireOwnerAccess } from "@/lib/admin-auth";
+import { fetchEditableProjectRepos } from "@/lib/github";
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const { userId } = await auth();
+  if (!userId) {
+    redirect("/sign-in");
+  }
+
+  const access = await requireOwnerAccess();
+  if (!access.ok) {
+    return (
+      <TerminalFrame title="~/admin">
+        <p className="text-sm text-red-400">{access.error}</p>
+      </TerminalFrame>
+    );
+  }
+
+  const repos = await fetchEditableProjectRepos();
+
   return (
     <TerminalFrame title="~/admin">
-      <p className="text-sm text-terminal-text/85">
-        Admin surface is now available at this route.
+      <p className="mb-4 text-sm text-terminal-text/85">
+        Manage which GitHub repositories are visible on <span className="text-terminal-amber">/projects</span> and
+        trigger screenshot refresh safely.
       </p>
-      <p className="mt-3 text-sm text-terminal-text/85">
-        Use the screenshot refresh endpoint to update project screenshots after project updates.
-      </p>
-
-      <div className="mt-6 rounded border border-terminal-border p-4 text-sm">
-        <p className="text-terminal-amber">Quick links</p>
-        <ul className="mt-2 space-y-1 text-terminal-text/85">
-          <li>
-            <Link className="underline hover:text-terminal-amber" href="/projects">
-              /projects
-            </Link>
-          </li>
-          <li>
-            <Link className="underline hover:text-terminal-amber" href="/api/refresh-screenshots">
-              /api/refresh-screenshots
-            </Link>
-          </li>
-        </ul>
-      </div>
+      <AdminProjectManager initialRepos={repos} />
     </TerminalFrame>
   );
 }

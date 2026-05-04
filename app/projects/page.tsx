@@ -10,8 +10,7 @@ export default async function ProjectsPage() {
   return (
     <TerminalFrame title="~/projects">
       <p className="mb-6 text-sm text-terminal-text/85">
-        Showing repos with a valid homepage URL. Repos tagged{" "}
-        <span className="text-terminal-amber">portfolio</span> are prioritized.
+        Showing repos tagged <span className="text-terminal-amber">portfolio</span> with a valid homepage URL.
       </p>
 
       {projects.length === 0 ? (
@@ -19,7 +18,7 @@ export default async function ProjectsPage() {
           {githubConfigured ? (
             <>
               No project repos found yet. Add a homepage URL to your GitHub repos and optionally tag them{" "}
-              <span className="text-terminal-amber">portfolio</span> for priority listing.
+              <span className="text-terminal-amber">portfolio</span> in admin to show them here.
             </>
           ) : (
             <>
