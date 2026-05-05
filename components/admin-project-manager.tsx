@@ -46,10 +46,13 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
   const [repos, setRepos] = useState<EditableProjectRepo[]>(initialRepos);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshResult, setRefreshResult] = useState<RefreshAggregate | null>(null);
   const [refreshProgress, setRefreshProgress] = useState<{ processed: number; total: number } | null>(null);
   const [savingRepo, setSavingRepo] = useState<string | null>(null);
+  const PAGE_SIZE = 8;
 
   async function loadRepos() {
     setLoading(true);
@@ -62,10 +65,28 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
       return;
     }
     setRepos(payload.repos ?? []);
+    setCurrentPage(1);
     setLoading(false);
   }
 
   const visibleCount = useMemo(() => repos.filter((repo) => repo.isVisible).length, [repos]);
+  const filteredRepos = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return repos;
+    return repos.filter((repo) => {
+      return (
+        repo.name.toLowerCase().includes(query) ||
+        repo.fullName.toLowerCase().includes(query) ||
+        repo.description.toLowerCase().includes(query) ||
+        repo.topics.some((topic) => topic.toLowerCase().includes(query))
+      );
+    });
+  }, [repos, searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredRepos.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const pageStart = (safePage - 1) * PAGE_SIZE;
+  const paginatedRepos = filteredRepos.slice(pageStart, pageStart + PAGE_SIZE);
 
   async function updateRepo(repo: EditableProjectRepo) {
     setSavingRepo(repo.fullName);
@@ -221,14 +242,34 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
       </div>
 
       <div className="space-y-3">
+        <div className="rounded border border-terminal-border p-3 sm:p-4">
+          <label className="mb-1 block text-xs text-terminal-text/75">Search repositories</label>
+          <input
+            value={searchQuery}
+            onChange={(event) => {
+              setSearchQuery(event.target.value);
+              setCurrentPage(1);
+            }}
+            placeholder="Search by name, owner/repo, description, or tag"
+            className="w-full min-w-0 rounded border border-terminal-border bg-transparent px-3 py-2 text-sm"
+          />
+          <p className="mt-2 text-xs text-terminal-text/70">
+            Showing {paginatedRepos.length} of {filteredRepos.length} matching repositories ({repos.length} total).
+          </p>
+        </div>
+
         {loading ? (
           <p className="text-sm text-terminal-text/70">Loading repositories...</p>
         ) : repos.length === 0 ? (
           <p className="rounded border border-dashed border-terminal-border p-4 text-sm text-terminal-text/70">
             No repositories found.
           </p>
+        ) : filteredRepos.length === 0 ? (
+          <p className="rounded border border-dashed border-terminal-border p-4 text-sm text-terminal-text/70">
+            No repositories match your search.
+          </p>
         ) : (
-          repos.map((repo) => (
+          paginatedRepos.map((repo) => (
             <div key={repo.id} className="min-w-0 rounded border border-terminal-border p-3 sm:p-4">
               <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                 <div className="min-w-0">
@@ -328,6 +369,31 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
             </div>
           ))
         )}
+        {filteredRepos.length > 0 ? (
+          <div className="flex flex-col gap-2 rounded border border-terminal-border p-3 text-xs sm:flex-row sm:items-center sm:justify-between sm:text-sm">
+            <p className="text-terminal-text/75">
+              Page {safePage} of {totalPages}
+            </p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                disabled={safePage === 1}
+                className="rounded border border-terminal-border px-3 py-1.5 text-terminal-text disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                disabled={safePage === totalPages}
+                className="rounded border border-terminal-accent px-3 py-1.5 text-terminal-accent disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );
