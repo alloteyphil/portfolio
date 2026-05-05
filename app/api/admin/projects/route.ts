@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { fetchEditableProjectRepos, updateRepoProjectSettings } from "@/lib/github";
 import { requireOwnerAccess } from "@/lib/admin-auth";
+import { getPortfolioConfigWithSha } from "@/lib/portfolio-config";
 
 const TOPIC_MAX_LENGTH = 50;
 const TOPIC_MAX_COUNT = 25;
@@ -48,7 +49,6 @@ function normalizeTopics(value: unknown): string[] {
 }
 
 function normalizeDescription(value: string): string {
-  // GitHub rejects control chars in repo descriptions. Normalize all whitespace/control runs to spaces.
   return value.replace(/[\u0000-\u001F\u007F]+/g, " ").replace(/\s+/g, " ").trim();
 }
 
@@ -66,8 +66,13 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json({ ok: false, error: access.error }, { status: access.status });
   }
 
-  const repos = await fetchEditableProjectRepos();
-  return NextResponse.json({ ok: true, repos });
+  const [repos, config] = await Promise.all([fetchEditableProjectRepos(), getPortfolioConfigWithSha()]);
+  return NextResponse.json({
+    ok: true,
+    repos,
+    manualProjects: config.manualProjects,
+    order: config.order
+  });
 }
 
 export async function PATCH(request: Request): Promise<NextResponse> {

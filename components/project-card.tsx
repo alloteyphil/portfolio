@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FolderGit2, Globe, iconButtonClass, iconStroke } from "@/components/icons";
+import { FolderGit2, Globe, Lock, iconButtonClass, iconStroke } from "@/components/icons";
 import type { PortfolioProject } from "@/types/project";
 
 type ProjectCardProps = {
@@ -20,6 +20,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
       ...project.topics.filter((topic) => topic.toLowerCase() !== "portfolio")
     ])
   ).slice(0, 6);
+
+  const showPrivateSource = project.sourceVisibility === "private" || !project.repositoryUrl;
 
   return (
     <article className="h-full min-w-0 rounded-xl border border-terminal-border bg-gradient-to-b from-terminal-panel to-terminal-bg p-4 shadow-terminal sm:p-5">
@@ -70,15 +72,26 @@ export function ProjectCard({ project }: ProjectCardProps) {
       </div>
 
       <footer className="mt-5 flex flex-col gap-2 text-sm sm:flex-row sm:gap-3">
-        <Link
-          href={project.repositoryUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded border border-terminal-border px-3 py-2 text-terminal-accent hover:border-terminal-accent sm:min-h-0 sm:py-1"
-        >
-          <FolderGit2 className={iconButtonClass} strokeWidth={iconStroke} aria-hidden />
-          source
-        </Link>
+        {showPrivateSource ? (
+          <span
+            aria-disabled="true"
+            title="Source is not publicly available"
+            className="inline-flex min-h-10 cursor-not-allowed items-center justify-center gap-2 rounded border border-terminal-border/60 px-3 py-2 text-terminal-text/55 sm:min-h-0 sm:py-1"
+          >
+            <Lock className={iconButtonClass} strokeWidth={iconStroke} aria-hidden />
+            private
+          </span>
+        ) : (
+          <Link
+            href={project.repositoryUrl!}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-10 items-center justify-center gap-2 rounded border border-terminal-border px-3 py-2 text-terminal-accent hover:border-terminal-accent sm:min-h-0 sm:py-1"
+          >
+            <FolderGit2 className={iconButtonClass} strokeWidth={iconStroke} aria-hidden />
+            source
+          </Link>
+        )}
         <Link
           href={project.homepageUrl}
           target="_blank"

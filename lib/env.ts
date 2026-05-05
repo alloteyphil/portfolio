@@ -17,7 +17,9 @@ const envSchema = z.object({
   RESEND_API_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
   CONTACT_FROM_EMAIL: z.preprocess(emptyToUndefined, z.string().email().optional()),
   CONTACT_TO_EMAIL: z.preprocess(emptyToUndefined, z.string().email().optional()),
-  ADMIN_OWNER_EMAILS: z.preprocess(emptyToUndefined, z.string().min(1).optional())
+  ADMIN_OWNER_EMAILS: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
+  PORTFOLIO_CONFIG_REPO: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
+  PORTFOLIO_CONFIG_REPO_NAME: z.preprocess(emptyToUndefined, z.string().min(1).optional())
 });
 
 const parsed = envSchema.parse(process.env);

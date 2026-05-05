@@ -16,6 +16,7 @@ export type GitHubRepo = {
   language: string | null;
   topics: string[];
   pushed_at: string;
+  is_private: boolean;
 };
 
 export type EditableProjectRepo = {
@@ -28,6 +29,7 @@ export type EditableProjectRepo = {
   language: string | null;
   topics: string[];
   isVisible: boolean;
+  isPrivate: boolean;
 };
 
 export async function fetchUserRepos(): Promise<GitHubRepo[]> {
@@ -36,11 +38,15 @@ export async function fetchUserRepos(): Promise<GitHubRepo[]> {
   }
 
   try {
-    const { data: repos } = await octokit.request("GET /users/{username}/repos", {
-      username: env.GITHUB_USERNAME,
+    // Use the authenticated user endpoint so private repos owned by the token
+    // user are visible to the curation pipeline. Fallback to the public listing
+    // if the token does not have read access to the authenticated user endpoint.
+    const { data: repos } = await octokit.request("GET /user/repos", {
       per_page: 100,
       sort: "pushed",
       direction: "desc",
+      visibility: "all",
+      affiliation: "owner",
       headers: {
         accept: "application/vnd.github+json"
       }
@@ -56,7 +62,8 @@ export async function fetchUserRepos(): Promise<GitHubRepo[]> {
       default_branch: repo.default_branch ?? "main",
       language: repo.language ?? null,
       topics: repo.topics ?? [],
-      pushed_at: repo.pushed_at ?? new Date(0).toISOString()
+      pushed_at: repo.pushed_at ?? new Date(0).toISOString(),
+      is_private: Boolean(repo.private)
     }));
   } catch (error) {
     console.error("Unable to fetch GitHub repositories for username:", env.GITHUB_USERNAME, error);
@@ -85,7 +92,8 @@ export async function fetchEditableProjectRepos(): Promise<EditableProjectRepo[]
       homepageUrl: cleanUrl(repo.homepage),
       language: repo.language,
       topics: repo.topics,
-      isVisible: repo.topics.includes("portfolio")
+      isVisible: repo.topics.includes("portfolio"),
+      isPrivate: repo.is_private
     }))
     .sort((a, b) => Number(b.isVisible) - Number(a.isVisible) || a.name.localeCompare(b.name));
 }

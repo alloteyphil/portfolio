@@ -4,6 +4,10 @@ import { TerminalFrame } from "@/components/terminal-frame";
 import { AdminProjectManager } from "@/components/admin-project-manager";
 import { requireOwnerAccess } from "@/lib/admin-auth";
 import { fetchEditableProjectRepos } from "@/lib/github";
+import { getPortfolioConfigWithSha } from "@/lib/portfolio-config";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function AdminPage() {
   const { userId } = await auth();
@@ -20,15 +24,19 @@ export default async function AdminPage() {
     );
   }
 
-  const repos = await fetchEditableProjectRepos();
+  const [repos, config] = await Promise.all([fetchEditableProjectRepos(), getPortfolioConfigWithSha()]);
 
   return (
     <TerminalFrame title="~/admin">
       <p className="mb-4 text-sm text-terminal-text/85">
-        Manage which GitHub repositories are visible on <span className="text-terminal-amber">/projects</span> and
-        trigger screenshot refresh safely.
+        Manage repositories visible on <span className="text-terminal-amber">/projects</span>, add manual entries
+        (private repos or non-GitHub sites), and reorder how they appear.
       </p>
-      <AdminProjectManager initialRepos={repos} />
+      <AdminProjectManager
+        initialRepos={repos}
+        initialManualProjects={config.manualProjects}
+        initialOrder={config.order}
+      />
     </TerminalFrame>
   );
 }

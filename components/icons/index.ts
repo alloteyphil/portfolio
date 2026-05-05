@@ -24,6 +24,7 @@ export {
   Globe,
   Home,
   Layers,
+  Lock,
   Mail,
   Monitor,
   Moon,

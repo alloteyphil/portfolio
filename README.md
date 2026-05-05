@@ -21,8 +21,22 @@ Operational deployment and secret management details are intentionally kept priv
 
 ## Current product direction
 
-- `/projects` will show only curated featured repos with valid live URLs.
+- `/projects` will show only curated featured repos with valid live URLs, merged with manual entries (private repos or non-GitHub work).
 - Blog is deferred from shipped scope for this phase.
+
+## Project sources and ordering
+
+Projects on `/projects` come from two sources, merged at request time:
+
+1. **GitHub repos** tagged with the `portfolio` topic. Private repos are included; their public source link is replaced with a disabled `private` button on the card.
+2. **Manual projects** stored in `data/portfolio-config.json` (also editable from `/admin`). Use these for client work that doesn't live in your GitHub account or for projects that need a custom display name.
+
+Display order is controlled from `/admin` (`Project order` section). The order is persisted to `data/portfolio-config.json` via the GitHub Contents API; updates take effect on the next request — no redeploy required.
+
+Optional environment variables:
+
+- `PORTFOLIO_CONFIG_REPO`: `owner/repo` slug that holds `data/portfolio-config.json`. Defaults to `${GITHUB_USERNAME}/portfolio`.
+- `PORTFOLIO_CONFIG_REPO_NAME`: alternative name override when only `GITHUB_USERNAME` is set (defaults to `portfolio`).
 
 ## Resume (PDF)
 
