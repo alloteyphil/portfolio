@@ -81,19 +81,19 @@ export default function HomePage() {
         <span className="intro-typer__caret" aria-hidden />
       </p>
       <h1 className="mt-4 text-2xl font-semibold leading-tight text-terminal-text sm:text-3xl sm:leading-snug">
-        Philip — I ship TypeScript things that real people tap on.
+        Philip — Full-Stack Developer who ships products people actually use.
       </h1>
       <p className="mt-4 max-w-3xl text-sm leading-relaxed text-terminal-text/85 sm:text-base">
-        Full-stack from Accra: web with Next.js, mobile with React Native (Expo), and backends that do not fall over
-        when traffic shows up. Lately that has meant real-time bits, careful data modeling, and shipping often enough
-        that &quot;we will fix it in post&quot; is not the plan.
+        Based in Accra. I build web apps with Next.js and TypeScript, mobile experiences with React Native (Expo), and
+        real-time backends that hold up under pressure. Currently Founding Engineer at Clubz — a social app with live
+        voice, location features, and real users.
       </p>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-terminal-text/85 sm:text-base">
-        This site is a little terminal-themed playground: projects pull from GitHub, screenshots refresh when I say
-        so, and nothing here pretends to be a corporate press release.
+        Previously grew a client platform from 1,200 to 62,700+ unique users in 12 months. I care about clean
+        architecture, fast iteration, and outcomes you can point at.
       </p>
       <p className="mt-3 max-w-3xl text-sm text-terminal-text/70">
-        Curious what I actually reach for day to day?{" "}
+        Take a look around.{" "}
         <Link href="/about#skills" className="text-terminal-amber underline underline-offset-2 hover:text-terminal-accent">
           peek the stack → ~/about#skills
         </Link>

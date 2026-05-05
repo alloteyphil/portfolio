@@ -21,21 +21,23 @@ export default function AboutPage() {
     <TerminalFrame title="~/about">
       <p className="text-terminal-accent">$ cat profile.txt</p>
       <p className="mt-4 max-w-3xl text-sm leading-relaxed text-terminal-text/90 sm:text-base">
-        Hey — I am Philip, a full-stack developer in Accra. I like problems where the UI, the data model, and the
-        &quot;what happens when 10k people do this at once&quot; story all have to agree.
+        I&apos;m Philip — a full-stack developer based in Accra, Ghana. I build across the stack: production web apps
+        in Next.js and TypeScript, mobile apps in React Native (Expo), and backends designed to stay boring under
+        load.
       </p>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-terminal-text/90 sm:text-base">
-        Right now I am a Founding Engineer at Clubz, building social, real-time experiences with React Native, Convex,
-        and LiveKit — the kind of product where latency is a feature, not an excuse.
+        As Founding Engineer at Clubz, I&apos;ve shipped real-time voice lounges, map-based location features,
+        cross-community sharing, and invite flows in a live React Native app.
       </p>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-terminal-text/90 sm:text-base">
-        Before that I shipped campaign-tight Next.js work for clients (think dilli-dilli.com energy: fast iterations,
-        crisp UI, no mystery deploys). I care about velocity, boringly reliable architecture, and outcomes you can
-        point at — not buzzwords.
+        Before that, I built and maintained dilli-dilli.com for a client — a Next.js platform that grew from 1,200 to
+        over 62,700 cumulative unique users in 12 months, tracked via PostHog.
       </p>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-terminal-text/90 sm:text-base">
-        Side quests include things like PulseNotes and Trackr: collaboration, roles, and pagination that does not
-        pretend infinite lists are free.
+        I also build personal projects that go beyond tutorials: PulseNotes is a real-time collaborative notes app with
+        workspace roles, live presence, revision history, and comment threads. Trackr is a personal finance tracker
+        with paginated queries and analytics dashboards. I have a BSc in Computing from De Montfort University and
+        I&apos;m actively looking for full-time or contract roles where I can ship things that matter.
       </p>
 
       <h2 id="skills" className="mt-10 scroll-mt-20 text-lg text-terminal-amber sm:scroll-mt-24">
