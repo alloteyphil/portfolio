@@ -40,11 +40,11 @@ export default function AboutPage() {
         I&apos;m actively looking for full-time or contract roles where I can ship things that matter.
       </p>
 
-      <h2 id="skills" className="mt-10 scroll-mt-20 text-lg text-terminal-amber sm:scroll-mt-24">
-        skills & tools
+      <h2 id="tools" className="mt-10 scroll-mt-20 text-lg text-terminal-amber sm:scroll-mt-24">
+        tools
       </h2>
       <p className="mt-2 max-w-3xl text-sm text-terminal-text/70">
-        Grouped so it scales — add or trim entries in <span className="text-terminal-accent">data/skills.ts</span>.
+        Grouped so it scales — add or trim entries in the tools config.
       </p>
 
       <div className="mt-6 space-y-4">

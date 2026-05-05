@@ -94,8 +94,8 @@ export default function HomePage() {
       </p>
       <p className="mt-3 max-w-3xl text-sm text-terminal-text/70">
         Take a look around.{" "}
-        <Link href="/about#skills" className="text-terminal-amber underline underline-offset-2 hover:text-terminal-accent">
-          peek the stack → ~/about#skills
+        <Link href="/about#tools" className="text-terminal-amber underline underline-offset-2 hover:text-terminal-accent">
+          peek the tools → ~/about#tools
         </Link>
       </p>
 
