@@ -4,6 +4,9 @@ import { TerminalFrame } from "@/components/terminal-frame";
 import { env } from "@/lib/env";
 import { getPortfolioProjects } from "@/lib/projects";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Projects",
   description:
