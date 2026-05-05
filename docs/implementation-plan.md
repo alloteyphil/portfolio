@@ -14,8 +14,8 @@ Ship a clean, fast portfolio V2 focused on clarity and credibility: curated proj
 
 ```mermaid
 flowchart TD
-  adminLogin["AdminLoginClerk"] --> adminSelect["AdminSelectFeaturedRepos"]
-  adminSelect --> featuredStore["ConvexFeaturedProjectsTable"]
+  internalAuth["InternalAuthGate"] --> internalSelect["InternalProjectCuration"]
+  internalSelect --> featuredStore["FeaturedProjectsState"]
   featuredStore --> projectsPage["ProjectsPageRenderLiveOnly"]
 
   pushMain["PushMain"] --> workflow["GitHubActionsRefreshWorkflow"]
@@ -44,9 +44,9 @@ Exit criteria:
 - `docs/decisions.md` reflects latest scope.
 - `docs/integrations.md` includes all providers and secrets.
 
-## Phase 2: Convex Foundation
+## Phase 2: Data Foundation
 
-- Add Convex schema for featured projects and screenshot state.
+- Add data structures for featured projects and screenshot state.
 - Add server functions for:
   - featured project CRUD
   - repo sync metadata
@@ -54,20 +54,20 @@ Exit criteria:
 
 Exit criteria:
 
-- Convex tables and server functions compile.
-- Admin and public routes can read featured project records.
+- Data layer and server functions compile.
+- Internal management and public routes can read featured project records.
 
-## Phase 3: Clerk-Protected Admin Curation
+## Phase 3: Protected Internal Curation
 
-- Add private admin route.
-- Authenticate with Clerk.
+- Add protected internal curation surface.
+- Authenticate internal access.
 - Add selection/toggle controls for featured repos.
-- Persist curation to Convex.
+- Persist curation in application data storage.
 
 Exit criteria:
 
-- Non-authenticated users cannot access admin route.
-- Owner/admin can curate featured repos and save changes.
+- Non-authenticated users cannot access internal curation.
+- Authorized operators can curate featured repos and save changes.
 
 ## Phase 4: Public Projects and Screenshot Policy
 
@@ -121,7 +121,7 @@ Exit criteria:
 ## Acceptance Criteria (Launch)
 
 - Portfolio displays only curated repos with valid live URLs.
-- Admin curation is private and auth-gated.
+- Internal curation is private and auth-gated.
 - Screenshot refresh runs only for relevant changes.
 - Previous screenshot is preserved when refresh fails.
 - Contact form is protected by Turnstile and delivered via Resend.
@@ -143,7 +143,7 @@ Exit criteria:
   - `app/projects/page.tsx`
   - `lib/projects.ts`
   - `components/**` (homepage and project UI composition)
-  - `app/api/refresh-screenshots/route.ts`
+  - screenshot refresh API route
   - `components/site-nav.tsx`
   - `lib/github.ts`
   - `lib/cloudinary.ts`
@@ -151,8 +151,7 @@ Exit criteria:
   - `lib/screenshot-store.ts`
 - New:
   - `public/cv/resume.pdf`
-  - `convex/**`
-  - `app/admin/**`
+  - internal curation route
   - `app/contact/**`
   - `lib/analytics/**` (or equivalent)
   - `app/projects/[slug]/page.tsx` (optional post-launch)

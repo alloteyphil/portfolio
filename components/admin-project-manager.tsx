@@ -42,6 +42,33 @@ type AdminProjectManagerProps = {
   initialRepos: EditableProjectRepo[];
 };
 
+const TOPIC_MAX_LENGTH = 50;
+
+function normalizeTopicForDisplay(topic: string): string {
+  const cleaned = topic
+    .trim()
+    .toLowerCase()
+    .replace(/,+/g, "-")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+/, "")
+    .slice(0, TOPIC_MAX_LENGTH);
+
+  return /^[a-z0-9]/.test(cleaned) ? cleaned : "";
+}
+
+function normalizeTopicsFromInput(value: string): string[] {
+  return Array.from(
+    new Set(
+      value
+        .split(",")
+        .map((topic) => normalizeTopicForDisplay(topic))
+        .filter(Boolean)
+    )
+  );
+}
+
 export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) {
   const [repos, setRepos] = useState<EditableProjectRepo[]>(initialRepos);
   const [loading, setLoading] = useState(false);
@@ -333,7 +360,7 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs text-terminal-text/75">Tags (comma separated)</label>
+                  <label className="mb-1 block text-xs text-terminal-text/75">Tools (comma separated)</label>
                   <input
                     value={repo.topics.join(", ")}
                     onChange={(event) =>
@@ -342,10 +369,7 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
                           item.fullName === repo.fullName
                             ? {
                                 ...item,
-                                topics: event.target.value
-                                  .split(",")
-                                  .map((topic) => topic.trim())
-                                  .filter(Boolean)
+                                topics: normalizeTopicsFromInput(event.target.value)
                               }
                             : item
                         )
@@ -353,6 +377,9 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
                     }
                     className="w-full min-w-0 rounded border border-terminal-border bg-transparent px-3 py-2 text-sm"
                   />
+                  <p className="mt-1 text-xs text-terminal-text/65">
+                    Spaces and commas are converted to hyphens automatically (example: react native to react-native).
+                  </p>
                 </div>
 
                 <div className="flex justify-stretch sm:justify-end">

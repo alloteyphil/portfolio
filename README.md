@@ -1,11 +1,10 @@
 # Terminal Portfolio V2
 
-Next.js App Router portfolio with a terminal aesthetic, admin-curated featured projects, and automated screenshot refresh workflows.
+Next.js App Router portfolio with a terminal aesthetic, curated projects, and automated screenshot previews.
 
 ## Stack
 
 - Next.js (App Router) + TypeScript + Tailwind
-- Clerk for admin authentication
 - Octokit for GitHub repository data
 - ScreenshotOne for website capture
 - Cloudinary for screenshot hosting/CDN
@@ -23,21 +22,7 @@ Operational deployment and secret management details are intentionally kept priv
 ## Current product direction
 
 - `/projects` will show only curated featured repos with valid live URLs.
-- Featured repo curation is owner/admin controlled via protected admin surface.
 - Blog is deferred from shipped scope for this phase.
-
-## Admin curation
-
-- Route: `/admin` (Clerk-protected + owner email allowlist)
-- Uses GitHub repo topics as the visibility source of truth:
-  - visible on `/projects` when repo has `portfolio` topic
-  - hidden when `portfolio` topic is removed
-- Admin can update project visibility and editable metadata (description, tags, and live link).
-
-## Screenshot refresh API
-
-- Admin-triggered refresh captures screenshots and updates project previews.
-- Refresh results include processed/succeeded/failed counts and per-project errors when present.
 
 ## Resume (PDF)
 
@@ -47,7 +32,7 @@ The nav link opens `/resume.pdf` in a new tab. Keep your PDF at `public/resume.p
 
 The contact form loads Turnstile with **explicit** `render` / `remove` so leaving `/contact` does not leave orphaned widgets (avoids “Cannot find Widget … use turnstile.remove()”).
 
-In **`next dev`**, the app uses Cloudflare’s [dummy site + secret keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) from `lib/turnstile-keys.ts` so Turnstile works on **localhost** without hostname allowlisting (avoids client error **110200**). Production builds use `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` from the environment.
+In **`next dev`**, the app uses Cloudflare’s [dummy site + secret keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) from `lib/turnstile-keys.ts` so Turnstile works on **localhost** without hostname allowlisting (avoids client error **110200**). Production builds use environment variables.
 
 To exercise your **real** Turnstile keys while developing, set `NEXT_PUBLIC_TURNSTILE_USE_PRODUCTION_KEYS=true` and add your dev hosts under the widget’s **Hostname Management** in the Cloudflare dashboard (otherwise **110200** returns).
 
@@ -55,11 +40,11 @@ To exercise your **real** Turnstile keys while developing, set `NEXT_PUBLIC_TURN
 
 - **Refresh (upload path):** each successful capture uploads to Cloudinary and drives transformation and storage toward your plan. Run refresh **sparingly**; featured projects use deterministic public IDs so repeat uploads update in place rather than multiplying assets.
 - **Delivery (page views):** project cards load screenshots via Cloudinary URLs (see `docs/image-optimization.md` for `f_auto`, `q_auto`, and sizing). That is **bandwidth / on-the-fly transform** usage when users view the site, separate from the refresh job.
-- **Guarding cost:** expensive work is already limited by **secret bearer token** (and Clerk on admin routes). This app does not “rate limit Cloudinary” at the CDN; it limits who can **trigger** refresh. Optional hardening: add **Vercel KV** and a per-IP sliding window on `app/api/refresh-screenshots/route.ts` only if you want that extra layer—otherwise skip to avoid new infra.
+- **Guarding cost:** expensive refresh operations are restricted and should be triggered intentionally.
 
 ## GitHub Actions
 
-Screenshot refresh runs from the **Refresh Portfolio Screenshots** workflow via **manual** `workflow_dispatch` (not on every push). Configure `REFRESH_URL` / refresh secret per `docs/runbook-screenshots.md` and the workflow file.
+Screenshot refresh runs from a manual workflow trigger (not on every push).
 
 ## Documentation map
 

@@ -28,11 +28,11 @@ Use this checklist for every merge into `main`.
 - [ ] Search input returns expected projects by title/description/tag.
 - [ ] Case-study route (`/projects/[slug]`) loads for eligible projects and has no broken links.
 
-## Admin
+## Internal Curation
 
-- [ ] `/admin` is blocked for unauthenticated users.
-- [ ] Authorized owner/admin can select and unselect featured repos.
-- [ ] Curation updates persist to Convex.
+- [ ] Internal curation surface is blocked for unauthenticated users.
+- [ ] Authorized operators can select and unselect featured repos.
+- [ ] Curation updates persist correctly.
 
 ## Screenshot Pipeline
 

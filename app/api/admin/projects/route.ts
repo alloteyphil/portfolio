@@ -5,6 +5,7 @@ import { requireOwnerAccess } from "@/lib/admin-auth";
 
 const TOPIC_MAX_LENGTH = 50;
 const TOPIC_MAX_COUNT = 25;
+const GITHUB_DESCRIPTION_MAX_LENGTH = 350;
 
 function normalizeHomepageUrl(value: string | null): string | null {
   if (value === null) return null;
@@ -23,14 +24,32 @@ function normalizeHomepageUrl(value: string | null): string | null {
 }
 
 function normalizeTopics(value: unknown): string[] {
+  const normalizeTopic = (topic: string): string => {
+    const cleaned = topic
+      .trim()
+      .toLowerCase()
+      .replace(/,+/g, "-")
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-+/, "")
+      .slice(0, TOPIC_MAX_LENGTH);
+
+    return /^[a-z0-9]/.test(cleaned) ? cleaned : "";
+  };
+
   const rawTopics = Array.isArray(value) ? value : [];
   const sanitized = rawTopics
-    .map((topic) => (typeof topic === "string" ? topic.trim().toLowerCase() : ""))
+    .map((topic) => (typeof topic === "string" ? normalizeTopic(topic) : ""))
     .filter(Boolean)
-    .map((topic) => topic.replace(/\s+/g, "-"))
     .filter((topic) => topic.length <= TOPIC_MAX_LENGTH);
 
   return Array.from(new Set(sanitized));
+}
+
+function normalizeDescription(value: string): string {
+  // GitHub rejects control chars in repo descriptions. Normalize all whitespace/control runs to spaces.
+  return value.replace(/[\u0000-\u001F\u007F]+/g, " ").replace(/\s+/g, " ").trim();
 }
 
 const updateRepoSchema = z.object({
@@ -71,11 +90,22 @@ export async function PATCH(request: Request): Promise<NextResponse> {
   }
 
   try {
+    const description = normalizeDescription(parsed.data.description);
+    if (description.length > GITHUB_DESCRIPTION_MAX_LENGTH) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: `Description must be ${GITHUB_DESCRIPTION_MAX_LENGTH} characters or fewer.`
+        },
+        { status: 400 }
+      );
+    }
+
     const homepageUrl = normalizeHomepageUrl(parsed.data.homepageUrl);
     await updateRepoProjectSettings({
       fullName: parsed.data.fullName,
       visible: parsed.data.visible,
-      description: parsed.data.description,
+      description,
       homepageUrl,
       topics: parsed.data.topics
     });

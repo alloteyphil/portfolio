@@ -27,9 +27,8 @@ This file is the source of truth for product and technical decisions agreed so f
 
 ## Data and Backend
 
-- Convex is the backend for application data and server-side workflows.
 - Clerk is used for private admin authentication.
-- Admin can choose which repos are featured on the portfolio.
+- Internal curation controls which repos are featured on the portfolio.
 - Featured projects are curated in app data, not only by GitHub topic.
 
 ## Screenshots
@@ -63,13 +62,13 @@ This file is the source of truth for product and technical decisions agreed so f
 
 - Primary purple shade token values.
 - Final animation set (which components animate and by how much).
-- Admin role model details beyond owner-only baseline.
+- Access role model details beyond the current baseline.
 
 ## Defaults While Pending
 
 - Use a conservative purple palette and keep contrast AAA/AA-friendly where possible.
 - Use subtle motion only (short duration, reduced distance, and `prefers-reduced-motion` support).
-- Treat authenticated owner/admin as authorized until expanded role definitions are added.
+- Treat authenticated authorized operators as allowed until expanded role definitions are added.
 
 ## Change Protocol
 

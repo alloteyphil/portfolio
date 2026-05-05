@@ -12,7 +12,7 @@ Detailed environment and credential values are intentionally kept private.
 
 | Integration | Purpose | Runtime Surface |
 | --- | --- | --- |
-| Clerk | Authentication and admin access control | Private admin routes |
+| Clerk | Authentication and protected access control | Internal management surfaces |
 | ScreenshotOne | Website screenshot capture | Refresh pipeline |
 | Cloudinary | Screenshot storage and CDN delivery | Projects UI and refresh pipeline |
 | Resend | Contact form email delivery | Contact endpoint |
@@ -37,15 +37,15 @@ Detailed environment and credential values are intentionally kept private.
 
 ## Clerk
 
-- Protects `/admin` routes and mutation endpoints.
-- Enforces owner/admin-only curation actions via private owner allowlist configuration.
+- Protects internal management routes and mutation endpoints.
+- Enforces restricted curation actions via private access control configuration.
 
 ## ScreenshotOne and Cloudinary
 
 - ScreenshotOne captures desktop-sized image only.
 - Cloudinary public ID stays deterministic (`portfolio/<repo-name>`).
 - Failed screenshot updates preserve prior Cloudinary URL.
-- Admin curation toggles GitHub `portfolio` topic to control visibility on `/projects`.
+- Internal curation toggles GitHub `portfolio` topic to control visibility on `/projects`.
 
 ## Resend and Turnstile
 
