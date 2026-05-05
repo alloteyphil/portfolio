@@ -1,0 +1,25 @@
+{
+  "manualProjects": [
+    {
+      "slug": "the-light-veil",
+      "name": "The Light Veil",
+      "fullName": "The Light Veil",
+      "description": "The Light Veil is a portfolio website built for a lightning-focused artist, showcasing their work through a visually striking and immersive design. It features a responsive layout and smooth navigation to present their projects professionally online.",
+      "homepageUrl": "https://thelightveil.info/",
+      "repositoryUrl": null,
+      "sourceVisibility": "private",
+      "language": "Wordpress",
+      "topics": [
+        "wordpress",
+        "elementor",
+        "html",
+        "css",
+        "javascript"
+      ],
+      "createdAt": "2026-05-05T21:05:49.843Z"
+    }
+  ],
+  "order": [
+    "manual-the-light-veil"
+  ]
+}
