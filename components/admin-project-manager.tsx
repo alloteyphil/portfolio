@@ -73,6 +73,7 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
   const [repos, setRepos] = useState<EditableProjectRepo[]>(initialRepos);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [topicDrafts, setTopicDrafts] = useState<Record<string, string>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
@@ -92,6 +93,7 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
       return;
     }
     setRepos(payload.repos ?? []);
+    setTopicDrafts({});
     setCurrentPage(1);
     setLoading(false);
   }
@@ -118,6 +120,13 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
   async function updateRepo(repo: EditableProjectRepo) {
     setSavingRepo(repo.fullName);
     setError(null);
+    const draftValue = topicDrafts[repo.fullName];
+    const normalizedTopics = draftValue !== undefined ? normalizeTopicsFromInput(draftValue) : repo.topics;
+    const normalizedTopicText = normalizedTopics.join(", ");
+    setRepos((current) =>
+      current.map((item) => (item.fullName === repo.fullName ? { ...item, topics: normalizedTopics } : item))
+    );
+    setTopicDrafts((current) => ({ ...current, [repo.fullName]: normalizedTopicText }));
 
     const response = await fetch("/api/admin/projects", {
       method: "PATCH",
@@ -127,7 +136,7 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
         visible: repo.isVisible,
         description: repo.description,
         homepageUrl: repo.homepageUrl,
-        topics: repo.topics
+        topics: normalizedTopics
       })
     });
     const payload = (await response.json()) as { ok?: boolean; error?: string };
@@ -362,19 +371,28 @@ export function AdminProjectManager({ initialRepos }: AdminProjectManagerProps) 
                 <div>
                   <label className="mb-1 block text-xs text-terminal-text/75">Tools (comma separated)</label>
                   <input
-                    value={repo.topics.join(", ")}
+                    value={topicDrafts[repo.fullName] ?? repo.topics.join(", ")}
                     onChange={(event) =>
+                      setTopicDrafts((current) => ({
+                        ...current,
+                        [repo.fullName]: event.target.value
+                      }))
+                    }
+                    onBlur={() => {
+                      const draftValue = topicDrafts[repo.fullName];
+                      if (draftValue === undefined) return;
+                      const normalizedTopics = normalizeTopicsFromInput(draftValue);
+                      const normalizedTopicText = normalizedTopics.join(", ");
                       setRepos((current) =>
                         current.map((item) =>
-                          item.fullName === repo.fullName
-                            ? {
-                                ...item,
-                                topics: normalizeTopicsFromInput(event.target.value)
-                              }
-                            : item
+                          item.fullName === repo.fullName ? { ...item, topics: normalizedTopics } : item
                         )
-                      )
-                    }
+                      );
+                      setTopicDrafts((current) => ({
+                        ...current,
+                        [repo.fullName]: normalizedTopicText
+                      }));
+                    }}
                     className="w-full min-w-0 rounded border border-terminal-border bg-transparent px-3 py-2 text-sm"
                   />
                   <p className="mt-1 text-xs text-terminal-text/65">
