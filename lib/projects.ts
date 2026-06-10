@@ -1,7 +1,7 @@
 import { fetchUserRepos, type GitHubRepo } from "./github";
 import { buildScreenshotPublicId } from "./screenshot-store";
 import { getCloudinaryScreenshotUrl } from "./cloudinary";
-import { getPortfolioConfigWithSha, saveCachedGithubRepos } from "./portfolio-config";
+import { getPortfolioConfig, saveCachedGithubRepos } from "./portfolio-config";
 import {
   buildGithubProjectId,
   buildManualProjectId,
@@ -149,7 +149,7 @@ async function buildGithubProjectsFromRepos(repos: GitHubRepo[]): Promise<Portfo
 export async function getPortfolioProjects(): Promise<PortfolioProject[]> {
   const [liveRepos, config] = await Promise.all([
     fetchUserRepos(),
-    getPortfolioConfigWithSha()
+    getPortfolioConfig()
   ]);
 
   let githubProjects: PortfolioProject[];
@@ -164,7 +164,7 @@ export async function getPortfolioProjects(): Promise<PortfolioProject[]> {
     // well within GitHub API rate limits.
     if (isCacheStale(config.cachedAt)) {
       const snapshot = liveRepos.map(toGithubCacheEntry);
-      saveCachedGithubRepos(snapshot, config).catch((err: unknown) => {
+      saveCachedGithubRepos(snapshot).catch((err: unknown) => {
         console.error("Failed to persist GitHub repo snapshot:", err);
       });
     }

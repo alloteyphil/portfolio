@@ -182,21 +182,21 @@ export async function savePortfolioConfig(
 
 /**
  * Persists a fresh GitHub repo snapshot into the portfolio config.
- * Pass the already-loaded SavedPortfolioConfig to avoid an extra remote fetch.
+ * Always re-fetches the remote file immediately before writing so the sha is
+ * never stale. Reusing the sha from the initial page-load fetch causes 409
+ * conflicts when concurrent requests have already updated the file.
  */
-export async function saveCachedGithubRepos(
-  repos: CachedGithubRepo[],
-  existingConfig: SavedPortfolioConfig
-): Promise<void> {
+export async function saveCachedGithubRepos(repos: CachedGithubRepo[]): Promise<void> {
+  const latest = await getPortfolioConfigWithSha();
   const updated: PortfolioConfig = {
-    manualProjects: existingConfig.manualProjects,
-    order: existingConfig.order,
+    manualProjects: latest.manualProjects,
+    order: latest.order,
     cachedGithubRepos: repos,
     cachedAt: new Date().toISOString()
   };
   await savePortfolioConfig(updated, {
     message: "chore: update cached github repo snapshot",
-    sha: existingConfig.sha ?? undefined
+    sha: latest.sha ?? undefined
   });
 }
 
