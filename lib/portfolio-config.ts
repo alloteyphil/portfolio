@@ -1,7 +1,7 @@
 import { Octokit } from "octokit";
 import { z } from "zod";
 import { env } from "./env";
-import type { ManualProjectRecord, PortfolioConfig, ProjectSourceVisibility } from "@/types/project";
+import type { CachedGithubRepo, ManualProjectRecord, PortfolioConfig, ProjectSourceVisibility } from "@/types/project";
 
 const CONFIG_PATH = "data/portfolio-config.json";
 
@@ -20,14 +20,31 @@ const manualProjectSchema = z.object({
   createdAt: z.string().default(() => new Date().toISOString())
 });
 
+const cachedGithubRepoSchema = z.object({
+  name: z.string(),
+  fullName: z.string(),
+  description: z.union([z.string(), z.null()]).default(null),
+  homepage: z.union([z.string(), z.null()]).default(null),
+  htmlUrl: z.string(),
+  defaultBranch: z.string().default("main"),
+  language: z.union([z.string(), z.null()]).default(null),
+  topics: z.array(z.string()).default([]),
+  pushedAt: z.string(),
+  isPrivate: z.boolean().default(false)
+});
+
 const portfolioConfigSchema = z.object({
   manualProjects: z.array(manualProjectSchema).default([]),
-  order: z.array(z.string()).default([])
+  order: z.array(z.string()).default([]),
+  cachedGithubRepos: z.array(cachedGithubRepoSchema).default([]),
+  cachedAt: z.union([z.string(), z.null()]).default(null)
 });
 
 const EMPTY_CONFIG: PortfolioConfig = {
   manualProjects: [],
-  order: []
+  order: [],
+  cachedGithubRepos: [],
+  cachedAt: null
 };
 
 function getOctokit(): Octokit {
@@ -142,12 +159,12 @@ export async function getPortfolioConfigWithSha(): Promise<SavedPortfolioConfig>
 
 export async function savePortfolioConfig(
   config: PortfolioConfig,
-  options: { message?: string } = {}
+  options: { message?: string; sha?: string } = {}
 ): Promise<void> {
   const octokit = getOctokit();
   const { owner, repo } = getRepoTarget();
-  const remote = await fetchRemoteConfigFile();
-  const sha = remote?.sha;
+  // Use the provided sha when available to skip an extra remote fetch.
+  const sha = options.sha !== undefined ? options.sha : (await fetchRemoteConfigFile())?.sha;
 
   const serialized = `${JSON.stringify(config, null, 2)}\n`;
   const content = Buffer.from(serialized, "utf-8").toString("base64");
@@ -160,6 +177,26 @@ export async function savePortfolioConfig(
     content,
     sha,
     headers: { accept: "application/vnd.github+json" }
+  });
+}
+
+/**
+ * Persists a fresh GitHub repo snapshot into the portfolio config.
+ * Pass the already-loaded SavedPortfolioConfig to avoid an extra remote fetch.
+ */
+export async function saveCachedGithubRepos(
+  repos: CachedGithubRepo[],
+  existingConfig: SavedPortfolioConfig
+): Promise<void> {
+  const updated: PortfolioConfig = {
+    manualProjects: existingConfig.manualProjects,
+    order: existingConfig.order,
+    cachedGithubRepos: repos,
+    cachedAt: new Date().toISOString()
+  };
+  await savePortfolioConfig(updated, {
+    message: "chore: update cached github repo snapshot",
+    sha: existingConfig.sha ?? undefined
   });
 }
 

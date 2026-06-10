@@ -40,6 +40,20 @@ Detailed environment and credential values are intentionally kept private.
 - Protects internal management routes and mutation endpoints.
 - Enforces restricted curation actions via private access control configuration.
 
+## GitHub Repo Cache Fallback
+
+`data/portfolio-config.json` (stored in the portfolio repo via GitHub Contents API) includes two fields that act as a persistent snapshot of the last successful GitHub repo fetch:
+
+- `cachedGithubRepos` — array of normalized repo entries (name, homepage, topics, language, etc.)
+- `cachedAt` — ISO timestamp of when the snapshot was last written
+
+**Behaviour:**
+- On each `/projects` page load, `lib/github.ts` attempts a live `GET /user/repos` call.
+- If the call **succeeds**, the result is used to render projects. If the snapshot is older than 1 hour, it is updated in the background (fire-and-forget, non-blocking).
+- If the call **fails** (token missing, expired, or API error), `lib/projects.ts` falls back to `cachedGithubRepos`, so `/projects` continues to render the last known set of repos.
+- The fallback is transparent to visitors. A warning is logged server-side.
+- When you update `GITHUB_TOKEN` and the live fetch succeeds again, the snapshot is refreshed automatically on the next stale cycle (≥ 1 hour old).
+
 ## ScreenshotOne and Cloudinary
 
 - ScreenshotOne captures desktop-sized image only.

@@ -27,7 +27,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
     const dedupedOrder = Array.from(new Set(parsed.data.order));
 
     await savePortfolioConfig(
-      { manualProjects: config.manualProjects, order: dedupedOrder },
+      { ...config, order: dedupedOrder },
       { message: "chore: update portfolio project order" }
     );
 

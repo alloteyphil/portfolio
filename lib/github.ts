@@ -32,9 +32,15 @@ export type EditableProjectRepo = {
   isPrivate: boolean;
 };
 
-export async function fetchUserRepos(): Promise<GitHubRepo[]> {
+/**
+ * Fetches all repos for the authenticated user.
+ * Returns null when the token is missing/expired or the API call fails —
+ * callers should fall back to any cached snapshot in that case.
+ * Returns an array (possibly empty) on success.
+ */
+export async function fetchUserRepos(): Promise<GitHubRepo[] | null> {
   if (!env.GITHUB_TOKEN || !env.GITHUB_USERNAME) {
-    return [];
+    return null;
   }
 
   try {
@@ -67,7 +73,7 @@ export async function fetchUserRepos(): Promise<GitHubRepo[]> {
     }));
   } catch (error) {
     console.error("Unable to fetch GitHub repositories for username:", env.GITHUB_USERNAME, error);
-    return [];
+    return null;
   }
 }
 
@@ -82,6 +88,7 @@ function cleanUrl(value: string | null): string | null {
 
 export async function fetchEditableProjectRepos(): Promise<EditableProjectRepo[]> {
   const repos = await fetchUserRepos();
+  if (!repos) return [];
   return repos
     .map((repo) => ({
       id: repo.id,

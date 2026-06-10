@@ -33,6 +33,10 @@ Projects on `/projects` come from two sources, merged at request time:
 
 Display order is controlled from `/admin` (`Project order` section). The order is persisted to `data/portfolio-config.json` via the GitHub Contents API; updates take effect on the next request — no redeploy required.
 
+### GitHub token expiry fallback
+
+`data/portfolio-config.json` also stores a `cachedGithubRepos` snapshot and a `cachedAt` timestamp. On each request, the app tries a live GitHub API call first. If the call fails (expired token, missing env var, rate limit), `/projects` renders from the cached snapshot instead of showing an empty list. When the token is valid again, the snapshot refreshes automatically in the background (at most once per hour). See `docs/integrations.md` for full details.
+
 Optional environment variables:
 
 - `PORTFOLIO_CONFIG_REPO`: `owner/repo` slug that holds `data/portfolio-config.json`. Defaults to `${GITHUB_USERNAME}/portfolio`.

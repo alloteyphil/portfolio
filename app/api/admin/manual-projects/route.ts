@@ -150,7 +150,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     const nextOrder = config.order.includes(orderedId) ? config.order : [...config.order, orderedId];
 
     await savePortfolioConfig(
-      { manualProjects: nextManual, order: nextOrder },
+      { ...config, manualProjects: nextManual, order: nextOrder },
       { message: `chore: add manual project ${record.slug}` }
     );
 
@@ -207,7 +207,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
     }
 
     await savePortfolioConfig(
-      { manualProjects: nextManual, order: nextOrder },
+      { ...config, manualProjects: nextManual, order: nextOrder },
       { message: `chore: update manual project ${updated.slug}` }
     );
 
@@ -251,7 +251,7 @@ export async function DELETE(request: Request): Promise<NextResponse> {
     const nextOrder = config.order.filter((id) => id !== removeId);
 
     await savePortfolioConfig(
-      { manualProjects: nextManual, order: nextOrder },
+      { ...config, manualProjects: nextManual, order: nextOrder },
       { message: `chore: remove manual project ${slug}` }
     );
 

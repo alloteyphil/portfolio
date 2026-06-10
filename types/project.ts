@@ -32,9 +32,24 @@ export type ManualProjectRecord = {
   createdAt: string;
 };
 
+export type CachedGithubRepo = {
+  name: string;
+  fullName: string;
+  description: string | null;
+  homepage: string | null;
+  htmlUrl: string;
+  defaultBranch: string;
+  language: string | null;
+  topics: string[];
+  pushedAt: string;
+  isPrivate: boolean;
+};
+
 export type PortfolioConfig = {
   manualProjects: ManualProjectRecord[];
   order: string[];
+  cachedGithubRepos: CachedGithubRepo[];
+  cachedAt: string | null;
 };
 
 export function buildGithubProjectId(repoName: string): string {
