@@ -1,6 +1,4 @@
 {
-  "cachedGithubRepos": [],
-  "cachedAt": null,
   "manualProjects": [
     {
       "slug": "the-light-veil",
@@ -35,6 +33,18 @@
   ],
   "cachedGithubRepos": [
     {
+      "name": "portfolio",
+      "fullName": "alloteyphil/portfolio",
+      "description": "Portfolio showcasing my work and projects.",
+      "homepage": "https://philipallotey.vercel.app/",
+      "htmlUrl": "https://github.com/alloteyphil/portfolio",
+      "defaultBranch": "main",
+      "language": "TypeScript",
+      "topics": [],
+      "pushedAt": "2026-06-10T11:21:27Z",
+      "isPrivate": false
+    },
+    {
       "name": "dilli-dilli",
       "fullName": "alloteyphil/dilli-dilli",
       "description": "Dilli Dilli is a restaurant website for a New York-based business, where I designed a modern, visually appealing interface to showcase menu items and brand identity. The site focuses on responsive design, smooth navigation, and enhancing the restaurant’s online presence.",
@@ -65,18 +75,6 @@
       "language": "Python",
       "topics": [],
       "pushedAt": "2026-05-08T17:23:34Z",
-      "isPrivate": false
-    },
-    {
-      "name": "portfolio",
-      "fullName": "alloteyphil/portfolio",
-      "description": "Portfolio showcasing my work and projects.",
-      "homepage": "https://philipallotey.vercel.app/",
-      "htmlUrl": "https://github.com/alloteyphil/portfolio",
-      "defaultBranch": "main",
-      "language": "TypeScript",
-      "topics": [],
-      "pushedAt": "2026-05-05T21:16:30Z",
       "isPrivate": false
     },
     {
@@ -527,5 +525,5 @@
       "isPrivate": false
     }
   ],
-  "cachedAt": "2026-06-10T11:14:24.496Z"
+  "cachedAt": "2026-06-12T05:45:41.492Z"
 }
