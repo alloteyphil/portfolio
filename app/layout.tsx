@@ -53,7 +53,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={archivo.variable} suppressHydrationWarning>
-      <body className="overflow-x-hidden bg-paper font-sans text-ink antialiased">
+      <body className="bg-paper font-sans text-ink antialiased">
         <Script id="theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <StructuredData />
         <a

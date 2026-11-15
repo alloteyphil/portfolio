@@ -22,7 +22,7 @@ export function SiteHeader() {
 
       <nav
         aria-label="Primary"
-        className="order-3 -ml-2 flex w-full items-center gap-1 sm:order-none sm:ml-auto sm:w-auto"
+        className="order-3 flex w-full min-w-0 items-center gap-1 sm:order-none sm:ml-auto sm:w-auto"
       >
         {LINKS.map((link) => {
           const external = "external" in link;
@@ -33,7 +33,7 @@ export function SiteHeader() {
               href={link.href}
               {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               aria-current={active ? "page" : undefined}
-              className={`rounded-xs px-2 py-1 text-[15px] font-medium transition-colors ${
+              className={`rounded-xs px-2 py-1 text-[15px] font-medium transition-colors first:pl-0 sm:first:pl-2 ${
                 active ? "bg-accent text-accent-ink" : "text-ink/75 hover:bg-accent hover:text-accent-ink"
               }`}
             >

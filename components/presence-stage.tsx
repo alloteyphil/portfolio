@@ -60,7 +60,7 @@ export function PresenceStage({ className = "", children }: { className?: string
   }, []);
 
   return (
-    <section ref={stageRef} className={`relative ${className}`.trim()}>
+    <section ref={stageRef} className={`relative overflow-x-clip ${className}`.trim()}>
       {children}
       <span ref={flagRef} className="guest-flag" aria-hidden>
         <span>You</span>

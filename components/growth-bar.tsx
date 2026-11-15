@@ -67,7 +67,7 @@ export function GrowthBar({ total, last30Days, asOf }: GrowthBarProps) {
       </p>
 
       <div aria-hidden>
-        <p className="display text-[clamp(3.5rem,15vw,11rem)] tabular-nums text-heading">
+        <p className="display max-w-full text-[clamp(2.75rem,13vw,11rem)] tabular-nums tracking-tight text-heading">
           <span ref={countRef}>{format(to)}+</span>
         </p>
         <p className="mt-3 text-muted">visitors to dilli-dilli.com to date</p>

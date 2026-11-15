@@ -3,6 +3,20 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
+ * Clip horizontal overflow on both root boxes. `overflow-x: hidden` on body alone still
+ * lets many mobile browsers pan the page when a child (caret flag, scaled ping, etc.) sticks out.
+ */
+html {
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+}
+
+body {
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+}
+
+/*
  * Theme tokens reference :root / .dark palette channels below. `@theme inline` keeps those
  * channel variables intact so custom CSS (buttons, marks, etc.) and Tailwind opacity modifiers
  * both resolve through the same source of truth.
@@ -104,6 +118,7 @@ a {
 
 .hero-title {
   position: relative;
+  overflow-x: clip;
   font-size: clamp(2.6rem, 8.4vw, 7rem);
 }
 
@@ -316,6 +331,8 @@ a {
 
 .hero-title[data-phase="done"] .caret-flag {
   opacity: 0;
+  /* Opacity alone can still expand scrollable overflow on mobile; drop it from layout. */
+  display: none;
 }
 
 /* The visitor's own name flag, trailing their pointer inside the hero. */
