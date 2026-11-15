@@ -27,8 +27,10 @@ export default async function ProjectsPage() {
         builds I still like.
       </PageHeader>
 
+      <Reveal kind="line" className="mb-12 h-px w-full bg-line sm:mb-14" />
+
       {projects.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-line p-8 text-ink/75">
+        <Reveal kind="up" className="rounded-lg border border-dashed border-line p-8 text-ink/75">
           {githubConfigured ? (
             <>
               No projects to show yet. Tag a GitHub repo with <code className="font-mono text-ink">portfolio</code> or
@@ -41,11 +43,11 @@ export default async function ProjectsPage() {
               to <code className="font-mono text-ink">data/portfolio-config.json</code>.
             </>
           )}
-        </div>
+        </Reveal>
       ) : (
         <div className="grid grid-cols-1 gap-x-10 gap-y-16 md:grid-cols-2">
           {projects.map((project, i) => (
-            <Reveal key={project.id} delay={i % 2}>
+            <Reveal key={project.id} kind="up" delay={i < 4 ? i : i % 2}>
               <ProjectCard project={project} />
             </Reveal>
           ))}

@@ -15,8 +15,12 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="flex flex-wrap items-center gap-x-6 gap-y-3 py-5 sm:py-7">
-      <Link href="/" className="display text-lg text-heading" aria-label="Philip Allotey, home">
+    <header className="load-step flex flex-wrap items-center gap-x-6 gap-y-3 py-5 sm:py-7">
+      <Link
+        href="/"
+        className="display text-lg text-heading transition-transform duration-200 hover:-translate-y-0.5"
+        aria-label="Philip Allotey, home"
+      >
         Philip Allotey
       </Link>
 
@@ -33,8 +37,8 @@ export function SiteHeader() {
               href={link.href}
               {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               aria-current={active ? "page" : undefined}
-              className={`rounded-xs px-2 py-1 text-[15px] font-medium transition-colors first:pl-0 sm:first:pl-2 ${
-                active ? "bg-accent text-accent-ink" : "text-ink/75 hover:bg-accent hover:text-accent-ink"
+              className={`nav-pill rounded-xs px-2 py-1 text-[15px] font-medium first:pl-0 sm:first:pl-2 ${
+                active ? "text-accent-ink" : "text-ink/75"
               }`}
             >
               {link.label}

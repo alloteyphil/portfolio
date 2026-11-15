@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import "./globals.css";
 import { KeyboardShortcuts } from "@/components/keyboard-shortcuts";
+import { ScrollProgress } from "@/components/scroll-progress";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { StructuredData } from "@/components/structured-data";
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Skip to main content
         </a>
         <ThemeProvider>
+          <ScrollProgress />
           <KeyboardShortcuts />
           <main className="mx-auto flex min-h-screen w-full min-w-0 max-w-page flex-col px-4 sm:px-8">
             <SiteHeader />

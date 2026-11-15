@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { CardTilt } from "@/components/card-tilt";
 import { ArrowUpRight, FolderGit2, Lock, iconStroke } from "@/components/icons";
 import type { PortfolioProject } from "@/types/project";
 
@@ -38,28 +39,30 @@ export function ProjectCard({ project }: ProjectCardProps) {
         href={project.homepageUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="relative block overflow-hidden rounded-lg border border-line bg-surface"
+        className="block rounded-lg"
         aria-label={`Open ${project.name} live site (new tab)`}
       >
-        {hasScreenshot ? (
-          <Image
-            src={screenshotUrl!}
-            alt=""
-            width={1200}
-            height={600}
-            sizes="(max-width: 768px) 100vw, 580px"
-            className="aspect-2/1 w-full object-cover object-top transition duration-700 ease-out group-hover:scale-[1.035]"
-            onError={() => setImageLoadFailed(true)}
-          />
-        ) : (
-          <div className="display flex aspect-2/1 items-center justify-center bg-brand p-6 text-center text-3xl text-white">
-            {project.name}
-          </div>
-        )}
-        <span className="absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-between bg-accent px-4 py-2.5 text-sm font-semibold text-accent-ink transition-transform duration-300 ease-out group-hover:translate-y-0">
-          {host}
-          <ArrowUpRight className="size-4" strokeWidth={2} aria-hidden />
-        </span>
+        <CardTilt className="relative overflow-hidden rounded-lg border border-line bg-surface">
+          {hasScreenshot ? (
+            <Image
+              src={screenshotUrl!}
+              alt=""
+              width={1200}
+              height={600}
+              sizes="(max-width: 768px) 100vw, 580px"
+              className="aspect-2/1 w-full object-cover object-top transition duration-700 ease-out group-hover:scale-[1.035]"
+              onError={() => setImageLoadFailed(true)}
+            />
+          ) : (
+            <div className="display flex aspect-2/1 items-center justify-center bg-brand p-6 text-center text-3xl text-white">
+              {project.name}
+            </div>
+          )}
+          <span className="absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-between bg-accent px-4 py-2.5 text-sm font-semibold text-accent-ink transition-transform duration-300 ease-out group-hover:translate-y-0">
+            {host}
+            <ArrowUpRight className="arrow-launch size-4" strokeWidth={2} aria-hidden />
+          </span>
+        </CardTilt>
       </a>
 
       <div className="flex flex-1 flex-col pt-5">
@@ -68,7 +71,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </h3>
         <p className="mt-2 line-clamp-3 leading-relaxed text-ink/75">{project.description}</p>
 
-        {stackTags.length > 0 ? <p className="mt-3 text-sm text-muted">{stackTags.join(", ")}</p> : null}
+        {stackTags.length > 0 ? (
+          <p className="mt-3 text-sm text-muted transition-colors duration-200 group-hover:text-ink/80">
+            {stackTags.join(", ")}
+          </p>
+        ) : null}
 
         <footer className="mt-auto flex gap-5 pt-5 text-[15px]">
           <Link

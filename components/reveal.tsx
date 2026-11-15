@@ -2,14 +2,22 @@
 
 import { useEffect, useRef, type CSSProperties, type ElementType, type ReactNode } from "react";
 
+export type RevealKind = "sel" | "up" | "line" | "clip" | "pop";
+
 type RevealProps = {
-  /** `sel` sweeps a selection highlight across a child `.mark`; `up` is a plain rise for lists and cards. */
-  kind?: "sel" | "up";
-  as?: "div" | "h2" | "li" | "section" | "p";
+  /**
+   * `sel` sweeps a selection highlight across a child `.mark`.
+   * `up` rises in softly for lists and paragraphs.
+   * `line` draws a horizontal divider from left to right.
+   * `clip` unmasks screenshots or callout islands from bottom up.
+   * `pop` springs in buttons, pills, or small cards.
+   */
+  kind?: RevealKind;
+  as?: "div" | "h2" | "li" | "section" | "p" | "ul" | "dl" | "aside";
   /** Stagger step (multiplied in CSS). */
   delay?: number;
   className?: string;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 /**

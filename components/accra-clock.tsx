@@ -8,7 +8,7 @@ const formatter = new Intl.DateTimeFormat("en-GB", {
   minute: "2-digit"
 });
 
-/** Local time in Accra. Renders a fixed-width placeholder on the server to avoid a hydration mismatch. */
+/** Local time in Accra with a softly pulsing colon separator when motion is allowed. */
 export function AccraClock({ className = "" }: { className?: string }) {
   const [time, setTime] = useState<string | null>(null);
 
@@ -19,9 +19,21 @@ export function AccraClock({ className = "" }: { className?: string }) {
     return () => window.clearInterval(id);
   }, []);
 
+  if (!time) {
+    return (
+      <time className={`tabular-nums ${className}`.trim()} suppressHydrationWarning>
+        --:--
+      </time>
+    );
+  }
+
+  const [hours, minutes] = time.split(":");
+
   return (
-    <time className={`tabular-nums ${className}`.trim()} suppressHydrationWarning>
-      {time ?? "--:--"}
+    <time dateTime={time} className={`tabular-nums ${className}`.trim()} suppressHydrationWarning>
+      {hours}
+      <span className="clock-colon">:</span>
+      {minutes}
     </time>
   );
 }

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 type PageHeaderProps = {
   title: ReactNode;
@@ -13,7 +13,12 @@ export function PageHeader({ title, children }: PageHeaderProps) {
         <span className="mark">{title}</span>
       </h1>
       {children ? (
-        <div className="mt-7 max-w-2xl text-lg leading-relaxed text-ink/80 sm:text-xl">{children}</div>
+        <div
+          className="load-step mt-7 max-w-2xl text-lg leading-relaxed text-ink/80 sm:text-xl"
+          style={{ "--d": 3 } as CSSProperties}
+        >
+          {children}
+        </div>
       ) : null}
     </header>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { AccraClock } from "@/components/accra-clock";
 import { ContactForm } from "@/components/contact-form";
 import { PageHeader } from "@/components/page-header";
+import { Reveal } from "@/components/reveal";
 
 const DESCRIPTION = "Send Philip Allotey a message about a freelance or contract project. He replies by email.";
 
@@ -19,9 +20,17 @@ export default function ContactPage() {
         straight to my inbox and I reply by email.
       </PageHeader>
 
+      <Reveal kind="line" className="mb-10 h-px w-full bg-line sm:mb-12" />
+
       <div className="grid gap-12 lg:grid-cols-[minmax(0,40rem)_1fr] lg:gap-24">
-        <ContactForm />
-        <aside className="order-first text-[15px] leading-relaxed text-ink/80 lg:order-none">
+        <Reveal delay={1}>
+          <ContactForm />
+        </Reveal>
+        <Reveal
+          as="aside"
+          delay={2}
+          className="order-first text-[15px] leading-relaxed text-ink/80 lg:order-none"
+        >
           <ul className="space-y-3 border-l-2 border-accent pl-5">
             <li>
               It&apos;s <AccraClock className="font-semibold text-ink" /> in Accra (GMT). If that&apos;s late, expect my
@@ -44,7 +53,7 @@ export default function ContactPage() {
               .
             </li>
           </ul>
-        </aside>
+        </Reveal>
       </div>
     </>
   );

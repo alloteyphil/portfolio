@@ -22,33 +22,33 @@ export default function AboutPage() {
 
       <div className="grid gap-12 lg:grid-cols-[minmax(0,40rem)_1fr] lg:gap-24">
         <div className="space-y-5 text-lg leading-relaxed text-ink/85">
-          <p>
+          <Reveal as="p" delay={1}>
             I&apos;m a full-stack developer in Accra, Ghana. Almost everything I write is TypeScript: Next.js on the
             front, and whatever the backend needs to keep every screen in sync.
-          </p>
-          <p>
+          </Reveal>
+          <Reveal as="p" delay={2}>
             The project I&apos;m proudest of is dilli-dilli.com, a site I built and launched for a New York restaurant
-            and still maintain. In its first twelve months it went from 1,200 to more than 62,700 unique visitors,
-            and it has been featured by the New York Times and Forbes.
-          </p>
-          <p>
+            and still maintain. It started at 1,200 monthly visitors, has grown past 62,700+ total visitors, and has
+            been featured by the New York Times and Forbes.
+          </Reveal>
+          <Reveal as="p" delay={3}>
             When I want to learn something properly I build a full product around it. Pulse Notes is where I worked
             out live presence, comment threads and revision history. Trackr is where I learned to page through a
             growing pile of transactions while the dashboard keeps updating.
-          </p>
-          <p>
+          </Reveal>
+          <Reveal as="p" delay={4}>
             By day I&apos;m a junior analyst at Points Africa, where I work on monitoring: the dashboards, alerts and
             live health pages that show the team when something in the platform is going wrong. The projects on this
             site are what I build outside of that.
-          </p>
-          <p>
+          </Reveal>
+          <Reveal as="p" delay={5}>
             <Link href="/projects" className="link font-semibold text-ink">
               See all the projects
             </Link>
-          </p>
+          </Reveal>
         </div>
 
-        <aside className="text-[15px] leading-relaxed text-ink/80">
+        <Reveal as="aside" delay={2} className="text-[15px] leading-relaxed text-ink/80">
           <ul className="space-y-3 border-l-2 border-accent pl-5">
             <li>
               Accra, Ghana. It&apos;s <AccraClock className="font-semibold text-ink" /> here (GMT).
@@ -59,11 +59,13 @@ export default function AboutPage() {
               Open to freelance and contract projects.
             </li>
           </ul>
-          <Link href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-line mt-7">
-            Résumé (PDF)
-            <ArrowUpRight className="size-4" strokeWidth={iconStroke} aria-hidden />
-          </Link>
-        </aside>
+          <Reveal kind="pop" delay={4}>
+            <Link href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-line mt-7">
+              Résumé (PDF)
+              <ArrowUpRight className="size-4" strokeWidth={iconStroke} aria-hidden />
+            </Link>
+          </Reveal>
+        </Reveal>
       </div>
 
       <section id="tools" className="mt-24 scroll-mt-8 sm:mt-32" aria-labelledby="tools-heading">
@@ -72,14 +74,17 @@ export default function AboutPage() {
             What I use
           </span>
         </Reveal>
-        <dl className="border-t border-line">
+        <Reveal kind="line" className="h-px w-full bg-line" />
+        <dl>
           {SKILL_GROUPS.map((group, i) => (
             <Reveal
               key={group.title}
-              delay={i}
-              className="grid gap-x-10 gap-y-1 border-b border-line py-5 sm:grid-cols-[11rem_1fr]"
+              delay={Math.min(i, 4)}
+              className="group grid gap-x-10 gap-y-1 border-b border-line py-5 transition-colors duration-200 sm:grid-cols-[11rem_1fr]"
             >
-              <dt className="text-[15px] text-muted sm:pt-0.5">{group.title}</dt>
+              <dt className="text-[15px] text-muted transition-colors duration-200 group-hover:text-ink sm:pt-0.5">
+                {group.title}
+              </dt>
               <dd>
                 <p className="text-lg font-medium text-ink">{group.items.join(", ")}</p>
                 {group.note ? <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-ink/70">{group.note}</p> : null}
