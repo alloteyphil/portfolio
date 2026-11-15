@@ -7,68 +7,43 @@ import { useSyncExternalStore } from "react";
 const emptySubscribe = () => () => {};
 
 const MODES = [
-  { value: "light" as const, label: "Light", Icon: Sun },
-  { value: "dark" as const, label: "Dark", Icon: Moon },
   { value: "system" as const, label: "System", Icon: Monitor },
+  { value: "light" as const, label: "Light", Icon: Sun },
+  { value: "dark" as const, label: "Dark", Icon: Moon }
 ];
 
-type ThemeToggleProps = {
-  /** Called after choosing a theme (e.g. close parent drawer). */
-  onThemeSelected?: () => void;
-};
-
-export function ThemeToggle({ onThemeSelected }: ThemeToggleProps) {
+/** Single button that cycles system → light → dark. */
+export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const mounted = useSyncExternalStore(
     emptySubscribe,
     () => true,
-    () => false,
+    () => false
   );
 
+  const buttonClass =
+    "inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-line text-muted transition hover:border-ink/30 hover:text-ink";
+
   if (!mounted) {
-    return (
-      <div
-        className="h-10 w-[7.25rem] animate-pulse rounded-lg border border-terminal-border bg-terminal-panel/50 md:h-11 md:w-[8rem]"
-        aria-hidden
-      />
-    );
+    return <span className={buttonClass} aria-hidden />;
   }
 
-  const current = theme ?? "system";
+  const index = Math.max(
+    0,
+    MODES.findIndex((mode) => mode.value === (theme ?? "system"))
+  );
+  const current = MODES[index];
+  const next = MODES[(index + 1) % MODES.length];
 
   return (
-    <div
-      role="group"
-      aria-label="Color theme"
-      className="inline-flex items-center gap-1 rounded-lg border border-terminal-border bg-terminal-bg p-1"
+    <button
+      type="button"
+      onClick={() => setTheme(next.value)}
+      title={`Theme: ${current.label}`}
+      aria-label={`Theme: ${current.label}. Switch to ${next.label}.`}
+      className={buttonClass}
     >
-        {MODES.map(({ value, label, Icon }) => {
-          const active = current === value;
-          return (
-            <button
-              key={value}
-              type="button"
-              title={label}
-              aria-label={`${label} theme`}
-              aria-pressed={active}
-              onClick={() => {
-                setTheme(value);
-                onThemeSelected?.();
-              }}
-              className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border transition md:h-9 md:w-9 ${
-                active
-                  ? "border-terminal-accent bg-terminal-accent/12 text-terminal-accent shadow-[inset_0_0_0_1px_rgb(var(--color-terminal-accent)/0.15)]"
-                  : "border-transparent text-terminal-text/65 hover:border-terminal-border/80 hover:bg-terminal-panel/70 hover:text-terminal-text"
-              }`}
-            >
-              <Icon
-                className="size-4 md:size-[1.05rem]"
-                strokeWidth={iconStroke}
-                aria-hidden
-              />
-            </button>
-          );
-        })}
-    </div>
+      <current.Icon className="size-4" strokeWidth={iconStroke} aria-hidden />
+    </button>
   );
 }

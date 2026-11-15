@@ -12,7 +12,7 @@ Detailed environment and credential values are intentionally kept private.
 
 | Integration | Purpose | Runtime Surface |
 | --- | --- | --- |
-| Clerk | Authentication and protected access control | Internal management surfaces |
+| Vercel Web Analytics API | Live visitor numbers for dilli-dilli.com | Homepage growth section (`lib/dilli-stats.ts`), refreshed daily, falls back to the April 2026 figure |
 | ScreenshotOne | Website screenshot capture | Refresh pipeline |
 | Cloudinary | Screenshot storage and CDN delivery | Projects UI and refresh pipeline |
 | Resend | Contact form email delivery | Contact endpoint |
@@ -34,11 +34,6 @@ Detailed environment and credential values are intentionally kept private.
   - this file
 
 ## Provider-Specific Contracts
-
-## Clerk
-
-- Protects internal management routes and mutation endpoints.
-- Enforces restricted curation actions via private access control configuration.
 
 ## GitHub Repo Cache Fallback
 

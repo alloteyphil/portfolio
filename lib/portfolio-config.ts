@@ -1,7 +1,7 @@
 import { Octokit } from "octokit";
 import { z } from "zod";
 import { env } from "./env";
-import type { CachedGithubRepo, ManualProjectRecord, PortfolioConfig, ProjectSourceVisibility } from "@/types/project";
+import type { CachedGithubRepo, PortfolioConfig } from "@/types/project";
 
 const CONFIG_PATH = "data/portfolio-config.json";
 
@@ -199,17 +199,3 @@ export async function saveCachedGithubRepos(repos: CachedGithubRepo[]): Promise<
     sha: latest.sha ?? undefined
   });
 }
-
-export function normalizeManualProject(input: unknown): ManualProjectRecord {
-  const parsed = manualProjectSchema.parse(input);
-  return parsed;
-}
-
-export function defaultSourceVisibility(): ProjectSourceVisibility {
-  return "private";
-}
-
-export const portfolioConfigSchemas = {
-  manualProject: manualProjectSchema,
-  portfolioConfig: portfolioConfigSchema
-};

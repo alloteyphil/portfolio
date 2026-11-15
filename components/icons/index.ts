@@ -5,7 +5,7 @@
  */
 export type { LucideIcon } from "lucide-react";
 
-/** Slightly softer than default 2 — reads better at small sizes with Geist Mono nearby */
+/** Slightly softer than default 2; reads better at small sizes next to body text. */
 export const iconStroke = 1.75;
 
 /** Primary nav pills (`text-xs` / `text-sm`) */

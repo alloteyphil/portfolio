@@ -13,7 +13,7 @@ Refresh project screenshots safely with minimal churn and clear failure handling
 ## Trigger Paths
 
 - Automatic: push to `main` workflow calls refresh endpoint.
-- Manual: admin-triggered refresh action (future admin surface).
+- Manual: run the "Refresh Portfolio Screenshots" GitHub Action (`workflow_dispatch`), which calls `/api/refresh-screenshots` with the refresh secret.
 
 ## Preconditions
 

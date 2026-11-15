@@ -142,16 +142,16 @@ export function KeyboardShortcuts() {
       ref={dialogRef}
       onClose={closeHelp}
       onClick={handleBackdropClick}
-      className="m-auto rounded-lg border border-terminal-border bg-terminal-panel/95 p-0 text-terminal-text shadow-terminal backdrop:bg-black/60"
+      className="m-auto rounded-2xl border border-line bg-surface p-0 text-ink shadow-soft backdrop:bg-black/50 backdrop:backdrop-blur-sm"
     >
       <div className="min-w-72 max-w-md p-5 sm:min-w-96 sm:p-6">
         <div className="flex items-center justify-between gap-4">
-          <p className="text-sm text-terminal-amber">$ shortcuts --list</p>
+          <p className="text-base font-semibold tracking-tight">Keyboard shortcuts</p>
           <button
             type="button"
             onClick={closeHelp}
             aria-label="Close shortcuts help"
-            className="rounded-md border border-terminal-border px-2 py-1 text-xs text-terminal-text/80 transition hover:border-terminal-accent hover:text-terminal-accent"
+            className="rounded-full border border-line px-2.5 py-1 font-mono text-xs text-muted transition hover:text-ink"
           >
             esc
           </button>
@@ -162,7 +162,7 @@ export function KeyboardShortcuts() {
           <Section title="general" bindings={UTIL_BINDINGS} />
         </div>
 
-        <p className="mt-5 text-[11px] text-terminal-text/60 sm:text-xs">
+        <p className="mt-5 text-xs text-muted">
           tip: press <Kbd>g</Kbd> then a letter (within 1.5s).
         </p>
       </div>
@@ -179,11 +179,11 @@ function Section({
 }) {
   return (
     <section>
-      <h2 className="text-xs font-medium text-terminal-accent sm:text-sm">{title}</h2>
+      <h2 className="font-mono text-xs uppercase tracking-[0.12em] text-muted">{title}</h2>
       <ul className="mt-2 space-y-1.5">
         {bindings.map((binding) => (
           <li key={binding.combo} className="flex items-center justify-between gap-4">
-            <span className="text-terminal-text/85">{binding.description}</span>
+            <span className="text-ink/85">{binding.description}</span>
             <span className="flex items-center gap-1">
               {binding.combo.split(" ").map((token, idx) => (
                 <Kbd key={`${binding.combo}-${idx}`}>{token}</Kbd>
@@ -198,7 +198,7 @@ function Section({
 
 function Kbd({ children }: { children: React.ReactNode }) {
   return (
-    <kbd className="inline-flex min-w-6 items-center justify-center rounded border border-terminal-border bg-terminal-bg px-1.5 py-0.5 font-mono text-[11px] text-terminal-text/90 sm:text-xs">
+    <kbd className="inline-flex min-w-6 items-center justify-center rounded border border-line bg-paper px-1.5 py-0.5 font-mono text-[11px] text-ink sm:text-xs">
       {children}
     </kbd>
   );

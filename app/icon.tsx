@@ -3,6 +3,7 @@ import { ImageResponse } from "next/og";
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
+/** A "P" with the marigold caret beside it, on purple. */
 export default function Icon() {
   return new ImageResponse(
     (
@@ -13,40 +14,13 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(155deg, #151515 0%, #0a0a0a 100%)",
-          borderRadius: 7,
-          border: "1px solid #2a2a2a"
+          gap: 3,
+          background: "#6D28D9",
+          borderRadius: 6
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 3
-          }}
-        >
-          <div
-            style={{
-              color: "#86efac",
-              fontSize: 15,
-              fontWeight: 700,
-              fontFamily: "ui-monospace, Menlo, Consolas, monospace",
-              lineHeight: 1,
-              marginTop: -2
-            }}
-          >
-            {">"}
-          </div>
-          <div
-            style={{
-              width: 9,
-              height: 3,
-              background: "#86efac",
-              borderRadius: 2
-            }}
-          />
-        </div>
+        <div style={{ color: "#FFFFFF", fontSize: 22, fontWeight: 800, lineHeight: 1 }}>P</div>
+        <div style={{ width: 4, height: 20, background: "#FFC425" }} />
       </div>
     ),
     { ...size }

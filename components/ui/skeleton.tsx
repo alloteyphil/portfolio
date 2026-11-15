@@ -7,14 +7,14 @@ type SkeletonProps = HTMLAttributes<HTMLDivElement> & {
 const roundedClass = {
   sm: "rounded",
   md: "rounded-md",
-  lg: "rounded-lg",
+  lg: "rounded-2xl",
   full: "rounded-full"
 } as const;
 
 export function Skeleton({ className = "", rounded = "md", ...props }: SkeletonProps) {
   return (
     <div
-      className={`animate-pulse bg-terminal-border/40 ${roundedClass[rounded]} ${className}`.trim()}
+      className={`animate-pulse bg-line/70 ${roundedClass[rounded]} ${className}`.trim()}
       aria-hidden
       {...props}
     />

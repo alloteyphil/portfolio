@@ -1,27 +1,22 @@
 import type { Metadata } from "next";
-import { BookOpen, iconStroke } from "@/components/icons";
-import { TerminalFrame } from "@/components/terminal-frame";
+import Link from "next/link";
+import { PageHeader } from "@/components/page-header";
+
+const DESCRIPTION = "Write-ups by Philip Allotey on things built and broken. Nothing published yet.";
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description: "Notes and write-ups — MDX scaffold, posts coming soon.",
-  openGraph: {
-    title: "Blog",
-    description: "Notes and write-ups — MDX scaffold, posts coming soon.",
-    url: "/blog"
-  }
+  title: "Writing",
+  description: DESCRIPTION,
+  openGraph: { title: "Writing", description: DESCRIPTION, url: "/blog" }
 };
 
 export default function BlogPage() {
   return (
-    <TerminalFrame title="~/blog">
-      <p className="flex flex-wrap items-center gap-2 text-terminal-accent">
-        <BookOpen className="size-4 shrink-0 sm:size-[1.125rem]" strokeWidth={iconStroke} aria-hidden />
-        <span>$ ls posts/</span>
-      </p>
-      <p className="mt-4 text-sm leading-relaxed text-terminal-text/85 sm:text-base">
-        Blog scaffold is ready for MDX integration. Add content wiring when you are ready to publish writing.
-      </p>
-    </TerminalFrame>
+    <PageHeader title="Nothing published yet.">
+      <p>I&apos;m planning write-ups on things I&apos;ve built and things I&apos;ve broken. Until then, the work speaks.</p>
+      <Link href="/projects" className="btn btn-solid mt-8">
+        See the work
+      </Link>
+    </PageHeader>
   );
 }

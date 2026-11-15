@@ -26,7 +26,7 @@ export function StructuredData() {
       {
         "@type": "WebSite",
         "@id": `${BASE_URL}/#website`,
-        name: "Philip | Portfolio",
+        name: "Philip Allotey",
         url: BASE_URL,
         inLanguage: "en",
         publisher: { "@id": `${BASE_URL}/#person` },

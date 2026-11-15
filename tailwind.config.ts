@@ -1,38 +1,40 @@
 import type { Config } from "tailwindcss";
 
+const token = (name: string) => `rgb(var(--color-${name}) / <alpha-value>)`;
+
 const config: Config = {
   darkMode: "class",
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./lib/**/*.{js,ts,jsx,tsx,mdx}"
+    "./lib/**/*.{js,ts,jsx,tsx,mdx}",
+    "./data/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
     extend: {
       fontFamily: {
-        outfit: ["var(--font-outfit)", "system-ui", "sans-serif"],
-        mono: [
-          "var(--font-geist-mono)",
-          "ui-monospace",
-          "SFMono-Regular",
-          "Menlo",
-          "Monaco",
-          "Consolas",
-          "monospace"
-        ]
+        sans: ["var(--font-archivo)", "system-ui", "sans-serif"],
+        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"]
       },
       colors: {
-        terminal: {
-          bg: "rgb(var(--color-terminal-bg) / <alpha-value>)",
-          panel: "rgb(var(--color-terminal-panel) / <alpha-value>)",
-          border: "rgb(var(--color-terminal-border) / <alpha-value>)",
-          text: "rgb(var(--color-terminal-text) / <alpha-value>)",
-          accent: "rgb(var(--color-terminal-accent) / <alpha-value>)",
-          amber: "rgb(var(--color-terminal-amber) / <alpha-value>)"
-        }
+        paper: token("paper"),
+        surface: token("surface"),
+        line: token("line"),
+        ink: token("ink"),
+        muted: token("muted"),
+        accent: {
+          DEFAULT: token("accent"),
+          ink: token("accent-ink")
+        },
+        brand: token("brand"),
+        heading: token("heading"),
+        live: token("live")
       },
       boxShadow: {
-        terminal: "var(--terminal-shadow)"
+        soft: "var(--shadow-soft)"
+      },
+      maxWidth: {
+        page: "76rem"
       }
     }
   },

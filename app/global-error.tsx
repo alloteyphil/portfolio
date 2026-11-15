@@ -19,30 +19,24 @@ export default function GlobalError({
         style={{
           margin: 0,
           minHeight: "100vh",
-          background: "#0a0a0a",
-          color: "#d8e4c8",
-          fontFamily: "ui-monospace, Menlo, Consolas, monospace",
+          background: "#F6F3FC",
+          color: "#2E1065",
+          fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           padding: "24px"
         }}
       >
-        <div
-          style={{
-            maxWidth: 560,
-            border: "1px solid #2a2a2a",
-            borderRadius: 12,
-            padding: 24,
-            background: "#111111"
-          }}
-        >
-          <p style={{ color: "#86efac", margin: 0 }}>$ trap --fatal</p>
-          <p style={{ color: "#fbbf24", marginTop: 12, marginBottom: 0 }}>
-            something failed at the root layout.
+        <div style={{ maxWidth: 560 }}>
+          <h1 style={{ margin: 0, fontSize: 36, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.05 }}>
+            The site failed to load.
+          </h1>
+          <p style={{ marginTop: 16, marginBottom: 0, fontSize: 17, lineHeight: 1.6 }}>
+            Reload the page to try again.
           </p>
-          <p style={{ marginTop: 16, marginBottom: 0, fontSize: 14, color: "#c8d4b8" }}>
-            {error?.message ?? "unknown error"}
+          <p style={{ marginTop: 12, marginBottom: 0, fontSize: 14, color: "#685496" }}>
+            {error?.message ?? "Unknown error"}
             {error?.digest ? ` (digest: ${error.digest})` : ""}
           </p>
           <button
@@ -50,17 +44,19 @@ export default function GlobalError({
             onClick={reset}
             style={{
               marginTop: 24,
-              padding: "10px 16px",
-              border: "1px solid #86efac",
+              minHeight: 48,
+              padding: "0 22px",
+              border: 0,
               borderRadius: 6,
-              background: "transparent",
-              color: "#86efac",
+              background: "#6D28D9",
+              color: "#FFFFFF",
               fontFamily: "inherit",
-              fontSize: 14,
+              fontSize: 15,
+              fontWeight: 600,
               cursor: "pointer"
             }}
           >
-            reload
+            Reload the page
           </button>
         </div>
       </body>

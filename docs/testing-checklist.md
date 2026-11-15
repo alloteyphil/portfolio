@@ -58,8 +58,8 @@ Use this checklist for every merge into `main`.
 
 ### Optional Post-Launch
 
-- [ ] PostHog tracks project live-link clicks.
-- [ ] PostHog tracks contact submit success/failure.
+- [ ] Vercel Web Analytics records page views in production.
+- [ ] Homepage Dilli Dilli numbers load from Vercel Web Analytics, and fall back to the April 2026 figure when the token is missing.
 
 ## Manual QA
 

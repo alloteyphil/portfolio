@@ -29,9 +29,11 @@ Operational deployment and secret management details are intentionally kept priv
 Projects on `/projects` come from two sources, merged at request time:
 
 1. **GitHub repos** tagged with the `portfolio` topic. Private repos are included; their public source link is replaced with a disabled `private` button on the card.
-2. **Manual projects** stored in `data/portfolio-config.json` (also editable from `/admin`). Use these for client work that doesn't live in your GitHub account or for projects that need a custom display name.
+2. **Manual projects** stored in the `manualProjects` array of `data/portfolio-config.json`. Use these for client work that doesn't live in your GitHub account or for projects that need a custom display name.
 
-Display order is controlled from `/admin` (`Project order` section). The order is persisted to `data/portfolio-config.json` via the GitHub Contents API; updates take effect on the next request — no redeploy required.
+Display order is the `order` array in the same file (`gh-<repo-name>` for GitHub repos, `manual-<slug>` for manual entries). To show or hide a repo, add or remove the `portfolio` topic on GitHub. The site reads the file from the repo's default branch through the GitHub Contents API, so a committed edit takes effect on the next request with no redeploy.
+
+There is no admin UI or login: the `/admin` area and Clerk were removed on 2026-11-14. Edit the file and commit. Pull first, because the site also commits repo-snapshot updates to this file.
 
 ### GitHub token expiry fallback
 

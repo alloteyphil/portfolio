@@ -198,7 +198,7 @@ export function ContactForm() {
           }
         }
 
-        setToast({ type: "success", message: "Message sent successfully." });
+        setToast({ type: "success", message: "Message sent. I'll reply by email." });
       } catch (err) {
         console.error(err);
         setToast({ type: "error", message: "Network error while sending message. Please try again." });
@@ -210,14 +210,14 @@ export function ContactForm() {
   function labelWithRequired(text: string) {
     return (
       <>
-        {text} <span className="text-red-400">*</span>
+        {text} <span className="font-normal text-muted">(required)</span>
       </>
     );
   }
 
   function fieldClass(hasError: boolean) {
-    return `w-full rounded border bg-transparent px-3 py-2 text-sm outline-none focus:border-terminal-accent ${
-      hasError ? "border-red-400" : "border-terminal-border"
+    return `w-full rounded-md border-[1.5px] bg-surface px-4 py-3 text-base text-ink outline-none transition placeholder:text-muted/60 focus:border-brand focus:ring-4 focus:ring-accent/60 dark:focus:border-accent dark:focus:ring-accent/25 ${
+      hasError ? "border-red-500" : "border-line"
     }`;
   }
 
@@ -225,10 +225,10 @@ export function ContactForm() {
     <>
       {toast ? (
         <div
-          className={`fixed left-4 right-4 top-4 z-50 rounded border px-3 py-3 text-sm shadow-lg sm:left-auto sm:right-5 sm:top-5 sm:max-w-sm sm:px-4 ${
+          className={`fixed left-4 right-4 top-4 z-50 rounded-md px-4 py-3 text-sm font-semibold shadow-soft sm:left-auto sm:right-5 sm:top-5 sm:max-w-sm ${
             toast.type === "error"
-              ? "border-red-400 bg-black text-red-300"
-              : "border-terminal-accent bg-black text-terminal-accent"
+              ? "border border-red-500/60 bg-surface text-red-600 dark:text-red-400"
+              : "bg-accent text-accent-ink"
           }`}
           role="status"
           aria-live="polite"
@@ -236,16 +236,16 @@ export function ContactForm() {
           {toast.message}
         </div>
       ) : null}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         <div>
-          <label htmlFor="contact-name" className="mb-1 block text-xs text-terminal-amber">
+          <label htmlFor="contact-name" className="mb-2 block text-sm font-medium text-ink">
             {labelWithRequired("Name")}
           </label>
           <input id="contact-name" autoComplete="name" maxLength={100} className={fieldClass(Boolean(errors.name))} {...register("name")} />
-          {errors.name ? <p className="mt-1 text-xs text-red-400">{errors.name.message}</p> : null}
+          {errors.name ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p> : null}
         </div>
         <div>
-          <label htmlFor="contact-email" className="mb-1 block text-xs text-terminal-amber">
+          <label htmlFor="contact-email" className="mb-2 block text-sm font-medium text-ink">
             {labelWithRequired("Email")}
           </label>
           <input
@@ -256,17 +256,17 @@ export function ContactForm() {
             className={fieldClass(Boolean(errors.email))}
             {...register("email")}
           />
-          {errors.email ? <p className="mt-1 text-xs text-red-400">{errors.email.message}</p> : null}
+          {errors.email ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p> : null}
         </div>
         <div>
-          <label htmlFor="contact-subject" className="mb-1 block text-xs text-terminal-amber">
+          <label htmlFor="contact-subject" className="mb-2 block text-sm font-medium text-ink">
             {labelWithRequired("Subject")}
           </label>
           <input id="contact-subject" maxLength={120} className={fieldClass(Boolean(errors.subject))} {...register("subject")} />
-          {errors.subject ? <p className="mt-1 text-xs text-red-400">{errors.subject.message}</p> : null}
+          {errors.subject ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.subject.message}</p> : null}
         </div>
         <div>
-          <label htmlFor="contact-message" className="mb-1 block text-xs text-terminal-amber">
+          <label htmlFor="contact-message" className="mb-2 block text-sm font-medium text-ink">
             {labelWithRequired("Message")}
           </label>
           <textarea
@@ -277,32 +277,32 @@ export function ContactForm() {
             className={fieldClass(Boolean(errors.message))}
             {...register("message")}
           />
-          {errors.message ? <p className="mt-1 text-xs text-red-400">{errors.message.message}</p> : null}
+          {errors.message ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message.message}</p> : null}
         </div>
 
         {turnstileEnabled ? (
           <div>
             <div ref={turnstileContainerRef} className="min-h-[65px] min-w-0 overflow-x-auto" />
             {errors.turnstileToken ? (
-              <p className="mt-1 text-xs text-red-400">{errors.turnstileToken.message}</p>
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.turnstileToken.message}</p>
             ) : null}
           </div>
         ) : (
-          <p className="text-xs text-terminal-amber">Turnstile is not configured in this environment.</p>
+          <p className="text-sm text-muted">Turnstile is not configured in this environment.</p>
         )}
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded border border-terminal-accent px-4 py-2.5 text-sm text-terminal-accent disabled:opacity-60 sm:min-h-0 sm:w-auto sm:justify-start sm:py-2"
+          className="btn btn-solid w-full sm:w-auto"
         >
           {isSubmitting ? (
             <>
-              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-terminal-accent border-t-transparent" />
-              sending...
+              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              Sending…
             </>
           ) : (
-            "send message"
+            "Send message"
           )}
         </button>
       </form>

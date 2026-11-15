@@ -2,28 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * "Live document" palette, purple-led: deep purple ink on pale lilac, a vivid purple for the brand
+ * block, and marigold (purple's complement) used the way a text selection is.
+ * Channels are space-separated RGB so Tailwind can apply alpha (see tailwind.config.ts).
+ */
 :root {
   color-scheme: light;
-  --color-terminal-bg: 250 250 249;
-  --color-terminal-panel: 245 245 244;
-  --color-terminal-border: 214 211 209;
-  --color-terminal-text: 41 37 36;
-  --color-terminal-accent: 5 150 105;
-  --color-terminal-amber: 180 83 9;
-  --terminal-shadow: 0 0 0 1px rgb(231 229 228 / 1), 0 18px 48px rgb(28 25 23 / 0.06);
-  --terminal-scanline-stripe: rgb(0 0 0 / 0.035);
+  --color-paper: 246 243 252;
+  --color-surface: 255 255 255;
+  --color-line: 219 210 240;
+  --color-ink: 46 16 101;
+  --color-muted: 104 84 150;
+  --color-accent: 255 196 37;
+  --color-accent-ink: 46 16 101;
+  --color-brand: 109 40 217;
+  --color-heading: 98 32 205;
+  --color-btn: 109 40 217;
+  --color-btn-ink: 255 255 255;
+  --color-guest: 226 48 100;
+  --color-focus: 109 40 217;
+  --color-live: 13 148 98;
+  --shadow-soft: 0 1px 0 rgb(46 16 101 / 0.05), 0 18px 40px -18px rgb(46 16 101 / 0.28);
 }
 
 .dark {
   color-scheme: dark;
-  --color-terminal-bg: 13 13 13;
-  --color-terminal-panel: 17 17 17;
-  --color-terminal-border: 42 42 42;
-  --color-terminal-text: 216 228 200;
-  --color-terminal-accent: 134 239 172;
-  --color-terminal-amber: 251 191 36;
-  --terminal-shadow: 0 0 0 1px rgb(31 31 31 / 1), 0 24px 50px rgb(0 0 0 / 0.45);
-  --terminal-scanline-stripe: rgb(255 255 255 / 0.03);
+  --color-paper: 19 10 41;
+  --color-surface: 30 18 62;
+  --color-line: 62 44 112;
+  --color-ink: 240 234 255;
+  --color-muted: 184 168 226;
+  --color-accent: 255 204 64;
+  --color-accent-ink: 19 10 41;
+  --color-brand: 124 58 237;
+  --color-heading: 200 184 255;
+  --color-btn: 124 58 237;
+  --color-btn-ink: 255 255 255;
+  --color-guest: 255 122 150;
+  --color-focus: 255 204 64;
+  --color-live: 74 222 150;
+  --shadow-soft: 0 1px 0 rgb(0 0 0 / 0.3), 0 18px 44px -18px rgb(0 0 0 / 0.7);
 }
 
 * {
@@ -32,69 +51,350 @@
 
 body {
   margin: 0;
-  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 a {
   color: inherit;
 }
 
-.terminal-panel {
-  border: 1px solid rgb(var(--color-terminal-border) / 1);
-  border-radius: 0.75rem;
-  background: rgb(var(--color-terminal-panel) / 0.92);
-  padding: 1rem;
-  box-shadow: var(--terminal-shadow);
+::selection {
+  background: rgb(var(--color-accent));
+  color: rgb(var(--color-accent-ink));
 }
 
-@media (min-width: 640px) {
-  .terminal-panel {
-    padding: 1.25rem;
+:focus-visible {
+  outline: 2px solid rgb(var(--color-focus));
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---- Type ---------------------------------------------------------------- */
+
+/* Archivo's width axis does the work: expanded + heavy for display, normal for reading. */
+.display {
+  font-stretch: 125%;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.94;
+}
+
+.hero-title {
+  position: relative;
+  font-size: clamp(2.6rem, 8.4vw, 7rem);
+}
+
+/* ---- Buttons and links --------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.375rem;
+  padding: 0 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  background-image: linear-gradient(rgb(var(--color-accent)), rgb(var(--color-accent)));
+  transition:
+    background-size 0.35s cubic-bezier(0.6, 0, 0.2, 1),
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  background-size: 100% 100%;
+  color: rgb(var(--color-accent-ink));
+}
+
+.btn-solid {
+  background-color: rgb(var(--color-btn));
+  color: rgb(var(--color-btn-ink));
+}
+
+.btn-line {
+  border: 1.5px solid rgb(var(--color-ink) / 0.35);
+  color: rgb(var(--color-ink));
+}
+
+.btn-line:hover,
+.btn-line:focus-visible {
+  border-color: rgb(var(--color-accent));
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  background-size: 0% 100%;
+}
+
+.link {
+  text-decoration: underline;
+  text-decoration-color: rgb(var(--color-accent));
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.link:hover {
+  background-color: rgb(var(--color-accent));
+  color: rgb(var(--color-accent-ink));
+}
+
+/* ---- Selection highlight (the site's one recurring gesture) -------------- */
+
+/* Inline span; the highlight sweeps through wrapped lines in reading order. */
+.mark,
+.row-mark {
+  background-image: linear-gradient(rgb(var(--color-accent)), rgb(var(--color-accent)));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+}
+
+/* Scroll-triggered: hidden until <Reveal /> sets data-in, then swept in. */
+.motion-ok [data-reveal="sel"]:not([data-in]) .mark {
+  color: transparent;
+}
+
+.motion-ok [data-reveal="sel"][data-in] .mark,
+.motion-ok .sel-load .mark {
+  animation: sel-sweep 0.95s cubic-bezier(0.6, 0, 0.2, 1) both;
+  animation-delay: calc(var(--d, 0) * 110ms);
+}
+
+@keyframes sel-sweep {
+  0% {
+    background-size: 0% 100%;
+    background-position: 0 0;
+    color: transparent;
+  }
+  45% {
+    background-size: 100% 100%;
+    background-position: 0 0;
+    color: transparent;
+  }
+  46% {
+    background-size: 100% 100%;
+    background-position: 100% 0;
+    color: rgb(var(--color-accent-ink));
+  }
+  100% {
+    background-size: 0% 100%;
+    background-position: 100% 0;
+    color: inherit;
   }
 }
 
-.scanline {
-  background: repeating-linear-gradient(
-    to bottom,
-    var(--terminal-scanline-stripe),
-    var(--terminal-scanline-stripe) 1px,
-    transparent 1px,
-    transparent 4px
-  );
-  opacity: 0.14;
+/* Hover-triggered version for rows and cards. */
+.row-mark {
+  transition:
+    background-size 0.4s cubic-bezier(0.6, 0, 0.2, 1),
+    color 0.2s;
 }
 
-.dark .scanline {
-  opacity: 0.12;
+.group:hover .row-mark,
+.group:focus-visible .row-mark,
+.group:focus-within .row-mark {
+  background-size: 100% 100%;
+  color: rgb(var(--color-accent-ink));
 }
 
-/* Home intro: JS-driven type/delete loop + caret (see app/page.tsx). */
-.intro-typer {
-  max-width: 100%;
+/* Plain block reveal for lists and cards, staggered with --d. */
+.motion-ok [data-reveal="up"] {
+  transition:
+    opacity 0.6s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--d, 0) * 80ms);
 }
 
-.intro-typer__text {
-  word-break: break-word;
+.motion-ok [data-reveal="up"]:not([data-in]) {
+  opacity: 0;
+  transform: translateY(18px);
 }
 
-@media (min-width: 640px) {
-  .intro-typer__text {
-    white-space: nowrap;
+/* ---- Hero: the headline being edited ------------------------------------- */
+
+.sel {
+  background: rgb(var(--color-accent));
+  color: rgb(var(--color-accent-ink));
+}
+
+/* Until hydration starts the edit, hold the phrase back (with a timed fallback if JS never arrives). */
+.motion-ok .hero-title[data-phase="static"] .live-phrase {
+  animation: phrase-fallback 0s 3s both;
+}
+
+@keyframes phrase-fallback {
+  from {
+    visibility: hidden;
+  }
+  to {
+    visibility: visible;
   }
 }
 
-.intro-typer__caret {
+.caret {
+  position: relative;
+  display: none;
+  width: 0;
+  height: 0.8em;
+  vertical-align: -0.05em;
+}
+
+.hero-title:not([data-phase="static"]) .caret {
   display: inline-block;
-  width: 2px;
-  height: 1.1em;
-  margin-left: 2px;
-  background: rgb(var(--color-terminal-accent));
-  vertical-align: -0.14em;
-  animation: caret-blink 0.85s step-end infinite;
+}
+
+.caret::before {
+  content: "";
+  position: absolute;
+  inset: -0.04em auto -0.04em 0;
+  width: max(3px, 0.05em);
+  background: rgb(var(--color-accent));
+}
+
+.hero-title[data-phase="draft"] .caret::before {
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+.hero-title[data-phase="done"] .caret::before {
+  animation: caret-blink 1s steps(1) 5 forwards;
 }
 
 @keyframes caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
   50% {
     opacity: 0;
+  }
+}
+
+.caret-flag {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 0.04em);
+  border-radius: 4px 4px 4px 0;
+  background: rgb(var(--color-accent));
+  padding: 0.3rem 0.5rem;
+  color: rgb(var(--color-accent-ink));
+  font-size: 0.8125rem;
+  font-stretch: 100%;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+  transition: opacity 0.5s 2.5s;
+}
+
+.hero-title[data-phase="done"] .caret-flag {
+  opacity: 0;
+}
+
+/* The visitor's own name flag, trailing their pointer inside the hero. */
+.guest-flag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s;
+  will-change: transform;
+}
+
+.guest-flag[data-on] {
+  opacity: 1;
+}
+
+.guest-flag span {
+  display: block;
+  margin: 18px 0 0 14px;
+  border-radius: 0 4px 4px 4px;
+  background: rgb(var(--color-guest));
+  padding: 0.3rem 0.5rem;
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dark .guest-flag span {
+  color: rgb(var(--color-accent-ink));
+}
+
+/* ---- Growth bar (scroll-linked via --p set by <GrowthBar />) ------------- */
+
+/* --start is the April 2025 figure as a percentage of the current total, so both bars stay to scale. */
+.growth-start {
+  width: calc(var(--start, 1.9) * 1%);
+}
+
+.growth-fill {
+  width: calc((var(--start, 1.9) + (100 - var(--start, 1.9)) * var(--p, 1)) * 1%);
+}
+
+/* ---- Presence dot -------------------------------------------------------- */
+
+.live-dot {
+  position: relative;
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+  border-radius: 9999px;
+  background: rgb(var(--color-live));
+}
+
+.motion-ok .live-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: live-ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes live-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  80%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+/* Always-purple island (the homepage closing block), whatever the page theme. */
+.brand-scope {
+  --color-paper: var(--color-brand);
+  --color-ink: 255 255 255;
+  --color-heading: 255 255 255;
+  --color-btn: 255 255 255;
+  --color-btn-ink: var(--color-brand);
+  --color-muted: 232 222 255;
+  --color-line: 167 132 246;
+  --color-accent: 255 204 64;
+  --color-accent-ink: 46 16 101;
+  --color-focus: 255 204 64;
+  background: rgb(var(--color-brand));
+  color: rgb(var(--color-ink));
+}
+
+/* Belt and braces: `.motion-ok` is only set when motion is allowed, but honour a mid-session change too. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
   }
 }

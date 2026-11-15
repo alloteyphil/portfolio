@@ -3,12 +3,20 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FolderGit2, Globe, Lock, iconButtonClass, iconStroke } from "@/components/icons";
+import { ArrowUpRight, FolderGit2, Lock, iconStroke } from "@/components/icons";
 import type { PortfolioProject } from "@/types/project";
 
 type ProjectCardProps = {
   project: PortfolioProject;
 };
+
+function displayHost(url: string) {
+  try {
+    return new URL(url).host.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const [imageLoadFailed, setImageLoadFailed] = useState(false);
@@ -17,91 +25,79 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const stackTags = Array.from(
     new Set([
       ...(project.language ? [project.language] : []),
-      ...project.topics.filter((topic) => topic.toLowerCase() !== "portfolio")
+      ...project.topics.filter((topic) => !["portfolio", "git", "github"].includes(topic.toLowerCase()))
     ])
-  ).slice(0, 6);
+  ).slice(0, 5);
 
   const showPrivateSource = project.sourceVisibility === "private" || !project.repositoryUrl;
+  const host = displayHost(project.homepageUrl);
 
   return (
-    <article className="h-full min-w-0 rounded-xl border border-terminal-border bg-gradient-to-b from-terminal-panel to-terminal-bg p-4 shadow-terminal sm:p-5">
-      <header className="mb-4 flex min-w-0 items-center justify-between gap-2 border-b border-terminal-border/70 pb-3">
-        <div className="flex shrink-0 items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-          <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
-          <span className="h-2.5 w-2.5 rounded-full bg-green-400" />
-        </div>
-        <span className="min-w-0 truncate text-right text-xs text-terminal-amber">{project.name}</span>
-      </header>
-
-      <div className="mb-4 min-w-0 overflow-hidden rounded-lg border border-terminal-border/70 bg-terminal-panel/50">
-        <div className="border-b border-terminal-border/70 bg-terminal-bg/70 px-2 py-2 text-xs text-terminal-amber sm:px-3">
-          <span className="block truncate" title={project.homepageUrl}>
-            {project.homepageUrl}
-          </span>
-        </div>
+    <article className="group flex h-full min-w-0 flex-col">
+      <a
+        href={project.homepageUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="relative block overflow-hidden rounded-lg border border-line bg-surface"
+        aria-label={`Open ${project.name} live site (new tab)`}
+      >
         {hasScreenshot ? (
           <Image
             src={screenshotUrl!}
-            alt={`${project.name} screenshot`}
+            alt=""
             width={1200}
             height={600}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 600px"
-            className="h-40 w-full object-cover sm:h-48"
+            sizes="(max-width: 768px) 100vw, 580px"
+            className="aspect-[2/1] w-full object-cover object-top transition duration-700 ease-out group-hover:scale-[1.035]"
             onError={() => setImageLoadFailed(true)}
           />
         ) : (
-          <div className="flex h-40 items-center justify-center px-2 text-center text-xs text-terminal-text/70 sm:h-48">
-            Screenshot not available yet. Run refresh to generate it.
+          <div className="display flex aspect-[2/1] items-center justify-center bg-brand p-6 text-center text-3xl text-white">
+            {project.name}
           </div>
         )}
-      </div>
+        <span className="absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-between bg-accent px-4 py-2.5 text-sm font-semibold text-accent-ink transition-transform duration-300 ease-out group-hover:translate-y-0">
+          {host}
+          <ArrowUpRight className="size-4" strokeWidth={2} aria-hidden />
+        </span>
+      </a>
 
-      <h3 className="break-words text-base text-terminal-accent sm:text-lg">{project.fullName}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-terminal-text/90">{project.description}</p>
+      <div className="flex flex-1 flex-col pt-5">
+        <h3 className="min-w-0 text-xl font-bold text-ink">
+          <span className="row-mark">{project.name}</span>
+        </h3>
+        <p className="mt-2 line-clamp-3 leading-relaxed text-ink/75">{project.description}</p>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        {stackTags.map((topic) => (
-          <span
-            key={topic}
-            className="rounded-full border border-terminal-border/70 bg-terminal-accent/10 px-2.5 py-0.5 text-xs text-terminal-accent"
-          >
-            {topic}
-          </span>
-        ))}
-      </div>
+        {stackTags.length > 0 ? <p className="mt-3 text-sm text-muted">{stackTags.join(", ")}</p> : null}
 
-      <footer className="mt-5 flex flex-col gap-2 text-sm sm:flex-row sm:gap-3">
-        {showPrivateSource ? (
-          <span
-            aria-disabled="true"
-            title="Source is not publicly available"
-            className="inline-flex min-h-10 cursor-not-allowed items-center justify-center gap-2 rounded border border-terminal-border/60 px-3 py-2 text-terminal-text/55 sm:min-h-0 sm:py-1"
-          >
-            <Lock className={iconButtonClass} strokeWidth={iconStroke} aria-hidden />
-            private
-          </span>
-        ) : (
+        <footer className="mt-auto flex gap-5 pt-5 text-[15px]">
           <Link
-            href={project.repositoryUrl!}
+            href={project.homepageUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-10 items-center justify-center gap-2 rounded border border-terminal-border px-3 py-2 text-terminal-accent hover:border-terminal-accent sm:min-h-0 sm:py-1"
+            className="link inline-flex items-center gap-1 font-semibold text-ink"
           >
-            <FolderGit2 className={iconButtonClass} strokeWidth={iconStroke} aria-hidden />
-            source
+            Open live site
+            <ArrowUpRight className="size-3.5" strokeWidth={iconStroke} aria-hidden />
           </Link>
-        )}
-        <Link
-          href={project.homepageUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded border border-terminal-border px-3 py-2 text-terminal-amber hover:border-terminal-amber sm:min-h-0 sm:py-1"
-        >
-          <Globe className={iconButtonClass} strokeWidth={iconStroke} aria-hidden />
-          live
-        </Link>
-      </footer>
+          {showPrivateSource ? (
+            <span className="inline-flex items-center gap-1.5 text-muted" title="Source is not publicly available">
+              <Lock className="size-3.5" strokeWidth={iconStroke} aria-hidden />
+              Private source
+            </span>
+          ) : (
+            <Link
+              href={project.repositoryUrl!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-muted transition hover:text-ink"
+            >
+              <FolderGit2 className="size-3.5" strokeWidth={iconStroke} aria-hidden />
+              Source
+            </Link>
+          )}
+        </footer>
+      </div>
     </article>
   );
 }

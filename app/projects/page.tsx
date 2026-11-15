@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/page-header";
 import { ProjectCard } from "@/components/project-card";
-import { TerminalFrame } from "@/components/terminal-frame";
+import { Reveal } from "@/components/reveal";
 import { env } from "@/lib/env";
 import { getPortfolioProjects } from "@/lib/projects";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+const DESCRIPTION = "Client sites, products and older builds by Philip Allotey. Every one is deployed, so you can open it.";
+
 export const metadata: Metadata = {
-  title: "Projects",
-  description: "A curated list of shipped projects — public repos, private work, and client sites.",
-  openGraph: {
-    title: "Projects",
-    description: "A curated list of shipped projects — public repos, private work, and client sites.",
-    url: "/projects"
-  }
+  title: "Work",
+  description: DESCRIPTION,
+  openGraph: { title: "Work", description: DESCRIPTION, url: "/projects" }
 };
 
 export default async function ProjectsPage() {
@@ -22,35 +21,36 @@ export default async function ProjectsPage() {
   const githubConfigured = Boolean(env.GITHUB_TOKEN && env.GITHUB_USERNAME);
 
   return (
-    <TerminalFrame title="~/projects">
-      <p className="mb-6 text-sm leading-relaxed text-terminal-text/85">
-        Curated portfolio: GitHub projects tagged <span className="text-terminal-amber">portfolio</span> plus
-        manually added private and client work.
-      </p>
+    <>
+      <PageHeader title="Everything here is live. Go ahead and open it.">
+        {projects.length > 0 ? `${projects.length} projects: ` : ""}client sites, my own products and a few older
+        builds I still like.
+      </PageHeader>
 
       {projects.length === 0 ? (
-        <div className="rounded border border-dashed border-terminal-border p-6 text-sm text-terminal-text/70">
+        <div className="rounded-lg border border-dashed border-line p-8 text-ink/75">
           {githubConfigured ? (
             <>
-              No projects to show yet. Tag a GitHub repo with{" "}
-              <span className="text-terminal-amber">portfolio</span> or add a manual entry from{" "}
-              <span className="text-terminal-amber">/admin</span>.
+              No projects to show yet. Tag a GitHub repo with <code className="font-mono text-ink">portfolio</code> or
+              add a manual entry to <code className="font-mono text-ink">data/portfolio-config.json</code>.
             </>
           ) : (
             <>
-              GitHub is not configured. Set <span className="text-terminal-amber">GITHUB_TOKEN</span> and{" "}
-              <span className="text-terminal-amber">GITHUB_USERNAME</span> in your environment, or add manual
-              projects from <span className="text-terminal-amber">/admin</span>.
+              GitHub is not configured. Set <code className="font-mono text-ink">GITHUB_TOKEN</code> and{" "}
+              <code className="font-mono text-ink">GITHUB_USERNAME</code> in your environment, or add manual projects
+              to <code className="font-mono text-ink">data/portfolio-config.json</code>.
             </>
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+        <div className="grid grid-cols-1 gap-x-10 gap-y-16 md:grid-cols-2">
+          {projects.map((project, i) => (
+            <Reveal key={project.id} delay={i % 2}>
+              <ProjectCard project={project} />
+            </Reveal>
           ))}
         </div>
       )}
-    </TerminalFrame>
+    </>
   );
 }
