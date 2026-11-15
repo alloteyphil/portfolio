@@ -1,13 +1,19 @@
 export type SkillGroup = {
   title: string;
   items: string[];
+  /** Optional one-line context: where this group of skills is used. */
+  note?: string;
 };
 
-/** Mirrors the Technologies section of public/resume.pdf. The About page maps over groups. */
+/**
+ * The About page maps over groups. Keep every item backed by real work:
+ * the observability and infrastructure groups come from Points Africa (pa-signoz-infra),
+ * the rest from the projects on this site.
+ */
 export const SKILL_GROUPS: SkillGroup[] = [
   {
     title: "Languages",
-    items: ["TypeScript", "JavaScript"]
+    items: ["TypeScript", "JavaScript", "Python", "SQL"]
   },
   {
     title: "Web and mobile",
@@ -18,11 +24,26 @@ export const SKILL_GROUPS: SkillGroup[] = [
     items: ["Node.js", "Convex", "REST APIs", "LiveKit", "Better Auth"]
   },
   {
+    title: "Observability",
+    items: [
+      "SigNoz",
+      "OpenTelemetry (traces, logs, metrics)",
+      "Dashboards and alert rules as code",
+      "Live health and incident pages",
+      "Amazon CloudWatch"
+    ],
+    note: "At Points Africa I build the dashboards, alerts and live health pages the team uses to watch the loyalty platform."
+  },
+  {
+    title: "Cloud and infrastructure",
+    items: ["AWS (SSM, ALB, ECS, Lambda)", "Terraform", "Docker Compose", "nginx", "GitHub Actions"]
+  },
+  {
     title: "Data and integrations",
     items: ["PostgreSQL", "MongoDB", "AWS S3", "Cloudflare R2", "Stripe", "Paystack", "Vercel Analytics"]
   },
   {
-    title: "Tooling",
-    items: ["Git", "Docker", "CI/CD", "ESLint", "Prettier", "Vitest", "Jest", "Linear"]
+    title: "Testing and tooling",
+    items: ["Git", "pytest", "Vitest", "Jest", "ESLint", "Prettier", "Linear"]
   }
 ];

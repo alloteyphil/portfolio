@@ -37,8 +37,9 @@ export default function AboutPage() {
             growing pile of transactions while the dashboard keeps updating.
           </p>
           <p>
-            By day I&apos;m a junior analyst at Points Africa. The projects on this site are what I build outside of
-            that.
+            By day I&apos;m a junior analyst at Points Africa, where I work on monitoring: the dashboards, alerts and
+            live health pages that show the team when something in the platform is going wrong. The projects on this
+            site are what I build outside of that.
           </p>
           <p>
             <Link href="/projects" className="link font-semibold text-ink">
@@ -79,7 +80,10 @@ export default function AboutPage() {
               className="grid gap-x-10 gap-y-1 border-b border-line py-5 sm:grid-cols-[11rem_1fr]"
             >
               <dt className="text-[15px] text-muted sm:pt-0.5">{group.title}</dt>
-              <dd className="text-lg font-medium text-ink">{group.items.join(", ")}</dd>
+              <dd>
+                <p className="text-lg font-medium text-ink">{group.items.join(", ")}</p>
+                {group.note ? <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-ink/70">{group.note}</p> : null}
+              </dd>
             </Reveal>
           ))}
         </dl>
