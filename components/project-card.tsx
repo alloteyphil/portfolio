@@ -48,11 +48,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
             width={1200}
             height={600}
             sizes="(max-width: 768px) 100vw, 580px"
-            className="aspect-[2/1] w-full object-cover object-top transition duration-700 ease-out group-hover:scale-[1.035]"
+            className="aspect-2/1 w-full object-cover object-top transition duration-700 ease-out group-hover:scale-[1.035]"
             onError={() => setImageLoadFailed(true)}
           />
         ) : (
-          <div className="display flex aspect-[2/1] items-center justify-center bg-brand p-6 text-center text-3xl text-white">
+          <div className="display flex aspect-2/1 items-center justify-center bg-brand p-6 text-center text-3xl text-white">
             {project.name}
           </div>
         )}

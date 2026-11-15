@@ -8,9 +8,9 @@ Use this checklist for every merge into `main`.
 
 ## Automated Checks
 
-- [ ] `bun run lint`
-- [ ] `bun run typecheck`
-- [ ] `bun run build`
+- [ ] `npm run lint`
+- [ ] `npm run typecheck`
+- [ ] `npm run build`
 - [ ] Required test suites pass
 
 ## Functional Validation

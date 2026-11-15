@@ -5,7 +5,7 @@ type SkeletonProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const roundedClass = {
-  sm: "rounded",
+  sm: "rounded-sm",
   md: "rounded-md",
   lg: "rounded-2xl",
   full: "rounded-full"

@@ -75,13 +75,13 @@ export function GrowthBar({ total, last30Days, asOf }: GrowthBarProps) {
         <div className="mt-10 grid grid-cols-[5.5rem_1fr] items-center gap-x-4 gap-y-3 sm:grid-cols-[7rem_1fr]">
           <span className="text-sm text-muted">April 2025</span>
           <div className="flex items-center gap-3">
-            <span className="growth-start block h-10 min-w-1 rounded-sm bg-brand sm:h-14" />
+            <span className="growth-start block h-10 min-w-1 rounded-xs bg-brand sm:h-14" />
             <span className="text-sm font-semibold tabular-nums text-ink">1,200</span>
           </div>
 
           <span className="text-sm text-muted">{asOf}</span>
           <div>
-            <span className="growth-fill block h-10 min-w-1 rounded-sm bg-accent sm:h-14" />
+            <span className="growth-fill block h-10 min-w-1 rounded-xs bg-accent sm:h-14" />
           </div>
         </div>
       </div>

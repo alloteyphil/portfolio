@@ -31,8 +31,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
       "Dashboards and alert rules as code",
       "Live health and incident pages",
       "Amazon CloudWatch"
-    ],
-    note: "At Points Africa I build the dashboards, alerts and live health pages the team uses to watch the loyalty platform."
+    ]
   },
   {
     title: "Cloud and infrastructure",

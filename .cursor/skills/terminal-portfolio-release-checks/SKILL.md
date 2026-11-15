@@ -13,9 +13,9 @@ description: Defines a repeatable pre-merge and pre-release validation flow for 
 
 ## Build Quality Gate
 
-1. `bun run lint`
-2. `bun run typecheck`
-3. `bun run build`
+1. `npm run lint`
+2. `npm run typecheck`
+3. `npm run build`
 
 ## Functional Gate
 

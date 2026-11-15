@@ -14,7 +14,7 @@ description: Maps the portfolio's Next.js App Router structure, route responsibi
 ## Do Not Use This Skill When
 
 - Changing integration contracts (use data-pipeline/automation skills).
-- Working on package-manager policy (use bun-workflow skill).
+- Working on package-manager policy (use npm-workflow skill).
 
 ## Project Map
 
@@ -40,5 +40,5 @@ description: Maps the portfolio's Next.js App Router structure, route responsibi
 
 ## Verification
 
-- Run `bun run lint` and `bun run build` after substantive changes.
+- Run `npm run lint` and `npm run build` after substantive changes.
 - Confirm affected routes still render with consistent shell/navigation behavior.

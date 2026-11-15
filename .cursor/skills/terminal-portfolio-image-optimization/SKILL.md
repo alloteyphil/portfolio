@@ -33,6 +33,6 @@ description: Applies dual screenshot optimization using Cloudinary delivery tran
 
 ## Verification
 
-1. Run `bun run lint` and `bun run build`.
+1. Run `npm run lint` and `npm run build`.
 2. Confirm `/projects` renders without layout-shift regressions.
 3. Confirm missing screenshots still render pending fallback UI.

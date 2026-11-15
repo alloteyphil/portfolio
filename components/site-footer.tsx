@@ -35,7 +35,7 @@ export function SiteFooter() {
               key={link.href}
               href={link.href}
               {...("external" in link ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              className="rounded-sm px-2 py-1 text-ink/75 transition-colors hover:bg-accent hover:text-accent-ink"
+              className="rounded-xs px-2 py-1 text-ink/75 transition-colors hover:bg-accent hover:text-accent-ink"
             >
               {link.label}
             </Link>

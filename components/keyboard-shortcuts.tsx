@@ -142,7 +142,7 @@ export function KeyboardShortcuts() {
       ref={dialogRef}
       onClose={closeHelp}
       onClick={handleBackdropClick}
-      className="m-auto rounded-2xl border border-line bg-surface p-0 text-ink shadow-soft backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+      className="m-auto rounded-2xl border border-line bg-surface p-0 text-ink shadow-soft backdrop:bg-black/50 backdrop:backdrop-blur-xs"
     >
       <div className="min-w-72 max-w-md p-5 sm:min-w-96 sm:p-6">
         <div className="flex items-center justify-between gap-4">

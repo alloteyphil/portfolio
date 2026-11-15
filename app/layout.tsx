@@ -66,7 +66,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <KeyboardShortcuts />
           <main className="mx-auto flex min-h-screen w-full min-w-0 max-w-page flex-col px-4 sm:px-8">
             <SiteHeader />
-            <div id="main-content" tabIndex={-1} className="flex-1 outline-none">
+            <div id="main-content" tabIndex={-1} className="flex-1 outline-hidden">
               {children}
             </div>
             <SiteFooter />

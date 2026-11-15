@@ -63,7 +63,7 @@ export function ContactForm() {
     setValue,
     reset,
     formState: { errors, isSubmitting }
-  } = useForm<FormValues>({
+  } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
@@ -216,7 +216,7 @@ export function ContactForm() {
   }
 
   function fieldClass(hasError: boolean) {
-    return `w-full rounded-md border-[1.5px] bg-surface px-4 py-3 text-base text-ink outline-none transition placeholder:text-muted/60 focus:border-brand focus:ring-4 focus:ring-accent/60 dark:focus:border-accent dark:focus:ring-accent/25 ${
+    return `w-full rounded-md border-[1.5px] bg-surface px-4 py-3 text-base text-ink outline-hidden transition placeholder:text-muted/60 focus:border-brand focus:ring-4 focus:ring-accent/60 dark:focus:border-accent dark:focus:ring-accent/25 ${
       hasError ? "border-red-500" : "border-line"
     }`;
   }

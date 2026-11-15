@@ -13,9 +13,9 @@ Next.js App Router portfolio with a terminal aesthetic, curated projects, and au
 
 ## Local development
 
-- Install dependencies: `bun install`
-- Run locally: `bun run dev`
-- Build check: `bun run build`
+- Install dependencies: `npm install`
+- Run locally: `npm run dev`
+- Build check: `npm run build`
 
 Operational deployment and secret management details are intentionally kept private.
 
@@ -74,5 +74,5 @@ Screenshot refresh runs from a manual workflow trigger (not on every push).
 - `docs/runbook-screenshots.md` - screenshot operations and fallback policy
 - `docs/blog-future.md` - deferred blog activation plan
 - `docs/testing-checklist.md` - testing and pre-merge checklist
-- `docs/bun-workflow.md` - Bun package manager workflow and command map
+- `docs/npm-workflow.md` - npm package manager workflow and command map
 - `docs/image-optimization.md` - screenshot delivery and rendering optimization guide

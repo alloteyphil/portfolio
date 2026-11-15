@@ -1,11 +1,35 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Theme tokens reference :root / .dark palette channels below. `@theme inline` keeps those
+ * channel variables intact so custom CSS (buttons, marks, etc.) and Tailwind opacity modifiers
+ * both resolve through the same source of truth.
+ */
+@theme inline {
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --color-paper: rgb(var(--color-paper));
+  --color-surface: rgb(var(--color-surface));
+  --color-line: rgb(var(--color-line));
+  --color-ink: rgb(var(--color-ink));
+  --color-muted: rgb(var(--color-muted));
+  --color-accent: rgb(var(--color-accent));
+  --color-accent-ink: rgb(var(--color-accent-ink));
+  --color-brand: rgb(var(--color-brand));
+  --color-heading: rgb(var(--color-heading));
+  --color-live: rgb(var(--color-live));
+
+  --shadow-soft: var(--shadow-soft);
+  --max-width-page: 76rem;
+}
 
 /*
  * "Live document" palette, purple-led: deep purple ink on pale lilac, a vivid purple for the brand
  * block, and marigold (purple's complement) used the way a text selection is.
- * Channels are space-separated RGB so Tailwind can apply alpha (see tailwind.config.ts).
+ * Channels are space-separated RGB so custom CSS and Tailwind can apply alpha.
  */
 :root {
   color-scheme: light;

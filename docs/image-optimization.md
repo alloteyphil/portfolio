@@ -39,8 +39,8 @@ Project screenshots are optimized through two complementary layers.
 
 ## Validation Checklist
 
-- `bun run lint` passes.
-- `bun run build` passes.
+- `npm run lint` passes.
+- `npm run build` passes.
 - `/projects` renders screenshot cards without visual jump.
 - Screenshot fallback still appears when no screenshot is available.
 - Delivered screenshot URLs include expected Cloudinary transforms.

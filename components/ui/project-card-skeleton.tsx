@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function ProjectCardSkeleton() {
   return (
     <div className="min-w-0">
-      <Skeleton className="aspect-[2/1] w-full" rounded="lg" />
+      <Skeleton className="aspect-2/1 w-full" rounded="lg" />
       <div className="flex items-center justify-between pt-5">
         <Skeleton className="h-5 w-40" />
         <Skeleton className="h-3 w-24" rounded="sm" />

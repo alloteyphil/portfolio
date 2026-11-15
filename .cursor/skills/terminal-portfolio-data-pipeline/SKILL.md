@@ -50,6 +50,6 @@ description: Owns the portfolio project ingestion and screenshot refresh pipelin
 
 ## Verification
 
-- Run `bun run lint` and `bun run build`.
+- Run `npm run lint` and `npm run build`.
 - Confirm `/projects` renders with and without screenshot URLs.
 - Confirm refresh route behavior remains retry-safe and non-destructive.

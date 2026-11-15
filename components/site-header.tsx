@@ -33,7 +33,7 @@ export function SiteHeader() {
               href={link.href}
               {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               aria-current={active ? "page" : undefined}
-              className={`rounded-sm px-2 py-1 text-[15px] font-medium transition-colors ${
+              className={`rounded-xs px-2 py-1 text-[15px] font-medium transition-colors ${
                 active ? "bg-accent text-accent-ink" : "text-ink/75 hover:bg-accent hover:text-accent-ink"
               }`}
             >

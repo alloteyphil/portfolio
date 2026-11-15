@@ -46,7 +46,7 @@ export async function fetchUserRepos(): Promise<GitHubRepo[] | null> {
     });
 
     return repos.map((repo) => ({
-      id: repo.id,
+      id: Number(repo.id),
       name: repo.name,
       full_name: repo.full_name,
       description: repo.description,

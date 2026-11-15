@@ -101,7 +101,7 @@ Exit criteria:
 
 Exit criteria:
 
-- `bun run lint`, `bun run typecheck`, and `bun run build` pass.
+- `npm run lint`, `npm run typecheck`, and `npm run build` pass.
 - Required tests pass.
 - Release checklist is complete.
 
@@ -127,7 +127,7 @@ Exit criteria:
 - Contact form is protected by Turnstile and delivered via Resend.
 - Resume/CV is reachable in one click from global navigation.
 - Basic SEO outputs are present and valid.
-- `bun run lint`, `bun run typecheck`, and `bun run build` pass.
+- `npm run lint`, `npm run typecheck`, and `npm run build` pass.
 
 ## Optional Criteria (Post-Launch)
 
