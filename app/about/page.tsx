@@ -28,7 +28,7 @@ export default function AboutPage() {
           </Reveal>
           <Reveal as="p" delay={2}>
             The project I&apos;m proudest of is dilli-dilli.com, a site I built and launched for a New York restaurant
-            and still maintain. It started at 1,200 monthly visitors, has grown past 62,700+ total visitors, and has
+            and still maintain. It started at 1,200 monthly visitors, has grown past 94,600+ total visitors, and has
             been featured by the New York Times and Forbes.
           </Reveal>
           <Reveal as="p" delay={3}>
@@ -60,10 +60,10 @@ export default function AboutPage() {
             </li>
           </ul>
           <Reveal kind="pop" delay={4}>
-            <Link href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-line mt-7">
+            <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-line mt-7">
               Résumé (PDF)
               <ArrowUpRight className="size-4" strokeWidth={iconStroke} aria-hidden />
-            </Link>
+            </a>
           </Reveal>
         </Reveal>
       </div>

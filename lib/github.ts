@@ -1,9 +1,18 @@
 import { Octokit } from "octokit";
 import { env } from "./env";
 
-const octokit = new Octokit({
-  auth: env.GITHUB_TOKEN
-});
+let octokitInstance: Octokit | null = null;
+
+/** Shared lazy Octokit singleton so GitHub API consumers don't re-instantiate plugins per call. */
+export function getOctokit(): Octokit {
+  if (!env.GITHUB_TOKEN) {
+    throw new Error("GITHUB_TOKEN is missing.");
+  }
+  if (!octokitInstance) {
+    octokitInstance = new Octokit({ auth: env.GITHUB_TOKEN });
+  }
+  return octokitInstance;
+}
 
 export type GitHubRepo = {
   id: number;
@@ -23,7 +32,6 @@ export type GitHubRepo = {
  * Fetches all repos for the authenticated user.
  * Returns null when the token is missing/expired or the API call fails —
  * callers should fall back to any cached snapshot in that case.
- * Returns an array (possibly empty) on success.
  */
 export async function fetchUserRepos(): Promise<GitHubRepo[] | null> {
   if (!env.GITHUB_TOKEN || !env.GITHUB_USERNAME) {
@@ -31,10 +39,7 @@ export async function fetchUserRepos(): Promise<GitHubRepo[] | null> {
   }
 
   try {
-    // Use the authenticated user endpoint so private repos owned by the token
-    // user are visible to the curation pipeline. Fallback to the public listing
-    // if the token does not have read access to the authenticated user endpoint.
-    const { data: repos } = await octokit.request("GET /user/repos", {
+    const { data: repos } = await getOctokit().request("GET /user/repos", {
       per_page: 100,
       sort: "pushed",
       direction: "desc",

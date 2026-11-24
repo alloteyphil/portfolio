@@ -29,17 +29,23 @@ export function SiteFooter() {
           </span>
         </div>
 
-        <nav className="-ml-2 flex flex-wrap gap-x-1 gap-y-1 text-sm" aria-label="Footer">
-          {LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              {...("external" in link ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              className="rounded-xs px-2 py-1 text-ink/75 transition-colors hover:bg-accent hover:text-accent-ink"
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="flex flex-wrap gap-x-1 gap-y-1 text-sm" aria-label="Footer">
+          {LINKS.map((link) => {
+            const className =
+              "rounded-xs px-2 py-1 text-ink/75 transition-colors first:pl-0 hover:bg-accent hover:text-accent-ink sm:first:pl-2";
+            if ("external" in link) {
+              return (
+                <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={className}>
+                  {link.label}
+                </a>
+              );
+            }
+            return (
+              <Link key={link.href} href={link.href} className={className}>
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
       </div>
     </footer>

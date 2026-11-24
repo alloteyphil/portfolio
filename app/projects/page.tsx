@@ -5,8 +5,8 @@ import { Reveal } from "@/components/reveal";
 import { env } from "@/lib/env";
 import { getPortfolioProjects } from "@/lib/projects";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+/** Revalidate curated projects in the background every 10 minutes instead of blocking every visitor on GitHub API calls. */
+export const revalidate = 600;
 
 const DESCRIPTION = "Client sites, products and older builds by Philip Allotey. Every one is deployed, so you can open it.";
 

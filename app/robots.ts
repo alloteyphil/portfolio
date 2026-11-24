@@ -1,7 +1,5 @@
 import type { MetadataRoute } from "next";
-import { env } from "@/lib/env";
-
-const BASE_URL = env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+import { SITE_URL } from "@/lib/env";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/"
     },
-    sitemap: `${BASE_URL}/sitemap.xml`
+    sitemap: `${SITE_URL}/sitemap.xml`
   };
 }

@@ -6,43 +6,64 @@ export type SkillGroup = {
 };
 
 /**
- * The About page maps over groups. Keep every item backed by real work:
- * the observability and infrastructure groups come from Points Africa (pa-signoz-infra),
- * the rest from the projects on this site.
+ * The About page maps over these groups. Kept in step with the Technical Skills
+ * section of `Philip_Allotey_CV.pdf` (updated 2026-11-24).
  */
 export const SKILL_GROUPS: SkillGroup[] = [
   {
     title: "Languages",
-    items: ["TypeScript", "JavaScript", "Python", "SQL"]
+    items: ["TypeScript", "JavaScript", "Python", "SQL", "HTML", "CSS"]
   },
   {
-    title: "Web and mobile",
-    items: ["React", "Next.js", "React Native (Expo)", "Expo Router", "Tailwind CSS", "React Query", "Zustand", "Zod"]
-  },
-  {
-    title: "Backend and real-time",
-    items: ["Node.js", "Convex", "REST APIs", "LiveKit", "Better Auth"]
-  },
-  {
-    title: "Observability",
+    title: "Frontend and mobile",
     items: [
-      "SigNoz",
-      "OpenTelemetry (traces, logs, metrics)",
-      "Dashboards and alert rules as code",
-      "Live health and incident pages",
-      "Amazon CloudWatch"
+      "React",
+      "Next.js (App Router, Server Actions)",
+      "Vite",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "TanStack Query",
+      "Zustand",
+      "Redux",
+      "React Hook Form",
+      "Zod",
+      "Motion",
+      "React Native (Expo)",
+      "Reanimated"
     ]
   },
   {
-    title: "Cloud and infrastructure",
-    items: ["AWS (SSM, ALB, ECS, Lambda)", "Terraform", "Docker Compose", "nginx", "GitHub Actions"]
+    title: "Backend and CMS",
+    items: ["Node.js", "Express", "FastAPI", "Flask", "REST APIs", "Convex", "Payload CMS", "WordPress"]
   },
   {
-    title: "Data and integrations",
-    items: ["PostgreSQL", "MongoDB", "AWS S3", "Cloudflare R2", "Stripe", "Paystack", "Vercel Analytics"]
+    title: "Auth, payments and messaging",
+    items: ["Clerk", "Better Auth", "Stripe", "Paystack", "Resend", "LiveKit"]
   },
   {
-    title: "Testing and tooling",
-    items: ["Git", "pytest", "Vitest", "Jest", "ESLint", "Prettier", "Linear"]
+    title: "Databases",
+    items: ["PostgreSQL", "MongoDB (Mongoose)", "SQLAlchemy", "Alembic"]
+  },
+  {
+    title: "Cloud and DevOps",
+    items: [
+      "AWS (Lambda, API Gateway, ECS, S3, CloudWatch)",
+      "Vercel",
+      "Docker",
+      "Terraform",
+      "GitHub Actions"
+    ]
+  },
+  {
+    title: "Observability and analytics",
+    items: ["OpenTelemetry", "SigNoz", "Vercel Analytics", "PostHog"]
+  },
+  {
+    title: "Testing",
+    items: ["Vitest", "Jest", "React Testing Library", "Playwright", "Python unittest"]
+  },
+  {
+    title: "AI and tools",
+    items: ["Claude API", "Cursor", "Claude Code", "Git", "GitHub", "Linear"]
   }
 ];

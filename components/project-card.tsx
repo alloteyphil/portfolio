@@ -1,15 +1,13 @@
-"use client";
-
-import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { CardTilt } from "@/components/card-tilt";
 import { ArrowUpRight, FolderGit2, Lock, iconStroke } from "@/components/icons";
+import { ProjectScreenshot } from "@/components/project-screenshot";
 import type { PortfolioProject } from "@/types/project";
 
 type ProjectCardProps = {
   project: PortfolioProject;
 };
+
+const IGNORED_TOPICS = new Set(["portfolio", "git", "github"]);
 
 function displayHost(url: string) {
   try {
@@ -20,13 +18,10 @@ function displayHost(url: string) {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-  const [imageLoadFailed, setImageLoadFailed] = useState(false);
-  const screenshotUrl = project.screenshotUrl ?? undefined;
-  const hasScreenshot = Boolean(screenshotUrl) && !imageLoadFailed;
   const stackTags = Array.from(
     new Set([
       ...(project.language ? [project.language] : []),
-      ...project.topics.filter((topic) => !["portfolio", "git", "github"].includes(topic.toLowerCase()))
+      ...project.topics.filter((topic) => !IGNORED_TOPICS.has(topic.toLowerCase()))
     ])
   ).slice(0, 5);
 
@@ -43,21 +38,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         aria-label={`Open ${project.name} live site (new tab)`}
       >
         <CardTilt className="relative overflow-hidden rounded-lg border border-line bg-surface">
-          {hasScreenshot ? (
-            <Image
-              src={screenshotUrl!}
-              alt=""
-              width={1200}
-              height={600}
-              sizes="(max-width: 768px) 100vw, 580px"
-              className="aspect-2/1 w-full object-cover object-top transition duration-700 ease-out group-hover:scale-[1.035]"
-              onError={() => setImageLoadFailed(true)}
-            />
-          ) : (
-            <div className="display flex aspect-2/1 items-center justify-center bg-brand p-6 text-center text-3xl text-white">
-              {project.name}
-            </div>
-          )}
+          <ProjectScreenshot name={project.name} screenshotUrl={project.screenshotUrl} />
           <span className="absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-between bg-accent px-4 py-2.5 text-sm font-semibold text-accent-ink transition-transform duration-300 ease-out group-hover:translate-y-0">
             {host}
             <ArrowUpRight className="arrow-launch size-4" strokeWidth={2} aria-hidden />
@@ -78,7 +59,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         ) : null}
 
         <footer className="mt-auto flex gap-5 pt-5 text-[15px]">
-          <Link
+          <a
             href={project.homepageUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -86,14 +67,14 @@ export function ProjectCard({ project }: ProjectCardProps) {
           >
             Open live site
             <ArrowUpRight className="size-3.5" strokeWidth={iconStroke} aria-hidden />
-          </Link>
+          </a>
           {showPrivateSource ? (
             <span className="inline-flex items-center gap-1.5 text-muted" title="Source is not publicly available">
               <Lock className="size-3.5" strokeWidth={iconStroke} aria-hidden />
               Private source
             </span>
           ) : (
-            <Link
+            <a
               href={project.repositoryUrl!}
               target="_blank"
               rel="noopener noreferrer"
@@ -101,7 +82,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             >
               <FolderGit2 className="size-3.5" strokeWidth={iconStroke} aria-hidden />
               Source
-            </Link>
+            </a>
           )}
         </footer>
       </div>

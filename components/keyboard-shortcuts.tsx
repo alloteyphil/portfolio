@@ -47,23 +47,6 @@ export function KeyboardShortcuts() {
   const gArmedRef = useRef(false);
   const gTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const cancelGSequence = useCallback(() => {
-    gArmedRef.current = false;
-    if (gTimerRef.current !== null) {
-      clearTimeout(gTimerRef.current);
-      gTimerRef.current = null;
-    }
-  }, []);
-
-  const armGSequence = useCallback(() => {
-    gArmedRef.current = true;
-    if (gTimerRef.current !== null) clearTimeout(gTimerRef.current);
-    gTimerRef.current = setTimeout(() => {
-      gArmedRef.current = false;
-      gTimerRef.current = null;
-    }, G_TIMEOUT_MS);
-  }, []);
-
   const closeHelp = useCallback(() => {
     setHelpOpen(false);
   }, []);
@@ -79,31 +62,50 @@ export function KeyboardShortcuts() {
   }, [helpOpen]);
 
   useEffect(() => {
+    const cancelG = () => {
+      gArmedRef.current = false;
+      if (gTimerRef.current !== null) {
+        clearTimeout(gTimerRef.current);
+        gTimerRef.current = null;
+      }
+    };
+
+    const armG = () => {
+      gArmedRef.current = true;
+      if (gTimerRef.current !== null) clearTimeout(gTimerRef.current);
+      gTimerRef.current = setTimeout(() => {
+        gArmedRef.current = false;
+        gTimerRef.current = null;
+      }, G_TIMEOUT_MS);
+    };
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
       if (isEditableTarget(event.target)) return;
 
+      const isDialogOpen = Boolean(dialogRef.current?.open);
+
       if (event.key === "Escape") {
-        if (helpOpen) {
+        if (isDialogOpen) {
           event.preventDefault();
-          closeHelp();
+          setHelpOpen(false);
         }
-        cancelGSequence();
+        cancelG();
         return;
       }
 
       if (event.key === "?") {
         event.preventDefault();
         setHelpOpen((open) => !open);
-        cancelGSequence();
+        cancelG();
         return;
       }
 
-      if (helpOpen) return;
+      if (isDialogOpen) return;
 
       if (gArmedRef.current) {
         const target = NAV_TARGETS[event.key.toLowerCase()];
-        cancelGSequence();
+        cancelG();
         if (target) {
           event.preventDefault();
           if (target.kind === "push") {
@@ -117,19 +119,16 @@ export function KeyboardShortcuts() {
 
       if (event.key === "g" || event.key === "G") {
         event.preventDefault();
-        armGSequence();
+        armG();
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      if (gTimerRef.current !== null) {
-        clearTimeout(gTimerRef.current);
-        gTimerRef.current = null;
-      }
+      cancelG();
     };
-  }, [armGSequence, cancelGSequence, closeHelp, helpOpen, router]);
+  }, [router]);
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDialogElement>) => {
     if (event.target === dialogRef.current) {
@@ -144,28 +143,30 @@ export function KeyboardShortcuts() {
       onClick={handleBackdropClick}
       className="m-auto rounded-2xl border border-line bg-surface p-0 text-ink shadow-soft backdrop:bg-black/50 backdrop:backdrop-blur-xs"
     >
-      <div className="min-w-72 max-w-md p-5 sm:min-w-96 sm:p-6">
-        <div className="flex items-center justify-between gap-4">
-          <p className="text-base font-semibold tracking-tight">Keyboard shortcuts</p>
-          <button
-            type="button"
-            onClick={closeHelp}
-            aria-label="Close shortcuts help"
-            className="rounded-full border border-line px-2.5 py-1 font-mono text-xs text-muted transition hover:text-ink"
-          >
-            esc
-          </button>
-        </div>
+      {helpOpen ? (
+        <div className="min-w-72 max-w-md p-5 sm:min-w-96 sm:p-6">
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-base font-semibold tracking-tight">Keyboard shortcuts</p>
+            <button
+              type="button"
+              onClick={closeHelp}
+              aria-label="Close shortcuts help"
+              className="rounded-full border border-line px-2.5 py-1 font-mono text-xs text-muted transition hover:text-ink"
+            >
+              esc
+            </button>
+          </div>
 
-        <div className="mt-4 space-y-4 text-xs sm:text-sm">
-          <Section title="navigation" bindings={NAV_BINDINGS} />
-          <Section title="general" bindings={UTIL_BINDINGS} />
-        </div>
+          <div className="mt-4 space-y-4 text-xs sm:text-sm">
+            <Section title="navigation" bindings={NAV_BINDINGS} />
+            <Section title="general" bindings={UTIL_BINDINGS} />
+          </div>
 
-        <p className="mt-5 text-xs text-muted">
-          tip: press <Kbd>g</Kbd> then a letter (within 1.5s).
-        </p>
-      </div>
+          <p className="mt-5 text-xs text-muted">
+            tip: press <Kbd>g</Kbd> then a letter (within 1.5s).
+          </p>
+        </div>
+      ) : null}
     </dialog>
   );
 }

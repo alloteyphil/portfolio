@@ -1,7 +1,7 @@
 import { env } from "./env";
 
-/** Figure recorded by hand in April 2026. Used whenever live data is unavailable, and as a floor. */
-const FALLBACK_TOTAL = 62_700;
+/** Figure recorded by hand from the CV (94,600+). Used whenever live data is unavailable, and as a floor. */
+const FALLBACK_TOTAL = 94_600;
 
 /** Refresh at most once a day; the numbers only need to be roughly current. */
 const REVALIDATE_SECONDS = 60 * 60 * 24;

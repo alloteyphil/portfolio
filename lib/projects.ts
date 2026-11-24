@@ -1,7 +1,9 @@
+import { cache } from "react";
+import { after } from "next/server";
+import { env } from "./env";
 import { fetchUserRepos, type GitHubRepo } from "./github";
-import { buildScreenshotPublicId } from "./screenshot-store";
-import { getCloudinaryScreenshotUrl } from "./cloudinary";
 import { getPortfolioConfig, saveCachedGithubRepos } from "./portfolio-config";
+import { buildScreenshotPublicId, resolveScreenshotUrl } from "./screenshot-store";
 import {
   buildGithubProjectId,
   buildManualProjectId,
@@ -10,19 +12,19 @@ import {
   type PortfolioProject
 } from "@/types/project";
 
+const ONE_HOUR_MS = 60 * 60 * 1000;
+
 function cleanUrl(value: string | null): string | null {
   if (!value) return null;
   try {
-    const normalized = new URL(value);
-    return normalized.toString();
+    return new URL(value).toString();
   } catch {
     return null;
   }
 }
 
-async function buildProjectFromManual(record: ManualProjectRecord): Promise<PortfolioProject> {
+function buildProjectFromManual(record: ManualProjectRecord): PortfolioProject {
   const screenshotPublicId = buildScreenshotPublicId(`manual-${record.slug}`);
-  const screenshotUrl = await getCloudinaryScreenshotUrl(screenshotPublicId);
 
   return {
     id: buildManualProjectId(record.slug),
@@ -38,39 +40,33 @@ async function buildProjectFromManual(record: ManualProjectRecord): Promise<Port
     topics: record.topics ?? [],
     pushedAt: record.createdAt,
     screenshotPublicId,
-    screenshotUrl
+    screenshotUrl: resolveScreenshotUrl(env.CLOUDINARY_CLOUD_NAME, screenshotPublicId)
   };
 }
 
 function applyConfiguredOrder(projects: PortfolioProject[], order: readonly string[]): PortfolioProject[] {
   if (order.length === 0) {
-    return [...projects].sort(
-      (a, b) => new Date(b.pushedAt).getTime() - new Date(a.pushedAt).getTime()
+    return projects.toSorted(
+      (a, b) => Date.parse(b.pushedAt) - Date.parse(a.pushedAt)
     );
   }
 
   const indexById = new Map<string, number>();
-  order.forEach((id, index) => {
-    if (!indexById.has(id)) {
-      indexById.set(id, index);
-    }
-  });
+  for (let i = 0; i < order.length; i++) {
+    const id = order[i]!;
+    if (!indexById.has(id)) indexById.set(id, i);
+  }
 
-  const ordered = [...projects];
-  ordered.sort((a, b) => {
+  return projects.toSorted((a, b) => {
     const aIndex = indexById.get(a.id);
     const bIndex = indexById.get(b.id);
 
-    if (aIndex !== undefined && bIndex !== undefined) {
-      return aIndex - bIndex;
-    }
+    if (aIndex !== undefined && bIndex !== undefined) return aIndex - bIndex;
     if (aIndex !== undefined) return -1;
     if (bIndex !== undefined) return 1;
 
-    return new Date(b.pushedAt).getTime() - new Date(a.pushedAt).getTime();
+    return Date.parse(b.pushedAt) - Date.parse(a.pushedAt);
   });
-
-  return ordered;
 }
 
 function toGithubCacheEntry(repo: GitHubRepo): CachedGithubRepo {
@@ -106,47 +102,42 @@ function fromGithubCacheEntry(cached: CachedGithubRepo): GitHubRepo {
 
 function isCacheStale(cachedAt: string | null): boolean {
   if (!cachedAt) return true;
-  const ONE_HOUR_MS = 60 * 60 * 1000;
-  return Date.now() - new Date(cachedAt).getTime() > ONE_HOUR_MS;
+  return Date.now() - Date.parse(cachedAt) > ONE_HOUR_MS;
 }
 
-async function buildGithubProjectsFromRepos(repos: GitHubRepo[]): Promise<PortfolioProject[]> {
-  const candidates = repos
-    .map((repo) => ({
-      repo,
-      homepageUrl: cleanUrl(repo.homepage)
-    }))
-    .filter(({ repo, homepageUrl }) => Boolean(homepageUrl) && repo.topics.includes("portfolio"))
-    .slice(0, 30);
+function buildGithubProjectsFromRepos(repos: GitHubRepo[]): PortfolioProject[] {
+  const projects: PortfolioProject[] = [];
 
-  return Promise.all(
-    candidates.map(async ({ repo, homepageUrl }) => {
-      const screenshotPublicId = buildScreenshotPublicId(repo.name);
-      const screenshotUrl = await getCloudinaryScreenshotUrl(screenshotPublicId);
+  for (const repo of repos) {
+    if (!repo.topics.includes("portfolio")) continue;
+    const homepageUrl = cleanUrl(repo.homepage);
+    if (!homepageUrl) continue;
 
-      const project: PortfolioProject = {
-        id: buildGithubProjectId(repo.name),
-        kind: "github",
-        name: repo.name,
-        fullName: repo.full_name,
-        description: repo.description ?? "No description provided.",
-        homepageUrl: homepageUrl!,
-        repositoryUrl: repo.html_url,
-        sourceVisibility: repo.is_private ? "private" : "public",
-        defaultBranch: repo.default_branch,
-        language: repo.language,
-        topics: repo.topics,
-        pushedAt: repo.pushed_at,
-        screenshotPublicId,
-        screenshotUrl
-      };
+    const screenshotPublicId = buildScreenshotPublicId(repo.name);
+    projects.push({
+      id: buildGithubProjectId(repo.name),
+      kind: "github",
+      name: repo.name,
+      fullName: repo.full_name,
+      description: repo.description ?? "No description provided.",
+      homepageUrl,
+      repositoryUrl: repo.html_url,
+      sourceVisibility: repo.is_private ? "private" : "public",
+      defaultBranch: repo.default_branch,
+      language: repo.language,
+      topics: repo.topics,
+      pushedAt: repo.pushed_at,
+      screenshotPublicId,
+      screenshotUrl: resolveScreenshotUrl(env.CLOUDINARY_CLOUD_NAME, screenshotPublicId)
+    });
 
-      return project;
-    })
-  );
+    if (projects.length >= 30) break;
+  }
+
+  return projects;
 }
 
-export async function getPortfolioProjects(): Promise<PortfolioProject[]> {
+export const getPortfolioProjects = cache(async (): Promise<PortfolioProject[]> => {
   const [liveRepos, config] = await Promise.all([
     fetchUserRepos(),
     getPortfolioConfig()
@@ -155,32 +146,32 @@ export async function getPortfolioProjects(): Promise<PortfolioProject[]> {
   let githubProjects: PortfolioProject[];
 
   if (liveRepos !== null) {
-    // Live fetch succeeded — build from fresh GitHub data.
-    githubProjects = await buildGithubProjectsFromRepos(liveRepos);
+    githubProjects = buildGithubProjectsFromRepos(liveRepos);
 
-    // Persist a snapshot so the next run can fall back if the token expires.
-    // Fire-and-forget: a write failure must not block the page render.
-    // Only refresh the snapshot when it is stale (older than 1 hour) to stay
-    // well within GitHub API rate limits.
     if (isCacheStale(config.cachedAt)) {
       const snapshot = liveRepos.map(toGithubCacheEntry);
-      saveCachedGithubRepos(snapshot).catch((err: unknown) => {
-        console.error("Failed to persist GitHub repo snapshot:", err);
-      });
+      try {
+        after(async () => {
+          try {
+            await saveCachedGithubRepos(snapshot);
+          } catch (err) {
+            console.error("Failed to persist GitHub repo snapshot:", err);
+          }
+        });
+      } catch {
+        // `after()` throws outside a request scope (e.g. static build prerender); skip snapshot write there.
+      }
     }
   } else {
-    // Live fetch unavailable (token missing/expired or API error).
-    // Serve from the last known-good snapshot so /projects stays populated.
     if (config.cachedGithubRepos.length > 0) {
       console.warn(
         `GitHub token unavailable — rendering /projects from cached snapshot (cachedAt: ${config.cachedAt ?? "unknown"}).`
       );
     }
-    const cachedRepos = config.cachedGithubRepos.map(fromGithubCacheEntry);
-    githubProjects = await buildGithubProjectsFromRepos(cachedRepos);
+    githubProjects = buildGithubProjectsFromRepos(config.cachedGithubRepos.map(fromGithubCacheEntry));
   }
 
-  const manualProjects = await Promise.all(config.manualProjects.map(buildProjectFromManual));
+  const manualProjects = config.manualProjects.map(buildProjectFromManual);
 
   return applyConfiguredOrder([...githubProjects, ...manualProjects], config.order);
-}
+});

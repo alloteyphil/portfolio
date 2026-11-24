@@ -1,8 +1,6 @@
-import { env } from "@/lib/env";
+import { env, SITE_URL } from "@/lib/env";
 
 const LINKEDIN_URL = "https://www.linkedin.com/in/alloteyphilip/";
-
-const BASE_URL = env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export function StructuredData() {
   const sameAs: string[] = [];
@@ -16,22 +14,22 @@ export function StructuredData() {
     "@graph": [
       {
         "@type": "Person",
-        "@id": `${BASE_URL}/#person`,
+        "@id": `${SITE_URL}/#person`,
         name: "Philip Allotey",
-        url: BASE_URL,
+        url: SITE_URL,
         jobTitle: "Full-stack developer",
-        image: `${BASE_URL}/opengraph-image`,
-        sameAs,
+        image: `${SITE_URL}/opengraph-image`,
+        sameAs
       },
       {
         "@type": "WebSite",
-        "@id": `${BASE_URL}/#website`,
+        "@id": `${SITE_URL}/#website`,
         name: "Philip Allotey",
-        url: BASE_URL,
+        url: SITE_URL,
         inLanguage: "en",
-        publisher: { "@id": `${BASE_URL}/#person` },
-      },
-    ],
+        publisher: { "@id": `${SITE_URL}/#person` }
+      }
+    ]
   };
 
   return (

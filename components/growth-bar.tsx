@@ -4,7 +4,7 @@ import { useEffect, useRef, type CSSProperties } from "react";
 
 const FROM = 1200;
 const format = (value: number) => Math.round(value).toLocaleString("en-US");
-/** Round down to the nearest hundred only when falling back to the April 2026 floor ("62,700+"). */
+/** Round down to the nearest hundred only when falling back to the CV floor ("94,600+"). */
 const floorToHundred = (value: number) => Math.floor(value / 100) * 100;
 
 type GrowthBarProps = {

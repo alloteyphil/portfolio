@@ -19,7 +19,7 @@ export const FEATURED_WORK: FeaturedWork[] = [
     name: "Dilli Dilli",
     kind: "Restaurant website, New York",
     summary:
-      "Launched at 1,200 monthly visitors and grown past 62,700+ total, featured by the New York Times and Forbes.",
+      "Launched at 1,200 monthly visitors and grown past 94,600+ total, featured by the New York Times and Forbes.",
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel"],
     href: "https://dilli-dilli.com/",
     repo: "dilli-dilli"

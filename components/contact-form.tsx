@@ -1,9 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { getTurnstileClientSiteKey } from "@/lib/turnstile-keys";
 
 type FormValues = {
@@ -11,9 +8,10 @@ type FormValues = {
   email: string;
   subject: string;
   message: string;
-  /** Set by Turnstile when enabled; omitted or empty when disabled. */
-  turnstileToken: string | undefined;
+  turnstileToken: string;
 };
+
+type FormErrors = Partial<Record<keyof FormValues, string>>;
 
 type TurnstileApi = {
   render: (container: HTMLElement, options: TurnstileRenderOptions) => string;
@@ -29,50 +27,77 @@ type TurnstileRenderOptions = {
 };
 
 const TURNSTILE_SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const INITIAL_VALUES: FormValues = {
+  name: "",
+  email: "",
+  subject: "",
+  message: "",
+  turnstileToken: ""
+};
 
 function getTurnstile(): TurnstileApi | undefined {
   return (globalThis as unknown as { turnstile?: TurnstileApi }).turnstile;
 }
 
-function buildContactSchema(turnstileRequired: boolean) {
-  return z.object({
-    name: z.string().trim().min(2, "Name must be at least 2 characters.").max(100, "Name is too long."),
-    email: z.string().trim().email("Enter a valid email address.").max(320, "Email is too long."),
-    subject: z.string().trim().min(2, "Subject must be at least 2 characters.").max(120, "Subject is too long."),
-    message: z.string().trim().min(10, "Message must be at least 10 characters.").max(4000, "Message is too long."),
-    turnstileToken: turnstileRequired
-      ? z.string().trim().min(1, "Complete the Turnstile challenge.")
-      : z.string().optional()
-  });
+function validateContactForm(values: FormValues, turnstileRequired: boolean): FormErrors {
+  const errors: FormErrors = {};
+  const name = values.name.trim();
+  const email = values.email.trim();
+  const subject = values.subject.trim();
+  const message = values.message.trim();
+
+  if (name.length < 2) errors.name = "Name must be at least 2 characters.";
+  else if (name.length > 100) errors.name = "Name is too long.";
+
+  if (!EMAIL_RE.test(email)) errors.email = "Enter a valid email address.";
+  else if (email.length > 320) errors.email = "Email is too long.";
+
+  if (subject.length < 2) errors.subject = "Subject must be at least 2 characters.";
+  else if (subject.length > 120) errors.subject = "Subject is too long.";
+
+  if (message.length < 10) errors.message = "Message must be at least 10 characters.";
+  else if (message.length > 4000) errors.message = "Message is too long.";
+
+  if (turnstileRequired && !values.turnstileToken.trim()) {
+    errors.turnstileToken = "Complete the Turnstile challenge.";
+  }
+
+  return errors;
+}
+
+function fieldClass(hasError: boolean) {
+  return `w-full rounded-md border-[1.5px] bg-surface px-4 py-3 text-base text-ink outline-hidden transition placeholder:text-muted/60 focus:border-brand focus:ring-4 focus:ring-accent/60 dark:focus:border-accent dark:focus:ring-accent/25 ${
+    hasError ? "border-red-500" : "border-line"
+  }`;
 }
 
 export function ContactForm() {
+  const [values, setValues] = useState<FormValues>(INITIAL_VALUES);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [submittedOnce, setSubmittedOnce] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
   const turnstileSiteKey = getTurnstileClientSiteKey();
   const turnstileEnabled = Boolean(turnstileSiteKey);
-  const schema = useMemo(() => buildContactSchema(turnstileEnabled), [turnstileEnabled]);
 
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
-  /** Latest widget id for effect cleanup (avoids stale closure on unmount). */
-  const turnstileWidgetIdForCleanupRef = useRef<string | null>(null);
-  const [turnstileWidgetId, setTurnstileWidgetId] = useState<string | null>(null);
+  const turnstileWidgetIdRef = useRef<string | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors, isSubmitting }
-  } = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-      turnstileToken: undefined
-    }
-  });
+  const updateField = useCallback(
+    <K extends keyof FormValues>(key: K, value: FormValues[K]) => {
+      setValues((prev) => {
+        const next = { ...prev, [key]: value };
+        if (submittedOnce) {
+          setErrors(validateContactForm(next, turnstileEnabled));
+        }
+        return next;
+      });
+    },
+    [submittedOnce, turnstileEnabled]
+  );
 
   useEffect(() => {
     if (!toast) return;
@@ -83,13 +108,11 @@ export function ContactForm() {
   useEffect(() => {
     if (!turnstileEnabled || !turnstileSiteKey) return;
     const siteKey = turnstileSiteKey;
-
     let disposed = false;
 
-    function removeWidget(options?: { updateReactState: boolean }) {
-      const updateReactState = options?.updateReactState ?? true;
+    function removeWidget() {
       const ts = getTurnstile();
-      const id = turnstileWidgetIdForCleanupRef.current;
+      const id = turnstileWidgetIdRef.current;
       if (id && ts) {
         try {
           ts.remove(id);
@@ -97,8 +120,7 @@ export function ContactForm() {
           /* DOM may already be detached */
         }
       }
-      turnstileWidgetIdForCleanupRef.current = null;
-      if (updateReactState) setTurnstileWidgetId(null);
+      turnstileWidgetIdRef.current = null;
     }
 
     function mountWidget() {
@@ -108,20 +130,12 @@ export function ContactForm() {
 
       removeWidget();
 
-      const newId = ts.render(turnstileContainerRef.current, {
+      turnstileWidgetIdRef.current = ts.render(turnstileContainerRef.current, {
         sitekey: siteKey,
-        callback: (token: string) => {
-          setValue("turnstileToken", token, { shouldValidate: true });
-        },
-        "expired-callback": () => {
-          setValue("turnstileToken", undefined, { shouldValidate: true });
-        },
-        "error-callback": () => {
-          setValue("turnstileToken", undefined, { shouldValidate: true });
-        }
+        callback: (token: string) => updateField("turnstileToken", token),
+        "expired-callback": () => updateField("turnstileToken", ""),
+        "error-callback": () => updateField("turnstileToken", "")
       });
-      turnstileWidgetIdForCleanupRef.current = newId;
-      setTurnstileWidgetId(newId);
     }
 
     function ensureScriptThenMount() {
@@ -155,71 +169,62 @@ export function ContactForm() {
     return () => {
       disposed = true;
       removeScriptListener?.();
-      removeWidget({ updateReactState: false });
+      removeWidget();
     };
-  }, [turnstileEnabled, turnstileSiteKey, setValue]);
+  }, [turnstileEnabled, turnstileSiteKey, updateField]);
 
-  const onSubmit = useCallback(
-    async (values: FormValues) => {
-      try {
-        const response = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: values.name,
-            email: values.email,
-            subject: values.subject,
-            message: values.message,
-            turnstileToken: values.turnstileToken ?? ""
-          })
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmittedOnce(true);
+
+    const validationErrors = validateContactForm(values, turnstileEnabled);
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) return;
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: values.name.trim(),
+          email: values.email.trim(),
+          subject: values.subject.trim(),
+          message: values.message.trim(),
+          turnstileToken: values.turnstileToken
+        })
+      });
+
+      const payload = (await response.json()) as { ok?: boolean; error?: string };
+      if (!response.ok || !payload.ok) {
+        setToast({
+          type: "error",
+          message: payload.error ?? "Unable to send message right now. Please try again."
         });
-
-        const payload = (await response.json()) as { ok?: boolean; error?: string };
-        if (!response.ok || !payload.ok) {
-          const errorMessage = payload.error ?? "Unable to send message right now. Please try again.";
-          setToast({ type: "error", message: errorMessage });
-          return;
-        }
-
-        reset({
-          name: "",
-          email: "",
-          subject: "",
-          message: "",
-          turnstileToken: undefined
-        });
-
-        const ts = getTurnstile();
-        if (ts && turnstileWidgetId) {
-          try {
-            ts.reset(turnstileWidgetId);
-          } catch {
-            /* ignore */
-          }
-        }
-
-        setToast({ type: "success", message: "Message sent. I'll reply by email." });
-      } catch (err) {
-        console.error(err);
-        setToast({ type: "error", message: "Network error while sending message. Please try again." });
+        return;
       }
-    },
-    [reset, turnstileWidgetId]
-  );
 
-  function labelWithRequired(text: string) {
-    return (
-      <>
-        {text} <span className="font-normal text-muted">(required)</span>
-      </>
-    );
-  }
+      setValues(INITIAL_VALUES);
+      setErrors({});
+      setSubmittedOnce(false);
 
-  function fieldClass(hasError: boolean) {
-    return `w-full rounded-md border-[1.5px] bg-surface px-4 py-3 text-base text-ink outline-hidden transition placeholder:text-muted/60 focus:border-brand focus:ring-4 focus:ring-accent/60 dark:focus:border-accent dark:focus:ring-accent/25 ${
-      hasError ? "border-red-500" : "border-line"
-    }`;
-  }
+      const ts = getTurnstile();
+      if (ts && turnstileWidgetIdRef.current) {
+        try {
+          ts.reset(turnstileWidgetIdRef.current);
+        } catch {
+          /* ignore */
+        }
+      }
+
+      setToast({ type: "success", message: "Message sent. I'll reply by email." });
+    } catch (err) {
+      console.error(err);
+      setToast({ type: "error", message: "Network error while sending message. Please try again." });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -236,55 +241,74 @@ export function ContactForm() {
           {toast.message}
         </div>
       ) : null}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         <div>
           <label htmlFor="contact-name" className="mb-2 block text-sm font-medium text-ink">
-            {labelWithRequired("Name")}
+            Name <span className="font-normal text-muted">(required)</span>
           </label>
-          <input id="contact-name" autoComplete="name" maxLength={100} className={fieldClass(Boolean(errors.name))} {...register("name")} />
-          {errors.name ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p> : null}
+          <input
+            id="contact-name"
+            name="name"
+            autoComplete="name"
+            maxLength={100}
+            value={values.name}
+            onChange={(e) => updateField("name", e.target.value)}
+            className={fieldClass(Boolean(errors.name))}
+          />
+          {errors.name ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p> : null}
         </div>
         <div>
           <label htmlFor="contact-email" className="mb-2 block text-sm font-medium text-ink">
-            {labelWithRequired("Email")}
+            Email <span className="font-normal text-muted">(required)</span>
           </label>
           <input
             id="contact-email"
+            name="email"
             type="email"
             autoComplete="email"
             maxLength={320}
+            value={values.email}
+            onChange={(e) => updateField("email", e.target.value)}
             className={fieldClass(Boolean(errors.email))}
-            {...register("email")}
           />
-          {errors.email ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p> : null}
+          {errors.email ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p> : null}
         </div>
         <div>
           <label htmlFor="contact-subject" className="mb-2 block text-sm font-medium text-ink">
-            {labelWithRequired("Subject")}
+            Subject <span className="font-normal text-muted">(required)</span>
           </label>
-          <input id="contact-subject" maxLength={120} className={fieldClass(Boolean(errors.subject))} {...register("subject")} />
-          {errors.subject ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.subject.message}</p> : null}
+          <input
+            id="contact-subject"
+            name="subject"
+            maxLength={120}
+            value={values.subject}
+            onChange={(e) => updateField("subject", e.target.value)}
+            className={fieldClass(Boolean(errors.subject))}
+          />
+          {errors.subject ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.subject}</p> : null}
         </div>
         <div>
           <label htmlFor="contact-message" className="mb-2 block text-sm font-medium text-ink">
-            {labelWithRequired("Message")}
+            Message <span className="font-normal text-muted">(required)</span>
           </label>
           <textarea
             id="contact-message"
+            name="message"
             minLength={10}
             maxLength={4000}
             rows={6}
+            value={values.message}
+            onChange={(e) => updateField("message", e.target.value)}
             className={fieldClass(Boolean(errors.message))}
-            {...register("message")}
           />
-          {errors.message ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message.message}</p> : null}
+          {errors.message ? <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message}</p> : null}
         </div>
 
         {turnstileEnabled ? (
           <div>
             <div ref={turnstileContainerRef} className="min-h-[65px] min-w-0 overflow-x-auto" />
             {errors.turnstileToken ? (
-              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.turnstileToken.message}</p>
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.turnstileToken}</p>
             ) : null}
           </div>
         ) : (

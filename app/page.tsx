@@ -188,10 +188,10 @@ export default async function HomePage() {
           <Link href="/contact" className="btn btn-solid">
             Get in touch
           </Link>
-          <Link href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-line">
+          <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-line">
             Résumé (PDF)
             <ArrowUpRight className="size-4" strokeWidth={iconStroke} aria-hidden />
-          </Link>
+          </a>
         </Reveal>
       </Reveal>
     </>

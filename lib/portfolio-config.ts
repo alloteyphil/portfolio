@@ -1,6 +1,6 @@
-import { Octokit } from "octokit";
 import { z } from "zod";
 import { env } from "./env";
+import { getOctokit } from "./github";
 import type { CachedGithubRepo, PortfolioConfig } from "@/types/project";
 
 const CONFIG_PATH = "data/portfolio-config.json";
@@ -46,13 +46,6 @@ const EMPTY_CONFIG: PortfolioConfig = {
   cachedGithubRepos: [],
   cachedAt: null
 };
-
-function getOctokit(): Octokit {
-  if (!env.GITHUB_TOKEN) {
-    throw new Error("GITHUB_TOKEN is missing.");
-  }
-  return new Octokit({ auth: env.GITHUB_TOKEN });
-}
 
 function getRepoTarget(): { owner: string; repo: string } {
   const repoSlug = env.PORTFOLIO_CONFIG_REPO ?? env.GITHUB_USERNAME;
@@ -126,7 +119,6 @@ function parseConfigContent(content: string): PortfolioConfig {
 
 async function readLocalConfigFile(): Promise<PortfolioConfig> {
   try {
-    // Loaded lazily so that build-time output tracing picks up the JSON file.
     const localConfig = (await import("@/data/portfolio-config.json")) as { default?: unknown } & Record<string, unknown>;
     const value = (localConfig.default ?? localConfig) as unknown;
     const parsed = portfolioConfigSchema.safeParse(value);
@@ -145,9 +137,9 @@ export async function getPortfolioConfig(): Promise<PortfolioConfig> {
   return readLocalConfigFile();
 }
 
-export type SavedPortfolioConfig = PortfolioConfig & { sha: string | null };
+type SavedPortfolioConfig = PortfolioConfig & { sha: string | null };
 
-export async function getPortfolioConfigWithSha(): Promise<SavedPortfolioConfig> {
+async function getPortfolioConfigWithSha(): Promise<SavedPortfolioConfig> {
   const remote = await fetchRemoteConfigFile();
   if (remote) {
     return { ...parseConfigContent(remote.content), sha: remote.sha };
@@ -157,13 +149,12 @@ export async function getPortfolioConfigWithSha(): Promise<SavedPortfolioConfig>
   return { ...fallback, sha: null };
 }
 
-export async function savePortfolioConfig(
+async function savePortfolioConfig(
   config: PortfolioConfig,
   options: { message?: string; sha?: string } = {}
 ): Promise<void> {
   const octokit = getOctokit();
   const { owner, repo } = getRepoTarget();
-  // Use the provided sha when available to skip an extra remote fetch.
   const sha = options.sha !== undefined ? options.sha : (await fetchRemoteConfigFile())?.sha;
 
   const serialized = `${JSON.stringify(config, null, 2)}\n`;
@@ -182,9 +173,7 @@ export async function savePortfolioConfig(
 
 /**
  * Persists a fresh GitHub repo snapshot into the portfolio config.
- * Always re-fetches the remote file immediately before writing so the sha is
- * never stale. Reusing the sha from the initial page-load fetch causes 409
- * conflicts when concurrent requests have already updated the file.
+ * Re-fetches the remote file immediately before writing so the sha is never stale.
  */
 export async function saveCachedGithubRepos(repos: CachedGithubRepo[]): Promise<void> {
   const latest = await getPortfolioConfigWithSha();

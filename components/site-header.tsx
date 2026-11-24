@@ -30,16 +30,25 @@ export function SiteHeader() {
       >
         {LINKS.map((link) => {
           const external = "external" in link;
-          const active = !external && pathname.startsWith(link.href);
+          const className = `nav-pill rounded-xs px-2 py-1 text-[15px] font-medium first:pl-0 sm:first:pl-2 ${
+            !external && pathname.startsWith(link.href) ? "text-accent-ink" : "text-ink/75"
+          }`;
+
+          if (external) {
+            return (
+              <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={className}>
+                {link.label}
+              </a>
+            );
+          }
+
+          const active = pathname.startsWith(link.href);
           return (
             <Link
               key={link.href}
               href={link.href}
-              {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               aria-current={active ? "page" : undefined}
-              className={`nav-pill rounded-xs px-2 py-1 text-[15px] font-medium first:pl-0 sm:first:pl-2 ${
-                active ? "text-accent-ink" : "text-ink/75"
-              }`}
+              className={className}
             >
               {link.label}
             </Link>

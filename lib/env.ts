@@ -1,29 +1,32 @@
 import { z } from "zod";
 
 const emptyToUndefined = (value: unknown) => (value === "" ? undefined : value);
+const optionalString = z.preprocess(emptyToUndefined, z.string().min(1).optional());
+const optionalUrl = z.preprocess(emptyToUndefined, z.string().url().optional());
+const optionalEmail = z.preprocess(emptyToUndefined, z.string().email().optional());
 
 const envSchema = z.object({
-  GITHUB_TOKEN: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  GITHUB_USERNAME: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  SCREENSHOTONE_API_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  CLOUDINARY_CLOUD_NAME: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  CLOUDINARY_API_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  CLOUDINARY_API_SECRET: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  REFRESH_SCREENSHOTS_SECRET: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  VERCEL_DEPLOY_HOOK_URL: z.preprocess(emptyToUndefined, z.string().url().optional()),
-  NEXT_PUBLIC_SITE_URL: z.preprocess(emptyToUndefined, z.string().url().optional()),
-  NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  TURNSTILE_SECRET_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  RESEND_API_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  CONTACT_FROM_EMAIL: z.preprocess(emptyToUndefined, z.string().email().optional()),
-  CONTACT_TO_EMAIL: z.preprocess(emptyToUndefined, z.string().email().optional()),
-  VERCEL_ANALYTICS_TOKEN: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  DILLI_VERCEL_PROJECT_ID: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  DILLI_VERCEL_TEAM_ID: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  PORTFOLIO_CONFIG_REPO:z.preprocess(emptyToUndefined, z.string().min(1).optional()),
-  PORTFOLIO_CONFIG_REPO_NAME: z.preprocess(emptyToUndefined, z.string().min(1).optional())
+  GITHUB_TOKEN: optionalString,
+  GITHUB_USERNAME: optionalString,
+  SCREENSHOTONE_API_KEY: optionalString,
+  CLOUDINARY_CLOUD_NAME: optionalString,
+  CLOUDINARY_API_KEY: optionalString,
+  CLOUDINARY_API_SECRET: optionalString,
+  REFRESH_SCREENSHOTS_SECRET: optionalString,
+  VERCEL_DEPLOY_HOOK_URL: optionalUrl,
+  NEXT_PUBLIC_SITE_URL: optionalUrl,
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: optionalString,
+  TURNSTILE_SECRET_KEY: optionalString,
+  RESEND_API_KEY: optionalString,
+  CONTACT_FROM_EMAIL: optionalEmail,
+  CONTACT_TO_EMAIL: optionalEmail,
+  VERCEL_ANALYTICS_TOKEN: optionalString,
+  DILLI_VERCEL_PROJECT_ID: optionalString,
+  DILLI_VERCEL_TEAM_ID: optionalString,
+  PORTFOLIO_CONFIG_REPO: optionalString,
+  PORTFOLIO_CONFIG_REPO_NAME: optionalString
 });
 
-const parsed = envSchema.parse(process.env);
+export const env = envSchema.parse(process.env);
 
-export const env = parsed;
+export const SITE_URL = env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";

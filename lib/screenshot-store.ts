@@ -11,3 +11,17 @@ export function buildCloudinaryDeliveryUrl(
   const transformSegment = "f_auto,q_auto,dpr_auto,c_fill,g_auto,w_1200,h_600";
   return `https://res.cloudinary.com/${cloudName}/image/upload/${transformSegment}/${versionSegment}${publicId}.png`;
 }
+
+/**
+ * Pure deterministic CDN URL resolver (zero network roundtrips).
+ * Returns null when Cloudinary isn't configured or misconfigured to the folder prefix.
+ */
+export function resolveScreenshotUrl(
+  cloudName: string | undefined,
+  publicId: string
+): string | null {
+  if (!cloudName || cloudName.toLowerCase() === "portfolio") {
+    return null;
+  }
+  return buildCloudinaryDeliveryUrl(cloudName, publicId);
+}

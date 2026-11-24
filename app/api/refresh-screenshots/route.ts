@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { env } from "@/lib/env";
 import { getPortfolioProjects } from "@/lib/projects";
@@ -160,8 +161,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const nextOffset = offset + slice.length;
   const done = nextOffset >= total;
 
-  if (done && env.VERCEL_DEPLOY_HOOK_URL) {
-    await fetch(env.VERCEL_DEPLOY_HOOK_URL, { method: "POST" });
+  if (done) {
+    revalidatePath("/projects");
+    revalidatePath("/");
+    if (env.VERCEL_DEPLOY_HOOK_URL) {
+      await fetch(env.VERCEL_DEPLOY_HOOK_URL, { method: "POST" });
+    }
   }
 
   const failures = results.filter((result) => !result.success);

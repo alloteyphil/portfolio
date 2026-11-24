@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  poweredByHeader: false,
   images: {
     remotePatterns: [
       {
@@ -7,6 +8,9 @@ const nextConfig = {
         hostname: "res.cloudinary.com"
       }
     ]
+  },
+  experimental: {
+    optimizePackageImports: ["lucide-react"]
   },
   skipTrailingSlashRedirect: true
 };
