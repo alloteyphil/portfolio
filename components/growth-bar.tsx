@@ -156,15 +156,7 @@ export function GrowthBar({ total, last30Days, asOf, live }: GrowthBarProps) {
         <p className="display max-w-full text-[clamp(2.75rem,13vw,11rem)] tabular-nums tracking-tight text-heading">
           <span ref={countRef}>{finalFormatted}</span>
         </p>
-        <p className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-muted">
-          <span>visitors to dilli-dilli.com to date</span>
-          {live ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 py-0.5 text-xs font-semibold text-ink">
-              <span className="live-dot" />
-              Live via Vercel Analytics
-            </span>
-          ) : null}
-        </p>
+        <p className="mt-3 text-muted">visitors to dilli-dilli.com to date</p>
 
         <div className="mt-10 grid grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-x-4 gap-y-3 sm:grid-cols-[7rem_minmax(0,1fr)]">
           <span className="text-sm text-muted">April 2025</span>
