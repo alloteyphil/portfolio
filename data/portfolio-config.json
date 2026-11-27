@@ -1,6 +1,7 @@
 {
   "manualProjects": [],
   "order": [
+    "gh-wasitus",
     "gh-dilli-dilli",
     "gh-pulse-notes",
     "gh-trackr",
@@ -12,6 +13,27 @@
     "gh-worldwise"
   ],
   "cachedGithubRepos": [
+    {
+      "name": "wasitus",
+      "fullName": "alloteyphil/wasitus",
+      "description": "Was it us? Incident timeline + evidence-based verdict (our change vs external cause) from OpenTelemetry/SigNoz and GitHub data.",
+      "homepage": "https://github.com/alloteyphil/wasitus",
+      "htmlUrl": "https://github.com/alloteyphil/wasitus",
+      "defaultBranch": "main",
+      "language": "Go",
+      "topics": [
+        "cli",
+        "golang",
+        "incident-response",
+        "observability",
+        "opentelemetry",
+        "portfolio",
+        "signoz",
+        "sre"
+      ],
+      "pushedAt": "2026-11-27T15:22:31Z",
+      "isPrivate": false
+    },
     {
       "name": "portfolio",
       "fullName": "alloteyphil/portfolio",
@@ -27,7 +49,7 @@
     {
       "name": "dilli-dilli",
       "fullName": "alloteyphil/dilli-dilli",
-      "description": "Dilli Dilli is a restaurant website for a New York-based business, where I designed a modern, visually appealing interface to showcase menu items and brand identity. The site focuses on responsive design, smooth navigation, and enhancing the restaurant’s online presence.",
+      "description": "Dilli Dilli is a restaurant website for a New York-based business, where I designed a modern, visually appealing interface to showcase menu items and brand identity. The site focuses on responsive design, smooth navigation, and enhancing the restaurant\u2019s online presence.",
       "homepage": "https://dilli-dilli.com/",
       "htmlUrl": "https://github.com/alloteyphil/dilli-dilli",
       "defaultBranch": "main",
@@ -505,5 +527,5 @@
       "isPrivate": false
     }
   ],
-  "cachedAt": "2026-07-10T11:00:57.753Z"
+  "cachedAt": "2026-11-27T15:26:56Z"
 }
