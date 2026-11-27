@@ -16,6 +16,15 @@ export type FeaturedWork = {
  */
 export const FEATURED_WORK: FeaturedWork[] = [
   {
+    name: "wasitus",
+    kind: "Incident analysis CLI",
+    summary:
+      "Builds an incident timeline from OpenTelemetry/SigNoz and GitHub, then returns a deterministic verdict: our change, an external cause, or UNKNOWN — with evidence you can check.",
+    stack: ["Go", "OpenTelemetry", "SigNoz"],
+    href: "https://github.com/alloteyphil/wasitus",
+    repo: "wasitus"
+  },
+  {
     name: "Dilli Dilli",
     kind: "Restaurant website, New York",
     summary:
